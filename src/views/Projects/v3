@@ -1,0 +1,156 @@
+# Version 3: Single-Player
+
+## New Tools Used:
+- REST API
+- MongoDB
+- Mongoose
+- FullStory
+
+## Product Vision & Goals
+After Version 2 was released, I realized that many potential users online gave me feedback that the game looked nice, but they didn't have friends with which to play.  Further, the feedback I received was outside the application and I had no good way to track user data and feedback in the app. With these opportunities in mind, my goal for V3 was to create a single-player game mode and add some feedback-gathering functionality to the app.
+
+## Identifying Problems
+
+### Single-Player Mode
+To enable single-player mode, I would need to consider what direction to take the single-player mode.  I want my users to be able to see the fun of the gameplay style so they will want to invite their friends to play online.  I also wanted to re-use as much of the game logic and front-end components as possible to lighten the engineering load.  The problems areas are best summarized as the following:
+
+- Online vs. Bot experience & Implementation
+- Re-use of components and gameplay logic
+- Restructuring the Application Flow
+
+### Feedback
+Thus far, I had no clue how users were using the app other than anecdotes.  I needed a more systematic way to track user data.  I decided to explore ways to do this. Considerations were...
+
+- Determining when, if, and how Users are using the site
+- Offering users an option to leave feedback
+- Recreating errors or bugs that user's may be experiencing
+
+## Understanding the Problems
+
+### Single-Player Mode
+Originally, the app flow was drawn up with the assumption that a user wanted to play with friends.  With a new game mode, the application flow needed to accomodate this change in user types.  Now, since not all players fell into the Multi-Player roles of Guest and Host, I started uses as either Single-Player and Multi-Player users.
+
+There were additional questions regarding how the single-player mode would be implemented.  From talking to users, an online experience was more enticing than playing with known bots.  While still estabilshing a user-base, though, I didn't know whether or not there would be enough users at a given time to make online worthwhile.  I decided to try to merge these experiences by creating bots, but making the experience feel like online by simulating a lobby and other players.
+
+#### Game Creation Phase:
+Pseudo-code:
+- User visits Home Page:
+  - Single-Player: looking to play single-player game
+    - User selects deck and user-name
+    - User joins mock-lobby
+    - Other players (bots) join the lobby at random time-intervals
+    - When lobby is full, gameplay begins.
+  - Multi-Player: Either Host or Guest
+    - Follows existing Host or Guest user flow
+  - Info Path: User wants to Learn about the Game
+    - Follows existing Info user flow
+
+#### Gameplay
+The gameplay flow for Single-Player should follow the same views and patterns of the multi-player gameplay.  The trick will be adapting the game logic to work with events created by bots rather than socket events created by other players.  The bots need to have human-like timing, so this will mean orchestrating bot events (i.e. selecting card, moving to next round, etc.).
+
+### Feedback
+
+#### User-Submitted Feedback
+I wanted users to be able to submit feedback at any point in the game.  I figured that a globally-available React component would do the trick. 
+
+Pseudo-Code:
+- User clicks Feedback tab
+  - Feedback Form Displayed
+    - User Exits -> form hidden
+    - User submits feedback:
+      - Loading Screen while feedback posting
+      - Success Screen when complete
+
+#### Tracking User Data
+I was informed of FullStory from a SWE friend of mine.  I found out that it was as easy as inserting a script in my React code to implement so I decided to give it a try.  The functionality allowed a full Session replay and tons of additional data about users and how they interacted with the app.  This plug-and-play service allowed me to keep my User-Submitted Feedback data very simple and leverage the FullStory data to cross-reference to see what problems that user may have experienced.
+
+## Mapping out the Experience
+![V3-Mockup](../../assets/Project/V3/V3-Mockup.png)
+
+The new Mock-Up was pretty simple, and just required adding an additional step at the beginning allow user's to choose their path, adding a Feedback Component, and creating Single-Player start-up flow.
+
+## Engineering the Feedback Solution
+
+### Front-End
+- Create a component visible on all views that would allow user to submit feedback.
+- Insert FullStory Script in React, which works out of the box.
+
+### Back-End
+- Accepts feedback data from client and stores it somewhere.
+- Sends confirmation to front-end whether data was received and stored.
+
+### Technology Selection
+I decided to set up a Database for scalability.  I admit this was admittedly over-engineered solution that I justified as an excuse to learn more about database integration and REST API protocols.
+
+Database: MongoDB
+- Compass: Online Cluster to store Feedback as JSON objects
+- Mongoose: Create data models for the Feedback object
+
+Accepting Requests: Express REST API
+- Create `"/api/feedback"` post route to store feedback into cluster
+
+### Data Structures/Algorithms
+The feedback I needed was pretty simple, so I created a model in Mongoose:
+
+```typescript
+  import { Schema, model } from 'mongoose'
+
+  interface IFeedback {
+    name: string;
+    email: string;
+    feedback: string;
+    time: string;
+  }
+
+  const feedbackSchema = new Schema<IFeedback>({
+    name: String,
+    email: String,
+    feedback: String,
+    time: String,
+  }, {
+    collection: 'Feedback',
+  });
+
+  const Feedback = model<IFeedback>('Feedback', feedbackSchema);
+```
+
+Then my Post route would update the database, then send confirmation to client:
+
+```typescript
+  apiroute.post("/feedback", async (req, res) => {
+
+  const feedback = new Feedback({
+    name: req.body.name,
+    email: req.body.email,
+    feedback: req.body.feedback,
+    time: req.body.time
+  });
+
+  await feedback.save();
+
+  res.status(201).send(feedback);
+})
+```
+
+### Feedback Finished State
+
+## Engineering the Single-Player Solution
+
+### Front-End
+- Create additional views for beginning flow.
+
+### Back-End
+- Update socket event-handling to account for only having a single player sending events.
+
+### Technology Selection
+Most of the problem stemmed from needing to separate the back-end into single-player and multi-player modes efficiently and effectively.  I was able to utilize Faker, a NPM module that generates fake user data to power the bots.
+
+### Data Structures/Algorithms
+I used Socket.io exclusively for handling the game events in the multi-player mode.  Now that I was introducing a game mode where other players were no longer able to send socket events, I needed to re-organize the back-end socket logic to handle the socket events from a single client based on any given game state.  For example, if my client selects a card, the view they will be shown will be different based on whether the other bot player(s) have selected.
+
+This was further complicated by my desire to orchestrate the bots to imitate human player timing. 
+
+My solution was to create separate Socket Events for Single-Player mode and use`setTimeout()`s to delay the bot selections.  Each event from the client would trigger the back-end to start any bot timers that were needed, and when the bot timers expired and triggered the event, I would have the back-end send a socket update to the client and trigger any further bot timers needed.
+
+### Single-Player Finished State
+
