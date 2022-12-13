@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { CWFLogo } from "../assets/CWFLogo";
 import { Footer } from "../components/Footer";
 import { Navbar } from "../components/Navbar";
+import { Sidebar } from "../components/Sidebar";
 import "../styles/Portfolio.css"
 
 
@@ -10,6 +11,8 @@ export const Portfolio = () => {
     <div className="portfolio-container">
 
       <Navbar/>
+
+      <Sidebar/>
 
       <div className="portfolio-content-wrapper">
         <a className="project-link portfolio-header-container" href="http://www.cardswithfriendsgame.com" target="_blank" rel="noreferrer">

@@ -1,0 +1,10 @@
+/* Sidebar */
+
+.sidebar-container {
+  background-color: #5ce1e6;
+  grid-area: sidebar;
+}
+
+a {
+  text-decoration: none;
+}
