@@ -2,18 +2,21 @@
 
 .sidebar-container {
   background-color: #5ce1e6;
-  grid-area: sidebar;
-  padding-top: 60px;
+  position: fixed;
+  padding-top: 20px;
   background: #292929;
   box-shadow: 2px 0px 10px 5px rgb(18, 227, 238);
   z-index: 5;
-  height: 100vh;
-  min-width: 250px;
+  width: 250px;
+  top: 70px;
+  left: 20px;
+  padding-bottom: 20px;
   display: flex;
   flex-direction: column;
   transition: 0.5s;
-  padding-left: 15%;
+  padding-left: 30px;
   text-align: left;
+  grid-area: sidebar;
 }
 
 a {
@@ -48,3 +51,4 @@ a {
 .sidebar-section:hover {
   color:  #b3b3b3;
 }
+

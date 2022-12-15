@@ -9,6 +9,11 @@ a {
   justify-content: space-between;
   align-items: center;
   grid-area: nav;
+  position: fixed;
+  width: 100vw;
+  top: 0px;
+  padding-top: 10px;
+  background-color: #292929;
 }
 
 .nav-button-container {

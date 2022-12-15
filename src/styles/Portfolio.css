@@ -4,77 +4,38 @@
     "nav nav"
     "sidebar portfolio-content-wrapper"
     "footer footer";
-  grid-template-rows: 54px 1fr 214px;
-  grid-template-columns: 200px 1fr;
+  grid-template-rows: 64px 1fr 214px;
+  grid-template-columns: 250px 1fr;
   grid-row-gap: 1rem;
   grid-column-gap: 1rem;
   height: 100vh;
   width: 100vw;
 }
 
-@media (min-width: 681px) {
-  .portfolio-content-wrapper {
-    grid-area: portfolio-content-wrapper;
-    display: grid;
-    grid-template-areas: 
-      "header header header"
-      "summary summary summary"
-      "cta cta cta"
-      "project1 project2 project3";
-    grid-template-rows: .3fr .4fr .4fr .4fr;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-row-gap: 1rem;
-    grid-column-gap: 1rem;
-    max-width: 800px;
-    max-height: 750px;
-    justify-self: center;
-    font-family: Arial, Helvetica, sans-serif ;
-  }
+.portfolio-content-wrapper {
+  grid-area: portfolio-content-wrapper;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: flex-start;
+  padding-left: 100px;
+  line-height: 1.6;
 }
 
-@media (max-width: 680px) {
-  .portfolio-content-wrapper {
-    grid-area: portfolio-content-wrapper;
-    display: grid;
-    grid-template-areas: 
-      "header"
-      "summary"
-      "cta"
-      "project1"
-      "project2"
-      "project3";
-    grid-template-rows: .3fr .4fr .4fr;
-    grid-template-columns: 1fr;
-    grid-row-gap: 1rem;
-    grid-column-gap: 1rem;
-    max-width: 90%;
-    max-height: 800px;
-    justify-self: center;
-    font-family: Arial, Helvetica, sans-serif;
-  }
-}
-
-.project-link {
-  text-decoration: none;
-  color: white;
-}
-
-.project-link:hover {
-  color:rgb(199, 199, 199)
-}
+/* PORTFOLIO INTRO */
 
 .portfolio-header-container {
-  grid-area: header;
   text-align: center;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: row;
+  margin-bottom: 10px;
 }
 
 .portfolio-header {
-  font-weight: 500;
-  font-size: 3.2rem;
+  font-weight: 400;
+  font-size: 4rem;
   margin-top: 5px;
   margin-bottom: 5px;
   align-items: center;
@@ -90,94 +51,10 @@
   }
 }
 
-.portfolio-summary-container {
-  grid-area: summary;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.portfolio-summary {
-  font-weight: 400;
-  margin-top: 7px;
-  margin-bottom: 7px;
-  font-size: 1.10rem;
-}
-
-.portfolio-cta-container {
-  grid-area: cta;
-  text-align: center;
-}
-
-.portfolio-cta {
-  text-align: center;
-  font-size: 2.25rem;
-}
-
-.portfolio-project-card {
-  text-align: center;
-  background-color: rgb(90, 90, 90);
-  border-radius: 5px;
-  height: 200px;
-  max-width: 200px;
-  justify-self: center;
-  align-self: center;
-  cursor: pointer;
-  text-decoration: none;
-  color: white;
-  padding: 5px;
-}
-
-.portfolio-project-card:hover {
-  background-color: rgb(125, 125, 125);
-  transform: scale(1.05);
-}
-
-.portfolio-project-card-header {
-  font-size: x-large;
-}
-
-.portfolio-project-card-subtitle {
-  font-size: large;
-}
-
-@media (max-width: 680px) {
-  .portfolio-project-card {
-    height: 75px;
-    max-width: 600px;
-    width: 85%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 10px;
-  }
-
-  .portfolio-project-card-header {
-    margin: 5px;
-  }
-
-  .portfolio-project-card-subtitle {
-    margin: 5px;
-  }
-}
-
-#project1 {
-  grid-area: project1;
-}
-
-#project2 {
-  grid-area: project2;
-}
-
-#project3 {
-  grid-area: project3;
-}
-
-@media (min-width: 681px) {
-  .portfolio-project-card {
-    justify-self:center
-  }
+.portfolio-content {
+  font-size: 1.25rem;
+  font-weight: 300;
+  width: 85%;
 }
 
 @media (max-width: 680px) {
@@ -192,14 +69,25 @@
     margin-bottom: 5px;
     align-items: center;
   }
+}
 
-  .portfolio-cta {
-    margin-top: 5px;
-    margin-bottom: 15px;
-  }
+/* SECTION STYLES */
+.version-header {
+  font-size: 3rem;
+  font-weight: 500;
+}
 
-  #project3 {
-    margin-bottom: 100px;
-  }
-  
+.section-header {
+  font-size: 2rem;
+  font-weight: 400;
+}
+
+.section-header-2 {
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.section-header-3 {
+  font-size: 1.35rem;
+  font-weight: 400;
 }

@@ -14,6 +14,8 @@ export const Portfolio = () => {
 
       <Sidebar/>
 
+      {/* PORTFOLIO INTRO */}
+
       <div className="portfolio-content-wrapper">
         <a className="project-link portfolio-header-container" href="http://www.cardswithfriendsgame.com" target="_blank" rel="noreferrer">
           <h1 className="portfolio-header">
@@ -22,48 +24,62 @@ export const Portfolio = () => {
           <CWFLogo className="cwf-logo-portfolio"/>
         </a>
 
-        <div className="portfolio-summary-container">
-          <p className="portfolio-summary">
-            <a className="project-link" href="http://www.cardswithfriendsgame.com" target="_blank" rel="noreferrer"><b>Cards with Friends </b></a>is a multi-player Cards Against Humanity web app.
-          </p>
-          <p className="portfolio-summary">
-            It also happens to be my first product to design, build, and deploy!
-          </p>
-        </div>
+        <p className="portfolio-content">
+          <a className="project-link" href="http://www.cardswithfriendsgame.com" target="_blank" rel="noreferrer"><b>Cards with Friends </b></a>is a multi-player Cards Against Humanity web app.  It is also the largest product I have had the opportunity to design, build, and deploy.
+        </p>
+        <p className="portfolio-content">
+          Below is a full break-down of the process divided into 3 major versions.  I have detailed my journey from ideation, through numerous features, to its current (and likely final) state.  Just keep scrolling to see my journey!
+        </p>
 
-        <div className="portfolio-cta-container">
-          <h2 className="portfolio-cta">
-            Please check out my journey below!
-          </h2>
-        </div>
+        {/* VERSION 1 */}
+        <h2 className="version-header" id="version-1-intro">
+          Version 1: MVP (Single-Client)
+        </h2>
 
-        <Link to="project-v1" className="portfolio-project-card" id="project1">
-          <h3 className="portfolio-project-card-header">
-            Version 1:
-          </h3>
-          <h4 className="portfolio-project-card-subtitle">
-            Single-Device Gameplay (MVP)
-          </h4>
-        </Link>
+        <p className="portfolio-content">
+          Yayaya
+        </p>
 
-        <Link to="project-v2" className="portfolio-project-card" id="project2">
-          <h3 className="portfolio-project-card-header">
-            Version 2:
-          </h3>
-          <h4 className="portfolio-project-card-subtitle">
-            Multi-Device Gameplay
-          </h4>
-        </Link>
+        <h3 className="section-header" id="version-1-tools">
+          Tools Used
+        </h3>
+        <h3 className="section-header" id="version-1-version-goals">
+          Version Goals
+        </h3>
+        <p className="portfolio-content">
+          Yayaya
+        </p>
+        <h3 className="section-header" id="version-1-identifying-problems">
+          Tools Used
+        </h3>
+        <h3 className="section-header" id="version-1-understanding-problems">
+          Tools Used
+        </h3>
+        <h3 className="section-header" id="version-1-ux-mockup">
+          UX Mockup
+        </h3>
+        <h3 className="section-header" id="version-1-engineering-the-solution">
+          Tools Used
+        </h3>
+        <h3 className="section-header" id="version-1-finished-state">
+          Tools Used
+        </h3>
 
-        <Link to="project-v3" className="portfolio-project-card" id="project3">
-          <h3 className="portfolio-project-card-header">
-            Version 3
-          </h3>
-          <h4 className="portfolio-project-card-subtitle">
-            Single-Player: Online Simulation
-          </h4>
-        </Link>
+        <h4 className="section-header-2">
+          Additional Tools
+        </h4>
+
+        <h5 className="section-header-3">
+        Additional
+        </h5>
+
+
+        {/* VERSION 2 */}
+
+        {/* VERSION 3 */}
+
       </div>
+
 
       <Footer/>
     </div>
