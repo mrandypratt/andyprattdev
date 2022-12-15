@@ -3,8 +3,48 @@
 .sidebar-container {
   background-color: #5ce1e6;
   grid-area: sidebar;
+  padding-top: 60px;
+  background: #292929;
+  box-shadow: 2px 0px 10px 5px rgb(18, 227, 238);
+  z-index: 5;
+  height: 100vh;
+  min-width: 250px;
+  display: flex;
+  flex-direction: column;
+  transition: 0.5s;
+  padding-left: 15%;
+  text-align: left;
 }
 
 a {
   text-decoration: none;
+}
+
+.sidebar-version-header {
+  color: white;
+  text-decoration: none;
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+  font-weight: 500;
+  font-size: 1.25rem;
+  line-height: 1.75;
+  letter-spacing: 0.02857em;
+}
+
+.sidebar-version-header:hover {
+  color:  #b3b3b3;
+}
+
+.sidebar-section {
+  margin-left: 10px;
+  color: white;
+  text-decoration: none;
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+  font-weight: 300;
+  font-size: 0.875rem;
+  line-height: 1.75;
+  letter-spacing: 0.02857em;
+}
+
+.sidebar-section:hover {
+  color:  #b3b3b3;
 }
