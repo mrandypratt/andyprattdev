@@ -14,23 +14,25 @@ export const ToolTable = ({version}: ToolTablePropsType) => {
 
   return (
     <table>
-      
-      <tr>
-        <th rowSpan={tools.length}>Tools Used</th>
-        <td>{tools[0]}</td>
-      </tr>
+      <tbody>
+        <tr>
+          <th rowSpan={tools.length}>Tools Used</th>
+          <td>{tools[0]}</td>
+        </tr>
 
-      {tools.map((tool, index) => {
-        if (index !== 0) {
-          return (
-            <tr>
-              <td>
-                {tool}
-              </td>
-            </tr>
-          )
-        }
-      })}
+        {tools.map((tool, index) => {
+          if (index !== 0) {
+            return (
+              <tr key={index}>
+                <td>
+                  {tool}
+                </td>
+              </tr>
+            )
+          }
+        })}
+
+      </tbody>
 
     </table>
   )
