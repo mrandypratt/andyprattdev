@@ -32,7 +32,7 @@ export const Portfolio = () => {
         </p>
 
         {/* VERSION 1 */}
-        <h2 className="version-header" id="version-1-intro">
+        <h2 className="version-header" id="version-1">
           Version 1: MVP (Single-Client)
         </h2>
 

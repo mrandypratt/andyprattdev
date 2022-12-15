@@ -1,161 +1,158 @@
-import { Link } from "react-router-dom";
+import { HashLink } from 'react-router-hash-link';
 import "../styles/Sidebar.css";
 
 export const Sidebar = () => {
 
-  return(
+  const scrollWithOffset = (el: HTMLElement) => {
+    const yCoordinate = el.getBoundingClientRect().top + window.pageYOffset;
+    const yOffset = -65; 
+    window.scrollTo({ top: yCoordinate + yOffset, behavior: 'smooth' }); 
+  }
+
+  return (
     <div className="sidebar-container">
 
 
 
       {/* VERSION 1: Header */}
-      <Link to="/portfolio//#version-1">
+      <HashLink to="#"  smooth>
+        <div className="sidebar-version-header">
+          Back to Top
+        </div>
+      </HashLink>
+
+      <HashLink to="#version-1" smooth scroll={el => scrollWithOffset(el)}>
         <div className="sidebar-version-header">
           Version 1: MVP
         </div>
-      </Link>
+      </HashLink>
 
       {/* VERSION 1: Sections */}
-      <Link to="/portfolio/#version-1-intro">
-        <div className="sidebar-section">
-            Intro
-        </div>
-      </Link>
-      <Link to="/portfolio/#version-1-tools">
+      <HashLink to="/portfolio/#version-1-tools" smooth scroll={el => scrollWithOffset(el)}>
         <div className="sidebar-section">
             Tools
         </div>
-      </Link>
-      <Link to="/portfolio/#version-1-version-goals">
+      </HashLink>
+      <HashLink to="/portfolio/#version-1-version-goals" smooth scroll={el => scrollWithOffset(el)}>
         <div className="sidebar-section">
             Version Goals
         </div>
-      </Link>
-      <Link to="/portfolio/#version-1-identifying-problems">
+      </HashLink>
+      <HashLink to="/portfolio/#version-1-identifying-problems" smooth scroll={el => scrollWithOffset(el)}>
         <div className="sidebar-section">
             Identifying Problems
         </div>
-      </Link>
-      <Link to="/portfolio/#version-1-understanding-problems">
+      </HashLink>
+      <HashLink to="/portfolio/#version-1-understanding-problems" smooth scroll={el => scrollWithOffset(el)}>
         <div className="sidebar-section">
             Understanding Problems
         </div>
-      </Link>
-      <Link to="#version-1-ux-mockup">
+      </HashLink>
+      <HashLink to="#version-1-ux-mockup" smooth scroll={el => scrollWithOffset(el)}>
         <div className="sidebar-section">
             UX Mockup
         </div>
-      </Link>
-      <Link to="/portfolio/#version-1-engineering-the-solution">
+      </HashLink>
+      <HashLink to="/portfolio/#version-1-engineering-the-solution" smooth scroll={el => scrollWithOffset(el)}>
         <div className="sidebar-section">
             Engineering the Solution
         </div>
-      </Link>
-      <Link to="/portfolio/#version-1-finished-state">
+      </HashLink>
+      <HashLink to="/portfolio/#version-1-finished-state" smooth scroll={el => scrollWithOffset(el)}>
         <div className="sidebar-section">
             Finished State
         </div>
-      </Link>
+      </HashLink>
 
 
      {/* VERSION 2: Header */}
-      <Link to="/portfolio/#version-2">
+      <HashLink to="/portfolio/#version-2" smooth scroll={el => scrollWithOffset(el)}>
         <div className="sidebar-version-header">
             Version 2: Multi-Device
         </div>
-      </Link>
+      </HashLink>
 
       {/* VERSION 2: Sections */}
-      <Link to="/portfolio/#version-2-intro">
-        <div className="sidebar-section">
-            Intro
-        </div>
-      </Link>
-      <Link to="/portfolio/#version-2-tools">
+      <HashLink to="/portfolio/#version-2-tools" smooth scroll={el => scrollWithOffset(el)}>
         <div className="sidebar-section">
             Tools
         </div>
-      </Link>
-      <Link to="/portfolio/#version-2-version-goals">
+      </HashLink>
+      <HashLink to="/portfolio/#version-2-version-goals" smooth scroll={el => scrollWithOffset(el)}>
         <div className="sidebar-section">
             Version Goals
         </div>
-      </Link>
-      <Link to="/portfolio/#version-2-identifying-problems">
+      </HashLink>
+      <HashLink to="/portfolio/#version-2-identifying-problems" smooth scroll={el => scrollWithOffset(el)}>
         <div className="sidebar-section">
             Identifying Problems
         </div>
-      </Link>
-      <Link to="/portfolio/#version-2-understanding-problems">
+      </HashLink>
+      <HashLink to="/portfolio/#version-2-understanding-problems" smooth scroll={el => scrollWithOffset(el)}>
         <div className="sidebar-section">
             Understanding Problems
         </div>
-      </Link>
-      <Link to="/portfolio/#version-2-ux-mockup">
+      </HashLink>
+      <HashLink to="/portfolio/#version-2-ux-mockup" smooth scroll={el => scrollWithOffset(el)}>
         <div className="sidebar-section">
             UX Mockup
         </div>
-      </Link>
-      <Link to="/portfolio/#version-2-engineering-the-solution">
+      </HashLink>
+      <HashLink to="/portfolio/#version-2-engineering-the-solution" smooth scroll={el => scrollWithOffset(el)}>
         <div className="sidebar-section">
             Engineering the Solution
         </div>
-      </Link>
-      <Link to="/portfolio/#version-2-finished-state">
+      </HashLink>
+      <HashLink to="/portfolio/#version-2-finished-state" smooth scroll={el => scrollWithOffset(el)}>
         <div className="sidebar-section">
             Finished State
         </div>
-      </Link>
+      </HashLink>
 
 
      {/* VERSION 3: Header */}
-      <Link to="/portfolio/#version-3">
+      <HashLink to="/portfolio/#version-3" smooth scroll={el => scrollWithOffset(el)}>
         <div className="sidebar-version-header">
             Version 3: Single-Player
         </div>
-      </Link>
+      </HashLink>
 
       {/* VERSION 3: Sections */}
-      <Link to="/portfolio/#version-3-intro">
-        <div className="sidebar-section">
-            Intro
-        </div>
-      </Link>
-      <Link to="/portfolio/#version-3-tools">
+      <HashLink to="/portfolio/#version-3-tools" smooth scroll={el => scrollWithOffset(el)}>
         <div className="sidebar-section">
             Tools
         </div>
-      </Link>
-      <Link to="/portfolio/#version-3-version-goals">
+      </HashLink>
+      <HashLink to="/portfolio/#version-3-version-goals" smooth scroll={el => scrollWithOffset(el)}>
         <div className="sidebar-section">
             Version Goals
         </div>
-      </Link>
-      <Link to="/portfolio/#version-3-identifying-problems">
+      </HashLink>
+      <HashLink to="/portfolio/#version-3-identifying-problems" smooth scroll={el => scrollWithOffset(el)}>
         <div className="sidebar-section">
             Identifying Problems
         </div>
-      </Link>
-      <Link to="/portfolio/#version-3-understanding-problems">
+      </HashLink>
+      <HashLink to="/portfolio/#version-3-understanding-problems" smooth scroll={el => scrollWithOffset(el)}>
         <div className="sidebar-section">
             Understanding Problems
         </div>
-      </Link>
-      <Link to="/portfolio/#version-3-ux-mockup">
+      </HashLink>
+      <HashLink to="/portfolio/#version-3-ux-mockup" smooth scroll={el => scrollWithOffset(el)}>
         <div className="sidebar-section">
             UX Mockup
         </div>
-      </Link>
-      <Link to="/portfolio/#version-3-engineering-the-solution">
+      </HashLink>
+      <HashLink to="/portfolio/#version-3-engineering-the-solution" smooth scroll={el => scrollWithOffset(el)}>
         <div className="sidebar-section">
             Engineering the Solution
         </div>
-      </Link>
-      <Link to="/portfolio/#version-3-finished-state">
+      </HashLink>
+      <HashLink to="/portfolio/#version-3-finished-state" smooth scroll={el => scrollWithOffset(el)}>
         <div className="sidebar-section">
             Finished State
         </div>
-      </Link>
+      </HashLink>
 
     </div>
   );
