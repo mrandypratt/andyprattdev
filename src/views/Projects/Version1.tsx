@@ -1,3 +1,4 @@
+import { codeSnippets } from "../../components/CodeSnippets"
 import { ToolTable } from "../../components/ToolTable"
 
 export const Version1 = () => {
@@ -133,6 +134,8 @@ export const Version1 = () => {
                logically part of the game logic. Excluding the Methods, below was the data structure 
                used to manage state for the game:
             </p>
+
+            {codeSnippets.V1CodeSnippet()}
 
 
         <h3 className="section-header" id="version-1-finished-state">
