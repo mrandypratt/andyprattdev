@@ -12,6 +12,10 @@
   width: 100vw;
 }
 
+li {
+  max-width: 85%;
+}
+
 .portfolio-content-wrapper {
   grid-area: portfolio-content-wrapper;
   display: flex;
@@ -20,6 +24,7 @@
   align-items: flex-start;
   padding-left: 100px;
   line-height: 1.6;
+  width: calc(100vw - 275px);
 }
 
 /* PORTFOLIO INTRO */
@@ -115,6 +120,18 @@
   width: 700px;
 }
 
+
+@media (max-width: 1100px) {
+  .yt-vid {
+    height: 350px;
+    width: 600px;
+  }
+}
+
+/*
+  Add Breakpoint for 1000px for Tablet then smaller for mobile
+*/
+
 .code-snippet {
-  max-width: 85%;
+  max-width: 80%;
 }

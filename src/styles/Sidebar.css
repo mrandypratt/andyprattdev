@@ -21,10 +21,6 @@
   overflow: auto;
 }
 
-body {
-  overflow: hidden;
-}
-
 a {
   text-decoration: none;
 }
