@@ -11,8 +11,15 @@ export const Version1 = () => {
         <h3 className="section-header" id="version-1-tools">
           Tools Used
         </h3>
-        <ToolTable version="one"/>
 
+        <ul>
+          <li>Canva</li>
+          <li>Miro</li>
+          <li>React</li>
+          <li>Material UI</li>
+          <li>GoDaddy</li>
+          <li>AWS S3 Bucket</li>
+        </ul>
 
         <h3 className="section-header" id="version-1-version-goals">
           Version Goals
