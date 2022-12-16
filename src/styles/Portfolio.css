@@ -91,3 +91,16 @@
   font-size: 1.35rem;
   font-weight: 400;
 }
+
+.mockup-pic {
+  width: 80%;
+}
+
+.yt-vid {
+  height: 392px;
+  width: 700px;
+}
+
+.code-snippet {
+  max-width: 85%;
+}

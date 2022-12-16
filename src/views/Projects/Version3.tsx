@@ -145,7 +145,7 @@ export const Version3 = () => {
         The new Mock-Up was pretty simple, and just required adding an additional step at the beginning allow user's to choose their path, adding a Feedback Component, and creating Single-Player start-up flow.
       </p>
 
-      <img src={V3Mockup} alt="V2-Mockup" width="500px"></img>
+      <img src={V3Mockup} alt="V2-Mockup" className="mockup-pic"></img>
 
       <h3 className="section-header" id="version-3-engineering-the-solution">
         Engineering the Solution
@@ -235,11 +235,11 @@ export const Version3 = () => {
       <h4 className="section-header-2">
         Feature #1: Feedback
       </h4>
-      <iframe width="560" height="315" src="https://www.youtube.com/embed/wdrH4mSdk4Y" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+      <iframe className="yt-vid" src="https://www.youtube.com/embed/wdrH4mSdk4Y" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
       <h4 className="section-header-2">
         Feature #2: Single-Player Mode
       </h4>
-      <iframe width="560" height="315" src="https://www.youtube.com/embed/aBt8_rdTIMs" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+      <iframe className="yt-vid" src="https://www.youtube.com/embed/aBt8_rdTIMs" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
     </div>
   )
 }

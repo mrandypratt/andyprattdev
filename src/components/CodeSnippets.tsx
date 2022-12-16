@@ -3,7 +3,7 @@ import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 const V1CodeSnippet = () => {
   return (
-    <SyntaxHighlighter language="javascript" style={vscDarkPlus}>
+    <SyntaxHighlighter className="code-snippet" language="javascript" style={vscDarkPlus}>
       {`
         class StatefulGame extends Game {
           constructor() {
@@ -67,7 +67,7 @@ const V1CodeSnippet = () => {
   
 const V2DataStores = () => {
   return (
-    <SyntaxHighlighter language="javascript" style={vscDarkPlus}>
+    <SyntaxHighlighter className="code-snippet" language="typescript" style={vscDarkPlus}>
       {`
         // Object that stores all Games in an arrya and houses Methods for Search and CRUD Operations
         class GameStore {
@@ -108,7 +108,7 @@ const V2DataStores = () => {
 
 const V2DataStructure = () => {
   return (
-    <SyntaxHighlighter language="javascript" style={vscDarkPlus}>
+    <SyntaxHighlighter className="code-snippet" language="typescript" style={vscDarkPlus}>
       {`
         export type SessionDataType = {
           sessionId: string;
@@ -161,7 +161,7 @@ const V2DataStructure = () => {
 
 const V3MongooseModel = () => {
   return (
-    <SyntaxHighlighter language="javascript" style={vscDarkPlus}>
+    <SyntaxHighlighter className="code-snippet" language="typescript" style={vscDarkPlus}>
       {`
           import { Schema, model } from 'mongoose'
 
@@ -189,7 +189,7 @@ const V3MongooseModel = () => {
 
 const V3APIRoute = () => {
   return (
-    <SyntaxHighlighter language="javascript" style={vscDarkPlus}>
+    <SyntaxHighlighter className="code-snippet" language="typescript" style={vscDarkPlus}>
       {`
           apiroute.post("/feedback", async (req, res) => {
 

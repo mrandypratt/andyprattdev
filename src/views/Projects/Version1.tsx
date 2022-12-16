@@ -108,7 +108,7 @@ export const Version1 = () => {
         With all this planning aside, I was able to create the following mockup:
       </p>
         
-      <img src={V1Mockup} alt="V1-Mockup" width="100%"></img>
+      <img src={V1Mockup} alt="V1-Mockup" className="mockup-pic"></img>
 
       <h3 className="section-header" id="version-1-engineering-the-solution">
         Engineering the Solution
@@ -170,7 +170,7 @@ export const Version1 = () => {
         After lots of time spend on planning and execution, I finally had a working version of the game!
       </p>
 
-      <iframe width="560" height="315" src="https://www.youtube.com/embed/rLt7-uvqtIc" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+      <iframe className="yt-vid" src="https://www.youtube.com/embed/rLt7-uvqtIc" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
     </div>
   )
 }

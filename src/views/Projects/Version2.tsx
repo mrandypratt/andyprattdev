@@ -149,7 +149,7 @@ export const Version2 = () => {
         I first mocked up a start-to-finish journey for each of the 5 categories of user at each step in their journey. (Note: Game Over/Results was part of Player & Judge paths)
       </p>
 
-      <img src={V2UserFlow} alt="5-User-Mockup" width="300px"></img>
+      <img src={V2UserFlow} alt="5-User-Mockup" className="mockup-pic"></img>
 
       <p className="portfolio-content">
         Since users will be on separate devices, it was also important to inform the user what is happening at each step of the journey (i.e. “who is the judge?”, “who is winning?”, “what do I need to do now?”, etc.). 
@@ -159,7 +159,7 @@ export const Version2 = () => {
         I expanded my original V1 Mock-Up in incorporate the two phases of play and the 5 user journeys.
       </p>
 
-      <img src={V2Mockup} alt="V2-Mockup" width="300px"></img>
+      <img src={V2Mockup} alt="V2-Mockup" className="mockup-pic"></img>
 
       <h4 className="section-header-2">
         Advanced Flow Elements
@@ -169,8 +169,8 @@ export const Version2 = () => {
         I mocked up ways to allow users to exit a lobby or game at any point in the game and determine how these cases should be handled.
       </p>
 
-      <img src={V2Session} alt="V2-Sessions" width="300px"></img>
-      <img src={V2EndGame} alt="V2-End-Game" width="300px"></img>
+      <img src={V2Session} alt="V2-Sessions" className="mockup-pic"></img>
+      <img src={V2EndGame} alt="V2-End-Game" className="mockup-pic"></img>
 
       <h3 className="section-header" id="version-2-engineering-the-solution">
         Engineering the Solution
@@ -302,7 +302,13 @@ export const Version2 = () => {
         I would essentially have Foreign keys in Session to reference an active game and in each game to reference the Sessions associated with the game.
       </p>
 
+      <h5 className="section-header-3">
+        Data Stores
+      </h5>
       {codeSnippets.V2DataStores()}
+      <h5 className="section-header-3">
+        Data Structure
+      </h5>
       {codeSnippets.V2DataStructure()}
 
       <h3 className="section-header" id="version-2-finished-state">
@@ -313,8 +319,14 @@ export const Version2 = () => {
         Abstracting many weeks and months of hard work and aggressive Googling, I finally released Version 2!
       </p>
 
-      <iframe width="560" height="315" src="https://www.youtube.com/embed/cLoCAiEKYpw" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
-      <iframe width="560" height="315" src="https://www.youtube.com/embed/7O-wDc7RE2s" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+      <h4 className="section-header-2">
+        Phase 1: Game Creation
+      </h4>
+      <iframe className="yt-vid" src="https://www.youtube.com/embed/cLoCAiEKYpw" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+      <h4 className="section-header-2">
+        Phase 2: GamePlay
+      </h4>
+      <iframe className="yt-vid" src="https://www.youtube.com/embed/7O-wDc7RE2s" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
 
     </div>
   )
