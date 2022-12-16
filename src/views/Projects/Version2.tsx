@@ -2,6 +2,7 @@ const V2UserFlow = require("../../assets/Project/V2/V2-User-Flows.png");
 const V2Mockup = require("../../assets/Project/V2/V2-Mockup.png");
 const V2Session = require("../../assets/Project/V2/V2-Sessions-Mockup.png");
 const V2EndGame = require("../../assets/Project/V2/V2-End-Game-Buttons.png");
+import { codeSnippets } from "../../components/CodeSnippets";
 
 export const Version2 = () => {
   return (
@@ -267,15 +268,53 @@ export const Version2 = () => {
         A <code>GameStore</code> object stored all active games and associated them with the appropriate clients. 
         This object was kept in-memory both to avoid additional database complexity and because I only needed semi-persistence (memory to last through the game, but not necessarily after a game is finished). 
       </p>
+      <h5 className="section-header-3">
+        Hosting/Deployment
+      </h5>
+      <p className="portfolio-content">
+        I selected AWS EC2 as my back-end hosting platform, as I had familarity with AWS and knew this would be affordable.
+        I created an architecture to help me shift between Dev, Test, and Prod environments and documented it all in a <code>CONTRIBUTING.md</code> file.
+      </p>
 
+      <ul>
+        <li>Dev</li>
+        <ul>
+          <li><code>concurrently</code> to run both react and node server at the same time.</li>
+          <li><code>.env</code> file to house environment variables and sensitive data.</li>
+        </ul>
+        <li>Test/Prod</li>
+        <ul>
+          <li>Server for both Test and Prod with environment variables for Test or Prod, respectively.</li>
+          <li>React build script to set front-end environment variable to test or prod, respectively.</li>
+          <li>Using <code>PM2</code> to run production server and store logs.</li>
+          <li>Elastic IP: used to keep a consistent URL for the EC2 instance across time and server re-boots.</li>
+        </ul>
+      </ul>
 
+      <h4 className="section-header-2">
+        Data Structures/Algorithms
+      </h4>
 
-        <h3 className="section-header" id="version-2-finished-state">
-          Finished State
-        </h3>
+      <p className="portfolio-content">
+        The things I needed to track were Clients (Users/Sessions/Sockets) and Games (Players/Cards/Winners).
+        I knew I wanted to use a JS Array to keep up with the arbitrary number of Sessions and Games that could be active at any time and reference them by ID's. 
+        Within the Arrays, I would store objects that represented Session data and Game data respectively.
+        I would essentially have Foreign keys in Session to reference an active game and in each game to reference the Sessions associated with the game.
+      </p>
 
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/cLoCAiEKYpw" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/7O-wDc7RE2s" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+      {codeSnippets.V2DataStores()}
+      {codeSnippets.V2DataStructure()}
+
+      <h3 className="section-header" id="version-2-finished-state">
+        Finished State
+      </h3>
+
+      <p className="portfolio-content">
+        Abstracting many weeks and months of hard work and aggressive Googling, I finally released Version 2!
+      </p>
+
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/cLoCAiEKYpw" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/7O-wDc7RE2s" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
 
     </div>
   )
