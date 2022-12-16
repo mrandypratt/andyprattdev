@@ -7,6 +7,7 @@
   background: #292929;
   box-shadow: 2px 0px 10px 5px rgb(18, 227, 238);
   z-index: 5;
+  max-height: calc(100vh - 120px);
   width: 250px;
   top: 70px;
   left: 20px;
@@ -17,6 +18,11 @@
   padding-left: 30px;
   text-align: left;
   grid-area: sidebar;
+  overflow: auto;
+}
+
+body {
+  overflow: hidden;
 }
 
 a {
