@@ -28,7 +28,7 @@
   text-align: center;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: left;
   flex-direction: row;
   margin-bottom: 10px;
 }
@@ -39,6 +39,16 @@
   margin-top: 5px;
   margin-bottom: 5px;
   align-items: center;
+}
+
+.project-link {
+  text-decoration: none;
+  color: white;
+  cursor: pointer;
+}
+
+.project-link:hover {
+  color:rgb(199, 199, 199)
 }
 
 .cwf-logo-portfolio {
@@ -72,6 +82,10 @@
 }
 
 /* SECTION STYLES */
+.version-wrapper {
+  width: 100%;
+}
+
 .version-header {
   font-size: 3rem;
   font-weight: 500;

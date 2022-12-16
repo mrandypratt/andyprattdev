@@ -123,8 +123,8 @@ export const Version1 = () => {
       <h5 className="section-header-3">
         Front-End
       </h5>
-      <li>React: I decided to use React due to its ease-of-use, state management, and developer experience (and because I know JavaScript).</li>
-      <li>Material UI: Third party components take some of the heavy lifting out of the design process</li>
+      <li>React: I decided to use React due to its ease-of-use, state management, and developer experience.</li>
+      <li>Material UI: Third party components take some of the heavy lifting out of the design process.</li>
       <p className="portfolio-content">
         I created a new React app, and eventually built each view as it appeared on the Wireframe by using a mix of MUI and custom UI components.
         Using flexbox and block styling, I was able to make the views mobile-first so I could optimize for full-response later.
