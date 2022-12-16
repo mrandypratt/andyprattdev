@@ -3,7 +3,7 @@ const V1Mockup = require("../../assets/Project/V1/V1-Mockup.png");
 
 export const Version1 = () => {
   return (
-    <div className="version1">
+    <div className="version-wrapper">
       <h2 className="version-header" id="version-1">
         Version 1: MVP (Single-Client)
       </h2>

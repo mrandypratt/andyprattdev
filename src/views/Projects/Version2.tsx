@@ -1,12 +1,12 @@
+import { codeSnippets } from "../../components/CodeSnippets";
 const V2UserFlow = require("../../assets/Project/V2/V2-User-Flows.png");
 const V2Mockup = require("../../assets/Project/V2/V2-Mockup.png");
 const V2Session = require("../../assets/Project/V2/V2-Sessions-Mockup.png");
 const V2EndGame = require("../../assets/Project/V2/V2-End-Game-Buttons.png");
-import { codeSnippets } from "../../components/CodeSnippets";
 
 export const Version2 = () => {
   return (
-    <div className="version1">
+    <div className="version-wrapper">
       <h2 className="version-header" id="version-2">
         Version 2: Multi-Device MVP
       </h2>
