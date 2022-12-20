@@ -1,8 +1,14 @@
+import { useEffect, useState } from 'react';
 import { HashLink } from 'react-router-hash-link';
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import "../styles/Sidebar.css";
 
-export const Sidebar = () => {
+type SidebarType = {
+  type: "desktop" | "mobile";
+  toggleSidebar?: () => void;
+}
 
+const SidebarTemplate = ({type, toggleSidebar}: SidebarType) => {
   const scrollWithOffset = (el: HTMLElement) => {
     const yCoordinate = el.getBoundingClientRect().top + window.pageYOffset;
     const yOffset = -65; 
@@ -11,22 +17,24 @@ export const Sidebar = () => {
 
   return (
     <div className="sidebar-container">
-
-
-
+  
+      {type === "mobile" && 
+        <CloseRoundedIcon className="close-sidebar-icon" onClick={toggleSidebar}/>
+      }
+  
       {/* VERSION 1: Header */}
       <HashLink to="#"  smooth>
         <div className="sidebar-version-header">
           Back to Top
         </div>
       </HashLink>
-
+  
       <HashLink to="#version-1" smooth scroll={el => scrollWithOffset(el)}>
         <div className="sidebar-version-header">
           Version 1: MVP
         </div>
       </HashLink>
-
+  
       {/* VERSION 1: Sections */}
       <HashLink to="/portfolio/#version-1-tools" smooth scroll={el => scrollWithOffset(el)}>
         <div className="sidebar-section">
@@ -63,15 +71,15 @@ export const Sidebar = () => {
             Finished State
         </div>
       </HashLink>
-
-
+  
+  
      {/* VERSION 2: Header */}
       <HashLink to="/portfolio/#version-2" smooth scroll={el => scrollWithOffset(el)}>
         <div className="sidebar-version-header">
             Version 2: Multi-Device
         </div>
       </HashLink>
-
+  
       {/* VERSION 2: Sections */}
       <HashLink to="/portfolio/#version-2-tools" smooth scroll={el => scrollWithOffset(el)}>
         <div className="sidebar-section">
@@ -108,15 +116,15 @@ export const Sidebar = () => {
             Finished State
         </div>
       </HashLink>
-
-
+  
+  
      {/* VERSION 3: Header */}
       <HashLink to="/portfolio/#version-3" smooth scroll={el => scrollWithOffset(el)}>
         <div className="sidebar-version-header">
             Version 3: Single-Player
         </div>
       </HashLink>
-
+  
       {/* VERSION 3: Sections */}
       <HashLink to="/portfolio/#version-3-tools" smooth scroll={el => scrollWithOffset(el)}>
         <div className="sidebar-section">
@@ -153,7 +161,51 @@ export const Sidebar = () => {
             Finished State
         </div>
       </HashLink>
-
     </div>
   );
+}
+
+const DesktopSidebar = () => {
+  return <SidebarTemplate type="desktop"/>
+}
+
+const MobileSidebar = () => {
+  const [ sidebarDisplay, setSidebarDisplay ] = useState(false);
+
+  const toggleSidebar = () => {
+    setSidebarDisplay(!sidebarDisplay);
+  }
+
+  if (sidebarDisplay) {
+    return (
+      <div className="mobile-sidebar-container">
+        <SidebarTemplate type="mobile" toggleSidebar={toggleSidebar}/> 
+        <div className="blur-bg" onClick={toggleSidebar}/>
+      </div>
+    )
+  } else {
+    return (
+      <button className="sidebar-button" onClick={toggleSidebar}>
+        {"<"}
+      </button>
+    )
+  }
+}
+
+export const Sidebar = (): JSX.Element => {
+  const [matches, setMatches] = useState(
+    window.matchMedia("(min-width: 1000px)").matches
+  )
+
+  useEffect(() => {
+    window
+    .matchMedia("(min-width: 1000px)")
+    .addEventListener('change', e => setMatches( e.matches ));
+  }, []);
+
+  if (matches) {
+    return <DesktopSidebar/>;
+  }
+  
+  return <MobileSidebar/>;
 }

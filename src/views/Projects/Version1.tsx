@@ -5,7 +5,7 @@ export const Version1 = () => {
   return (
     <div className="version-wrapper">
       <h2 className="version-header" id="version-1">
-        Version 1: MVP (Single-Client)
+        Version 1: Single-Client
       </h2>
 
       <h3 className="section-header" id="version-1-tools">
