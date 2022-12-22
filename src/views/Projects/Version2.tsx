@@ -8,8 +8,10 @@ export const Version2 = () => {
   return (
     <div className="version-wrapper">
       <h2 className="version-header" id="version-2">
-        Version 2: Multi-Device MVP
+        Version 2: <wbr/>Multi&#x2011;Device&nbsp;MVP
       </h2>
+
+      <hr className="version-divider"></hr>
 
       <h3 className="section-header" id="version-2-tools">
         Tools Used

@@ -5,9 +5,11 @@ export const Version3 = () => {
   return (
     <div className="version-wrapper">
       <h2 className="version-header" id="version-3">
-        Version 3: Single-Player
+        Version 3: <wbr/>Single&#x2011;Player
       </h2>
 
+      <hr className="version-divider"></hr>
+      
       <h3 className="section-header" id="version-3-tools">
         Tools Used
       </h3>

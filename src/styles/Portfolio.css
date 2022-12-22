@@ -139,9 +139,31 @@ li {
   width: 100%;
 }
 
+h1, h2, h3, h4, h5, h6 {
+  margin-bottom: 10px;
+}
+
+.version-header-container {
+  display: flex;
+  flex-direction: row;
+}
+
 .version-header {
   font-size: 3rem;
   font-weight: 500;
+  margin-bottom: 0px;
+  margin-right: 10px;
+}
+
+.version-header-title {
+  font-size: 3rem;
+  font-weight: 500;
+  margin-bottom: 0px;
+}
+
+.version-divider {
+  border-top: 1px;
+  margin-right: 10%;
 }
 
 .section-header {
@@ -187,4 +209,5 @@ li {
     max-width: 90%;
   }
 }
+
 

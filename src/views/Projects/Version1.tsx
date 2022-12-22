@@ -5,8 +5,10 @@ export const Version1 = () => {
   return (
     <div className="version-wrapper">
       <h2 className="version-header" id="version-1">
-        Version 1: Single-Client
+        Version 1: <wbr/>Single&#x2011;Client
       </h2>
+        
+      <hr className="version-divider"></hr>
 
       <h3 className="section-header" id="version-1-tools">
         Tools Used
@@ -123,8 +125,12 @@ export const Version1 = () => {
       <h5 className="section-header-3">
         Front-End
       </h5>
-      <li>React: I decided to use React due to its ease-of-use, state management, and developer experience.</li>
-      <li>Material UI: Third party components take some of the heavy lifting out of the design process.</li>
+
+      <ul>
+        <li>React: I decided to use React due to its ease-of-use, state management, and developer experience.</li>
+        <li>Material UI: Third party components take some of the heavy lifting out of the design process.</li>
+      </ul>
+
       <p className="portfolio-content">
         I created a new React app, and eventually built each view as it appeared on the Wireframe by using a mix of MUI and custom UI components.
         Using flexbox and block styling, I was able to make the views mobile-first so I could optimize for full-response later.
