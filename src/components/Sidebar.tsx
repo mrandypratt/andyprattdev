@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { HashLink } from 'react-router-hash-link';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import MenuOpenOutlinedIcon from '@mui/icons-material/MenuOpenOutlined';
 import "../styles/Sidebar.css";
 
 type SidebarType = {
@@ -178,16 +179,16 @@ const MobileSidebar = () => {
 
   if (sidebarDisplay) {
     return (
-      <div className="mobile-sidebar-container">
+    <div className="mobile-sidebar-container">
         <SidebarTemplate type="mobile" toggleSidebar={toggleSidebar}/> 
         <div className="blur-bg" onClick={toggleSidebar}/>
       </div>
     )
   } else {
     return (
-      <button className="sidebar-button" onClick={toggleSidebar}>
-        {"<"}
-      </button>
+      <div className="sidebar-button" onClick={toggleSidebar}>
+        <MenuOpenOutlinedIcon fontSize='large'/>
+      </div>
     )
   }
 }
