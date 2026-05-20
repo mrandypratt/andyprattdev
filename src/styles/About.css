@@ -5,7 +5,7 @@
     "header header"
     "content pictures"
     "footer footer";
-  grid-template-rows: 54px .3fr 2.6fr 214px;
+  grid-template-rows: 64px .3fr 2.6fr 214px;
   grid-template-columns: 1fr 1fr;
   grid-row-gap: 50px;
   grid-column-gap: 100px;
@@ -60,7 +60,7 @@
       "pictures"
       "content"
       "footer";
-    grid-template-rows: .1fr .3fr 2.6fr 1fr .3fr;
+    grid-template-rows: 64px .3fr 2.6fr 1fr .3fr;
     grid-template-columns: 1fr;
     grid-row-gap: 20px;
   }

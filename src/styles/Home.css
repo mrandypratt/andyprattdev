@@ -5,7 +5,7 @@
     "nav"
     "content"
     "footer";
-  grid-template-rows: 54px 1fr 214px;
+  grid-template-rows: 64px 1fr 214px;
   grid-template-columns: 1fr;
   grid-gap: 50px;
   height: 100vh;

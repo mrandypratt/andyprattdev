@@ -18,93 +18,93 @@ export const APDevLogo = ({format}: LogoPropsType): JSX.Element => {
         <defs>
           <g />
         </defs>
-        <g fill="#ffffff" fill-opacity="1">
+        <g fill="#ffffff" fillOpacity="1">
           <g transform="translate(5.641608, 27.838406)">
             <g>
               <path d="M 14.84375 -2.78125 L 1.203125 -8.796875 L 1.203125 -10.765625 L 14.84375 -17.578125 L 14.84375 -14.28125 L 5.453125 -9.921875 L 14.84375 -6.0625 Z M 14.84375 -2.78125 " />
             </g>
           </g>
         </g>
-        <g fill="#ffffff" fill-opacity="1">
+        <g fill="#ffffff" fillOpacity="1">
           <g transform="translate(21.708885, 27.838406)">
             <g />
           </g>
         </g>
-        <g fill="#ffffff" fill-opacity="1">
+        <g fill="#ffffff" fillOpacity="1">
           <g transform="translate(29.013739, 27.838406)">
             <g />
           </g>
         </g>
-        <g fill="#ffffff" fill-opacity="1">
+        <g fill="#ffffff" fillOpacity="1">
           <g transform="translate(36.318592, 27.838406)">
             <g />
           </g>
         </g>
-        <g fill="#ffffff" fill-opacity="1">
+        <g fill="#ffffff" fillOpacity="1">
           <g transform="translate(43.623446, 27.838406)">
             <g />
           </g>
         </g>
-        <g fill="#ffffff" fill-opacity="1">
+        <g fill="#ffffff" fillOpacity="1">
           <g transform="translate(50.9283, 27.838406)">
             <g />
           </g>
         </g>
-        <g fill="#ffffff" fill-opacity="1">
+        <g fill="#ffffff" fillOpacity="1">
           <g transform="translate(58.233153, 27.838406)">
             <g />
           </g>
         </g>
-        <g fill="#ffffff" fill-opacity="1">
+        <g fill="#ffffff" fillOpacity="1">
           <g transform="translate(65.538007, 27.838406)">
             <g />
           </g>
         </g>
-        <g fill="#ffffff" fill-opacity="1">
+        <g fill="#ffffff" fillOpacity="1">
           <g transform="translate(72.842861, 27.838406)">
             <g />
           </g>
         </g>
-        <g fill="#ffffff" fill-opacity="1">
+        <g fill="#ffffff" fillOpacity="1">
           <g transform="translate(80.147714, 27.838406)">
             <g />
           </g>
         </g>
-        <g fill="#ffffff" fill-opacity="1">
+        <g fill="#ffffff" fillOpacity="1">
           <g transform="translate(87.452568, 27.838406)">
             <g />
           </g>
         </g>
-        <g fill="#ffffff" fill-opacity="1">
+        <g fill="#ffffff" fillOpacity="1">
           <g transform="translate(94.757422, 27.838406)">
             <g />
           </g>
         </g>
-        <g fill="#ffffff" fill-opacity="1">
+        <g fill="#ffffff" fillOpacity="1">
           <g transform="translate(102.062275, 27.838406)">
             <g />
           </g>
         </g>
-        <g fill="#ffffff" fill-opacity="1">
+        <g fill="#ffffff" fillOpacity="1">
           <g transform="translate(109.367129, 27.838406)">
             <g />
           </g>
         </g>
-        <g fill="#ffffff" fill-opacity="1">
+        <g fill="#ffffff" fillOpacity="1">
           <g transform="translate(116.663542, 27.838406)">
             <g>
               <path d="M 11.484375 -20.078125 L 4 0 L 0.1875 0 L 7.671875 -20.078125 Z M 11.484375 -20.078125 " />
             </g>
           </g>
         </g>
-        <g fill="#ffffff" fill-opacity="1">
+        <g fill="#ffffff" fillOpacity="1">
           <g transform="translate(128.279907, 27.838406)">
             <g>
               <path d="M 1.203125 -6.0625 L 10.609375 -9.921875 L 1.203125 -14.28125 L 1.203125 -17.578125 L 14.84375 -10.765625 L 14.84375 -8.796875 L 1.203125 -2.78125 Z M 1.203125 -6.0625 " />
             </g>
           </g>
         </g>
-        <g fill="#ffbd59" fill-opacity="1">
+        <g fill="#ffbd59" fillOpacity="1">
           <g transform="translate(24.067064, 27.532835)">
             <g>
               <path d="M 14.8125 0 L 13.359375 -4.78125 L 6.046875 -4.78125 L 4.59375 0 L 0 0 L 7.09375 -20.15625 L 12.296875 -20.15625 L 19.40625 0 Z M 12.34375 -8.34375 L 10.890625 -13.015625 C 10.796875 -13.328125 10.671875 -13.726562 10.515625 -14.21875 C 10.367188 -14.707031 10.21875 -15.207031 10.0625 -15.71875 C 9.914062 -16.226562 9.796875 -16.671875 9.703125 -17.046875 C 9.617188 -16.671875 9.492188 -16.203125 9.328125 -15.640625 C 9.171875 -15.085938 9.019531 -14.5625 8.875 -14.0625 C 8.726562 -13.570312 8.625 -13.222656 8.5625 -13.015625 L 7.109375 -8.34375 Z M 12.34375 -8.34375 " />
@@ -116,7 +116,7 @@ export const APDevLogo = ({format}: LogoPropsType): JSX.Element => {
             </g>
           </g>
         </g>
-        <g fill="#5ce1e6" fill-opacity="1">
+        <g fill="#5ce1e6" fillOpacity="1">
           <g transform="translate(61.131464, 27.532835)">
             <g>
               <path d="M 19.1875 -10.234375 C 19.1875 -7.972656 18.753906 -6.082031 17.890625 -4.5625 C 17.023438 -3.050781 15.769531 -1.910156 14.125 -1.140625 C 12.488281 -0.378906 10.519531 0 8.21875 0 L 2.53125 0 L 2.53125 -20.078125 L 8.828125 -20.078125 C 10.929688 -20.078125 12.753906 -19.703125 14.296875 -18.953125 C 15.847656 -18.210938 17.050781 -17.109375 17.90625 -15.640625 C 18.757812 -14.179688 19.1875 -12.378906 19.1875 -10.234375 Z M 14.765625 -10.125 C 14.765625 -11.601562 14.546875 -12.820312 14.109375 -13.78125 C 13.671875 -14.738281 13.03125 -15.445312 12.1875 -15.90625 C 11.34375 -16.363281 10.296875 -16.59375 9.046875 -16.59375 L 6.78125 -16.59375 L 6.78125 -3.515625 L 8.609375 -3.515625 C 10.691406 -3.515625 12.238281 -4.066406 13.25 -5.171875 C 14.257812 -6.285156 14.765625 -7.9375 14.765625 -10.125 Z M 14.765625 -10.125 " />

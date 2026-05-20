@@ -61,7 +61,8 @@ const MobileNavbar = (): JSX.Element => {
 
           </div>
 
-          <CloseRoundedIcon className="close-feedback-icon" fontSize="large"/>
+          <CloseRoundedIcon className="close-sidebar-icon" fontSize="large"/>
+          
           <Link to="/">
             <div className="app-bar-menu-item">
                 HOME
@@ -85,7 +86,6 @@ const MobileNavbar = (): JSX.Element => {
               ABOUT
             </div>
           </Link>
-
         </div>
       }
 

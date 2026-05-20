@@ -1,9 +1,11 @@
-import { Link } from "react-router-dom";
 import { CWFLogo } from "../assets/CWFLogo";
 import { Footer } from "../components/Footer";
 import { Navbar } from "../components/Navbar";
+import { Sidebar } from "../components/Sidebar";
 import "../styles/Portfolio.css"
-
+import { Version1 } from "./Projects/Version1";
+import { Version2 } from "./Projects/Version2";
+import { Version3 } from "./Projects/Version3";
 
 export const Portfolio = () => {
   return (
@@ -11,56 +13,32 @@ export const Portfolio = () => {
 
       <Navbar/>
 
+      <Sidebar/>
+
+      {/* PORTFOLIO INTRO */}
       <div className="portfolio-content-wrapper">
-        <a className="project-link portfolio-header-container" href="http://www.cardswithfriendsgame.com" target="_blank" rel="noreferrer">
-          <h1 className="portfolio-header">
-              Cards with Friends
-          </h1>
-          <CWFLogo className="cwf-logo-portfolio"/>
-        </a>
+        <div className="version-wrapper">
+          <a className="project-link portfolio-header-container" href="http://www.cardswithfriendsgame.com" target="_blank" rel="noreferrer">
+            <h1 className="portfolio-header">
+                Cards with Friends
+            </h1>
+            <CWFLogo className="cwf-logo-portfolio"/>
+          </a>
 
-        <div className="portfolio-summary-container">
-          <p className="portfolio-summary">
-            <a className="project-link" href="http://www.cardswithfriendsgame.com" target="_blank" rel="noreferrer"><b>Cards with Friends </b></a>is a multi-player Cards Against Humanity web app.
+          <p className="portfolio-content">
+            <a className="project-link" href="http://www.cardswithfriendsgame.com" target="_blank" rel="noreferrer"><b>Cards with Friends </b></a>is a multi-player Cards Against Humanity web app.  It is also the largest product I have had the opportunity to design, build, and deploy.
           </p>
-          <p className="portfolio-summary">
-            It also happens to be my first product to design, build, and deploy!
+          <p className="portfolio-content">
+            Below is a full break-down of the process divided into 3 major versions.  I have detailed my journey from ideation, through numerous features, to its current (and likely final) state.  Just keep scrolling to see my journey!
           </p>
         </div>
+      
+        <Version1/>
+        <Version2/>
+        <Version3/>
 
-        <div className="portfolio-cta-container">
-          <h2 className="portfolio-cta">
-            Please check out my journey below!
-          </h2>
-        </div>
-
-        <Link to="project-v1" className="portfolio-project-card" id="project1">
-          <h3 className="portfolio-project-card-header">
-            Version 1:
-          </h3>
-          <h4 className="portfolio-project-card-subtitle">
-            Single-Device Gameplay (MVP)
-          </h4>
-        </Link>
-
-        <Link to="project-v2" className="portfolio-project-card" id="project2">
-          <h3 className="portfolio-project-card-header">
-            Version 2:
-          </h3>
-          <h4 className="portfolio-project-card-subtitle">
-            Multi-Device Gameplay
-          </h4>
-        </Link>
-
-        <Link to="project-v3" className="portfolio-project-card" id="project3">
-          <h3 className="portfolio-project-card-header">
-            Version 3
-          </h3>
-          <h4 className="portfolio-project-card-subtitle">
-            Single-Player: Online Simulation
-          </h4>
-        </Link>
       </div>
+
 
       <Footer/>
     </div>
