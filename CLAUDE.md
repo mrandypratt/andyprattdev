@@ -8,14 +8,14 @@ The substance lives in `docs/`. Read in this order before doing work:
 
 1. **`docs/north-star.md`** — Purpose, positioning, and decision filter for the site. The "why" before the "what." Position is: AI-first Software Engineer, systems thinker, evidence over claims.
 2. **`docs/architecture.md`** — Code-level inventory: tech stack, directory map, components, design system, known issues.
-3. **`docs/infrastructure.md`** — Hosting topology (GoDaddy DNS → CloudFront → S3), deploy flow, AWS access, open questions.
+3. **`docs/infrastructure.md`** — Hosting topology (Route 53 → CloudFront → private S3 via OAC, all CDK-managed in `/infra`), deploy flow, AWS access.
 4. **`docs/development.md`** — Local setup, common commands, git workflow, identity setup.
 
 ## Quick facts
 
 - React 17 + TypeScript 4.6 + CRA 5 — all behind current major versions (flagged in `architecture.md`).
 - No backend code in this repo. The Cards with Friends backend lives in a separate repo.
-- No tests. Default CRA ESLint. No CI/CD — deploy is manual from local.
+- No tests. Default CRA ESLint. No CI/CD — both content (`npm run deploy`) and infra (`cd infra && npx cdk deploy`) ship from local.
 - AWS access via SSO (already configured on this machine).
 
 ## Commands
@@ -25,7 +25,8 @@ The substance lives in `docs/`. Read in this order before doing work:
 | `npm install` | Install dependencies |
 | `npm start` | CRA dev server at http://localhost:3000 |
 | `npm run build` | Production build → `./build` |
-| `npm run deploy` | Runs `npm run build`, then `aws s3 sync build/ s3://www.andyprattdev.com --delete`, then CloudFront invalidation on distribution `E2NOY0IXIWZPZD` (requires `aws sso login`) |
+| `npm run deploy` | Runs `npm run build`, then `aws s3 sync build/ s3://andyprattdev.com --delete`, then CloudFront invalidation on distribution `E3OIYWCNDQ275Q` (requires `aws sso login`) |
+| `cd infra && npx cdk diff` / `npx cdk deploy` | Diff or apply the CDK stack (`AndyPrattDevSite`) that owns S3, CloudFront, Route 53, etc. CDK ships infra; `npm run deploy` ships content. |
 
 ## AWS account verification
 

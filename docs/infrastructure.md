@@ -5,31 +5,31 @@ Production hosting for andyprattdev.com.
 ## Topology
 
 ```
-   andyprattdev.com  (apex — DNS broken at GoDaddy)
-   www.andyprattdev.com
+   andyprattdev.com  (apex — canonical)
+   www.andyprattdev.com  (301 → apex)
             │
             ▼
-   ┌──────────────────┐
-   │   GoDaddy DNS    │   ← registrar + DNS
-   └────────┬─────────┘
-            │  CNAME (www only today)
-            ▼
-   ┌──────────────────────────┐
-   │   CloudFront E2NOY0IXIWZPZD │   ← CDN + TLS termination
-   │   aliases: apex + www       │   ← apex alias configured but no DNS
-   └────────┬────────────────────┘
-            │  origin
-            ▼
+   ┌────────────────────────────┐
+   │   Route 53 hosted zone     │   ← DNS (us-east-1)
+   │   A/AAAA ALIAS apex + www  │
+   └────────────┬───────────────┘
+                │ ALIAS
+                ▼
    ┌────────────────────────────────────────┐
-   │ S3 bucket: www.andyprattdev.com        │   ← static site (us-east-2)
-   │ S3 website hosting, public, index.html │
+   │   CloudFront E3OIYWCNDQ275Q            │   ← CDN + TLS termination
+   │   aliases: apex + www                  │
+   │   CloudFront Function: www → apex 301  │
+   │   SPA error-response fallback          │
+   └────────────┬───────────────────────────┘
+                │ OAC (SigV4)
+                ▼
+   ┌────────────────────────────────────────┐
+   │ S3 bucket: andyprattdev.com (private)  │   ← static site (us-east-1)
+   │ Block Public Access ON; REST endpoint  │
    └────────────────────────────────────────┘
-
-Vestigial (not in serving path today):
-   s3://andyprattdev.com (us-east-1) — RedirectAllRequestsTo www bucket's
-   S3-website endpoint. Predates the CloudFront apex alias. Safe to leave
-   alone; revisit when fixing apex DNS.
 ```
+
+GoDaddy is registrar-only: it owns the domain registration but no longer serves DNS. Authoritative DNS lives in Route 53.
 
 ## Components
 
@@ -37,28 +37,75 @@ Vestigial (not in serving path today):
 
 - **Registrar:** GoDaddy
 - **Domain:** `andyprattdev.com`
-- Production traffic resolves to `www.andyprattdev.com`. Apex (`andyprattdev.com`) behavior is not yet documented — see open questions.
+- Canonical host: `https://andyprattdev.com`. `www.andyprattdev.com/<path>` 301-redirects to `https://andyprattdev.com/<path>` (path + query preserved by a CloudFront Function).
 
 ### DNS
 
-- DNS is hosted at GoDaddy (not delegated to Route 53).
-- `www` → CloudFront distribution domain (CNAME).
-- Record types and exact target — to verify.
+- **Provider:** Route 53 (us-east-1).
+- **Hosted zone ID:** `Z071401732F7EODYXQERQ`
+- **Nameservers** (set as Custom NS at GoDaddy):
+  - `ns-716.awsdns-25.net`
+  - `ns-1071.awsdns-05.org`
+  - `ns-205.awsdns-25.com`
+  - `ns-1947.awsdns-51.co.uk`
+- Records in the zone:
+  - `A` / `AAAA` ALIAS `andyprattdev.com.` → CloudFront `E3OIYWCNDQ275Q`
+  - `A` / `AAAA` ALIAS `www.andyprattdev.com.` → CloudFront `E3OIYWCNDQ275Q`
+  - `CNAME _5f507524096e8cb13f6f90d2d8f1c59e.andyprattdev.com.` → ACM apex validation
+  - `CNAME _0ce30a398e99148d1681ad5611effba2.www.andyprattdev.com.` → ACM www validation
+- No MX/TXT/DMARC at apex (no email is served from this domain).
 
 ### CDN
 
-- **CloudFront** distribution fronts `www.andyprattdev.com`.
-- **Distribution ID:** `E2NOY0IXIWZPZD`
-- TLS — presumed ACM certificate in `us-east-1` attached to the distribution (CloudFront requires `us-east-1` for ACM).
-- Default behavior, error/404 handling, cache policies — to capture.
+- **CloudFront distribution ID:** `E3OIYWCNDQ275Q` (defined in CDK)
+- **CloudFront domain:** `d2cy8gq8xzoczi.cloudfront.net`
+- **Aliases:** `andyprattdev.com`, `www.andyprattdev.com`
+- **Behavior:**
+  - `DefaultRootObject: index.html`
+  - HTTPS-only (`REDIRECT_TO_HTTPS`)
+  - `CachingOptimized` cache policy
+  - Custom error responses: 403/404 → 200 `/index.html` (SPA client-side routing fallback)
+  - Viewer-request Function: rewrites `www.andyprattdev.com/<path>?<qs>` → 301 to apex
+- **Price class:** PRICE_CLASS_100
+- **No** access logging, WAF, or origin shield (intentional; scope creep / cost).
+
+### TLS / cert renewal
+
+- **ACM cert ARN:** `arn:aws:acm:us-east-1:730586623447:certificate/471402fa-4abc-4304-8690-87c83103a1c9`
+- **SANs:** `andyprattdev.com`, `www.andyprattdev.com`
+- **Expiry:** `2026-10-29`
+- **Validation:** DNS-validated. Both `_<token>.<name>` CNAMEs live in the Route 53 hosted zone (above), so ACM auto-renews silently. Removing or relocating those CNAMEs will silently break renewal — don't.
 
 ### Origin
 
-- **S3 bucket:** `s3://www.andyprattdev.com`
-- **Region:** `us-east-2` (Ohio)
-- **Access pattern:** S3 static website hosting (public), `index.html` for both index and error documents. Not fronted by OAI/OAC.
-- An additional bucket `s3://andyprattdev.com` (us-east-1) exists with `RedirectAllRequestsTo` pointing at the www bucket's website endpoint. It is not currently in the serving path (CloudFront has the apex alias directly) and can be left alone until apex DNS is sorted.
-- **Unrelated bucket:** `elasticbeanstalk-us-east-2-730586623447` exists in the account from an April 2022 Elastic Beanstalk session. Not related to this site; safe to leave or clean up separately.
+- **S3 bucket:** `andyprattdev.com` (us-east-1)
+- **Access pattern:** Private. Block Public Access ON. Served via CloudFront Origin Access Control (SigV4). REST endpoint, not the S3 website endpoint.
+- The bucket policy is auto-generated by CDK and grants `cloudfront.amazonaws.com` `s3:GetObject` scoped to the distribution ARN.
+- **No versioning** (rely on git + redeploy for rollback).
+- **CDK removal policy:** `RETAIN` — `cdk destroy` will not delete the bucket.
+
+### Unrelated buckets
+
+- `elasticbeanstalk-us-east-2-730586623447` (us-east-2) exists from an April 2022 Elastic Beanstalk session. Tracked as a separate board card for cleanup.
+
+## Infrastructure as code
+
+The S3 bucket, OAC, CloudFront Function, CloudFront distribution, Route 53 zone, and Route 53 records are defined in CDK at `infra/` in this repo.
+
+- **App:** TypeScript CDK (`aws-cdk-lib`)
+- **Stack:** `AndyPrattDevSite`
+- **Entrypoint:** `infra/bin/infra.ts`
+- **Stack body:** `infra/lib/site-stack.ts`
+
+| Command | What it does |
+|---------|--------------|
+| `cd infra && npx cdk synth` | Synthesize the CloudFormation template |
+| `cd infra && npx cdk diff` | Diff the synthesized template against the deployed stack |
+| `cd infra && npx cdk deploy` | Apply changes |
+
+The ACM cert is *referenced* (via `Certificate.fromCertificateArn`) — it is **not** CDK-managed, so the cert is safe from accidental teardown.
+
+Bootstrap is `aws://730586623447/us-east-1` (one-time). The `CDKToolkit` stack is owned by us; do not delete the staging bucket out-of-band.
 
 ## Deploy flow
 
@@ -70,16 +117,15 @@ npm run deploy   # build + s3 sync + CloudFront invalidation
 
 ```
 npm run build \
-  && aws s3 sync build/ s3://www.andyprattdev.com --delete \
-  && aws cloudfront create-invalidation --distribution-id E2NOY0IXIWZPZD --paths '/*'
+  && aws s3 sync build/ s3://andyprattdev.com --delete \
+  && aws cloudfront create-invalidation --distribution-id E3OIYWCNDQ275Q --paths '/*'
 ```
 
-The build step is folded in so a single command goes from source → live site. To build without deploying (e.g., to inspect `./build`), `npm run build` still works on its own.
-
+- The build step is folded in so a single command goes from source → live site. To build without deploying (e.g., to inspect `./build`), `npm run build` still works on its own.
 - `--delete` removes objects from the bucket that no longer exist in `build/`. CRA emits hash-suffixed asset filenames, so without `--delete` every prior version of every JS/CSS chunk would accumulate forever.
 - The invalidation forces edge caches to re-fetch on the next request, so changes are visible immediately rather than waiting for natural TTL expiry.
 
-**Historical note:** Before May 2026 the script targeted `s3://andyprattdev` (a bucket that does not exist), so every invocation failed with `NoSuchBucket` and the live site sat at the December 2022 upload. Once the next deploy runs, the site will refresh.
+`npm run deploy` ships **content**; CDK ships **infra**. Don't conflate them.
 
 ## AWS access
 
@@ -103,18 +149,4 @@ A pre-tool-use hook (`.claude/hooks/aws-account-guard.sh`) verifies that any age
 
 ## No CI/CD
 
-Deploys today are manual from a developer machine. Future improvement: a GitHub Actions workflow on push-to-`main` that builds and deploys, using OIDC against an AWS role so no long-lived secrets are stored in GitHub.
-
-## Open questions / to verify
-
-These are the gaps that future sessions should fill in (most can be answered with a few `aws` CLI calls after `aws sso login`):
-
-- [x] CloudFront distribution ID — `E2NOY0IXIWZPZD`
-- [x] AWS account ID and SSO profile name — `730586623447` / `mrandypratt`
-- [x] Whether the deploy script should be extended to invalidate CloudFront — done; `npm run deploy` now syncs and invalidates
-- [x] S3 bucket region — `us-east-2` for the www bucket, `us-east-1` for the vestigial apex-redirect bucket
-- [x] Apex domain behavior — CloudFront has apex as an alias on the same distribution as www; the gap is purely DNS-side at GoDaddy
-- [x] Whether the bucket is public website hosting or private behind OAI/OAC — public S3 website hosting, not OAC
-- [ ] DNS record types at GoDaddy for `@` and `www`
-- [ ] ACM certificate ARN and SANs
-- [ ] Whether to migrate DNS from GoDaddy to Route 53 (would enable ALIAS records for the apex and tighten the AWS-side surface)
+Deploys today are manual from a developer machine. Future improvement: a GitHub Actions workflow on push-to-`main` that builds and deploys, using OIDC against an AWS role so no long-lived secrets are stored in GitHub. Trade-off: CI minutes + an OIDC role to manage. Deferred for now.
