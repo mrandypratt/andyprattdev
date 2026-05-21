@@ -25,7 +25,33 @@ The substance lives in `docs/`. Read in this order before doing work:
 | `npm install` | Install dependencies |
 | `npm start` | CRA dev server at http://localhost:3000 |
 | `npm run build` | Production build → `./build` |
-| `npm run deploy` | `aws s3 sync build/ s3://andyprattdev` (requires `aws sso login`) |
+| `npm run deploy` | Runs `npm run build`, then `aws s3 sync build/ s3://www.andyprattdev.com --delete`, then CloudFront invalidation on distribution `E2NOY0IXIWZPZD` (requires `aws sso login`) |
+
+## AWS account verification
+
+Any command that touches AWS resources MUST run against the correct account. This applies to `aws *`, `cdk *`, `npx cdk *`, and `npm run deploy` (which wraps AWS calls).
+
+| Field | Value |
+|---|---|
+| Account ID | `730586623447` |
+| Friendly name | `andyprattdev` |
+| Region | `us-east-1` |
+| SSO profile | `mrandypratt` |
+| Permission set | `AdministratorAccess` |
+
+**Before running any AWS-affecting command**, verify the identity:
+
+```
+aws sts get-caller-identity --query Account --output text   # must print 730586623447
+```
+
+If it prints something else (or errors), re-authenticate:
+
+```
+aws sso login --profile mrandypratt
+```
+
+A `PreToolUse` hook (`.claude/hooks/aws-account-guard.sh`, wired in `.claude/settings.json`) enforces this automatically and will block the tool call with a `BLOCKED:` message if the account doesn't match.
 
 ## Working notes for agents
 
