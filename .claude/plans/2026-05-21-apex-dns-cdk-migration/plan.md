@@ -229,6 +229,14 @@ Resources to define in `infra/lib/site-stack.ts`:
 
 ## Phase 7: Alias cutover from old distribution to new
 
+> **Detour during execution (2026-05-21):** CloudFront's CName safety check rejects adding an alias when DNS for that alias still resolves to a different CloudFront distribution. GoDaddy's `www` record CNAMEs to the old distribution, so a CDK deploy that adds both aliases at once is refused. Apex has no such conflict (GoDaddy serves A records to its own forwarding IPs, not a CloudFront alias), so the cutover was split:
+>
+> 1. ✅ Stripped both aliases from the old distribution, then immediately restored them when the new attach failed.
+> 2. ✅ Dropped only `andyprattdev.com` from the old distribution.
+> 3. ✅ Updated CDK stack to attach apex alias + ACM cert; redeployed. Apex alias now lives on the new distribution.
+> 4. ⏳ www alias remains on the old distribution. `aws cloudfront associate-alias` also refused (`Invalid or missing alias DNS TXT records`) — TXT-validation path skipped per user choice.
+> 5. Resolution path: **do Phase 8 (NS swap) first** so Route 53 becomes authoritative and `www` resolves to the new distribution. The CDK deploy that adds www to the new distribution then passes CName check naturally. Brief www TLS-mismatch window during DNS propagation is accepted per the plan.
+
 This is the brief-`www`-downtime window the user accepted.
 
 - [ ] **Step 7a: Remove aliases from the OLD distribution** `E2NOY0IXIWZPZD`.

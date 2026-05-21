@@ -5,9 +5,12 @@ import * as cloudfront from 'aws-cdk-lib/aws-cloudfront';
 import * as origins from 'aws-cdk-lib/aws-cloudfront-origins';
 import * as route53 from 'aws-cdk-lib/aws-route53';
 import * as targets from 'aws-cdk-lib/aws-route53-targets';
+import * as acm from 'aws-cdk-lib/aws-certificatemanager';
 
 const DOMAIN_NAME = 'andyprattdev.com';
 const WWW_NAME = `www.${DOMAIN_NAME}`;
+const CERTIFICATE_ARN =
+  'arn:aws:acm:us-east-1:730586623447:certificate/471402fa-4abc-4304-8690-87c83103a1c9';
 
 const REDIRECT_FUNCTION_CODE = `function handler(event) {
   var request = event.request;
@@ -53,9 +56,16 @@ export class AndyPrattDevSiteStack extends cdk.Stack {
       code: cloudfront.FunctionCode.fromInline(REDIRECT_FUNCTION_CODE),
     });
 
+    const certificate = acm.Certificate.fromCertificateArn(this, 'Cert', CERTIFICATE_ARN);
+
     const distribution = new cloudfront.Distribution(this, 'SiteDistribution', {
       defaultRootObject: 'index.html',
       priceClass: cloudfront.PriceClass.PRICE_CLASS_100,
+      // Stage A of cutover: apex only. www stays on the old distribution until
+      // `aws cloudfront associate-alias` can atomically move it; CDK adopts www
+      // on the deploy after that.
+      domainNames: [DOMAIN_NAME],
+      certificate,
       defaultBehavior: {
         origin,
         viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
@@ -71,8 +81,6 @@ export class AndyPrattDevSiteStack extends cdk.Stack {
         { httpStatus: 403, responseHttpStatus: 200, responsePagePath: '/index.html' },
         { httpStatus: 404, responseHttpStatus: 200, responsePagePath: '/index.html' },
       ],
-      // Stage 1: no domainNames / certificate yet — aliases still live on the legacy
-      // distribution. Phase 7 adds these after stripping aliases from the old one.
     });
 
     const zone = new route53.HostedZone(this, 'Zone', { zoneName: DOMAIN_NAME });
