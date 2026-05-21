@@ -13,7 +13,8 @@
 - **status**: ready
 - **size**: M
 - **priority**: 1
-- **notes**: Root domain currently doesn't resolve; only `www` works. Inspect GoDaddy records, route apex to the CloudFront distribution or 301 to `www`. May require adding apex to the ACM cert's SANs. Capture findings in `docs/infrastructure.md` open-questions list.
+- **plan**: 2026-05-21-apex-dns-route53-migration
+- **notes**: Apex broken — GoDaddy HTTPS Domain Forwarding returns 405/empty. Plan migrates DNS to Route 53 with apex-canonical end state: single S3 bucket `andyprattdev.com` (us-east-1), CloudFront Function 301s www→apex, Route 53 A/AAAA ALIAS for both names. Requires user nameserver swap at GoDaddy. Brief downtime accepted.
 
 ### Update resume PDF
 
