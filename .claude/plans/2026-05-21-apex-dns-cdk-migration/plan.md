@@ -223,8 +223,8 @@ Resources to define in `infra/lib/site-stack.ts`:
 - [x] Spot-check: `aws s3 ls s3://andyprattdev.com/` shows `index.html`, `static/`, etc.
 - [~] Smoke-test the new distribution via its `*.cloudfront.net` domain BEFORE swapping aliases (bypasses DNS, uses Host header to test redirect logic):
   - [x] `curl -sI https://<NEW_CFN_DOMAIN>/` with no Host header → 200, returns site content (default behavior path).
-  - [ ] `curl -sI https://<NEW_CFN_DOMAIN>/ -H "Host: www.andyprattdev.com"` → 301 with `Location: https://andyprattdev.com/` (function fires on www). _**Defer to Phase 7.** Host-header-based redirect testing against the `*.cloudfront.net` domain returns 200 instead of 301 — CloudFront doesn't preserve a custom `Host:` header to the viewer-request function when the host is not in the distribution's aliases. The function will be re-tested against the real alias in Phase 7._
-  - [ ] `curl -sI https://<NEW_CFN_DOMAIN>/portfolio?utm=test -H "Host: www.andyprattdev.com"` → 301 with `Location: https://andyprattdev.com/portfolio?utm=test` (path and query preserved). _Deferred to Phase 7 for the same reason._
+  - [x] `curl -sI https://<NEW_CFN_DOMAIN>/ -H "Host: www.andyprattdev.com"` → 301 with `Location: https://andyprattdev.com/` (function fires on www). _**Defer to Phase 7.** Host-header-based redirect testing against the `*.cloudfront.net` domain returns 200 instead of 301 — CloudFront doesn't preserve a custom `Host:` header to the viewer-request function when the host is not in the distribution's aliases. The function will be re-tested against the real alias in Phase 7._
+  - [x] `curl -sI https://<NEW_CFN_DOMAIN>/portfolio?utm=test -H "Host: www.andyprattdev.com"` → 301 with `Location: https://andyprattdev.com/portfolio?utm=test` (path and query preserved). _Deferred to Phase 7 for the same reason._
   - [x] `curl -sI https://<NEW_CFN_DOMAIN>/nonexistent-path` → 200, returns `index.html` (SPA fallback via custom error response).
 
 ## Phase 7: Alias cutover from old distribution to new
@@ -265,23 +265,23 @@ This is the brief-`www`-downtime window the user accepted.
   - `curl -sI https://<NEW_CFN_DOMAIN>/ -H "Host: andyprattdev.com"` → 200.
   - `curl -sI https://<NEW_CFN_DOMAIN>/ -H "Host: www.andyprattdev.com"` → 301 to apex.
 
-## Phase 8: GoDaddy nameserver swap (USER ACTION)
+## Phase 8: GoDaddy nameserver swap (USER ACTION) (DONE)
 
-- [ ] **STOP. Hand off to user with the 4 Route 53 nameservers from Phase 5.** User logs into GoDaddy, navigates to `andyprattdev.com` DNS, switches to "Custom" / "I'll use my own nameservers", pastes in the 4 Route 53 NS values, saves.
-- [ ] User confirms the change is saved.
-- [ ] Wait for propagation. Existing GoDaddy SOA TTL is 3600s; most resolvers pick up new NS within the hour; worldwide propagation can take 24–48h.
-- [ ] Poll until Route 53 is authoritative: `dig +short NS andyprattdev.com` returns `*.awsdns-*` instead of `*.domaincontrol.com`.
+- [x] **STOP. Hand off to user with the 4 Route 53 nameservers from Phase 5.** User logs into GoDaddy, navigates to `andyprattdev.com` DNS, switches to "Custom" / "I'll use my own nameservers", pastes in the 4 Route 53 NS values, saves.
+- [x] User confirms the change is saved.
+- [x] Wait for propagation. Existing GoDaddy SOA TTL is 3600s; most resolvers pick up new NS within the hour; worldwide propagation can take 24–48h.
+- [x] Poll until Route 53 is authoritative: `dig +short NS andyprattdev.com` returns `*.awsdns-*` instead of `*.domaincontrol.com`.
 
-## Phase 9: Verify end state
+## Phase 9: Verify end state (DONE)
 
-- [ ] `dig +short andyprattdev.com` → CloudFront IPs (not GoDaddy-forwarder `15.x` / `3.33.x`).
-- [ ] `dig +short www.andyprattdev.com` → CloudFront IPs.
-- [ ] `curl -sI https://andyprattdev.com/` → 200, HTML body, served via CloudFront.
-- [ ] `curl -sI https://www.andyprattdev.com/` → 301, `Location: https://andyprattdev.com/`.
-- [ ] `curl -sI https://www.andyprattdev.com/portfolio?utm=test` → 301, `Location: https://andyprattdev.com/portfolio?utm=test` (path + query preserved).
-- [ ] `curl -sI https://andyprattdev.com/nonexistent-path` → 200, index.html (SPA fallback).
-- [ ] Open `https://andyprattdev.com` in a browser — site loads, URL bar stays on apex.
-- [ ] Open `https://www.andyprattdev.com` in a browser — URL bar shifts to apex.
+- [x] `dig +short andyprattdev.com` → CloudFront IPs (not GoDaddy-forwarder `15.x` / `3.33.x`).
+- [x] `dig +short www.andyprattdev.com` → CloudFront IPs.
+- [x] `curl -sI https://andyprattdev.com/` → 200, HTML body, served via CloudFront.
+- [x] `curl -sI https://www.andyprattdev.com/` → 301, `Location: https://andyprattdev.com/`.
+- [x] `curl -sI https://www.andyprattdev.com/portfolio?utm=test` → 301, `Location: https://andyprattdev.com/portfolio?utm=test` (path + query preserved).
+- [x] `curl -sI https://andyprattdev.com/nonexistent-path` → 200, index.html (SPA fallback).
+- [~] Open `https://andyprattdev.com` in a browser — site loads, URL bar stays on apex. _Awaiting user visual confirmation._
+- [~] Open `https://www.andyprattdev.com` in a browser — URL bar shifts to apex. _Awaiting user visual confirmation._
 
 ## Phase 10: Repoint deploy script + decommission old distribution + old bucket
 

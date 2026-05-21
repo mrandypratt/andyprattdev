@@ -61,10 +61,7 @@ export class AndyPrattDevSiteStack extends cdk.Stack {
     const distribution = new cloudfront.Distribution(this, 'SiteDistribution', {
       defaultRootObject: 'index.html',
       priceClass: cloudfront.PriceClass.PRICE_CLASS_100,
-      // Stage A of cutover: apex only. www stays on the old distribution until
-      // `aws cloudfront associate-alias` can atomically move it; CDK adopts www
-      // on the deploy after that.
-      domainNames: [DOMAIN_NAME],
+      domainNames: [DOMAIN_NAME, WWW_NAME],
       certificate,
       defaultBehavior: {
         origin,
