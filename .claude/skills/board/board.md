@@ -15,13 +15,6 @@
 - **priority**: 2
 - **notes**: One-line removal in `src/components/Footer.tsx:29`. Off-tone for the north-star "calm, technically mature" positioning.
 
-### Kill "Play my Card Game!" CTA + dead Cards with Friends links
-
-- **status**: ready
-- **size**: S
-- **priority**: 1
-- **notes**: Cards with Friends is offline. Remove the Home button at `src/views/Home.tsx:42-46` and unwrap the dead anchors in `src/views/Portfolio.tsx:21,29` that link to cardswithfriendsgame.com.
-
 ### Fix apex DNS for andyprattdev.com
 
 - **status**: ready

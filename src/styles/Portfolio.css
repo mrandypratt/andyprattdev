@@ -94,16 +94,6 @@ li {
   align-items: center;
 }
 
-.project-link {
-  text-decoration: none;
-  color: white;
-  cursor: pointer;
-}
-
-.project-link:hover {
-  color:rgb(199, 199, 199)
-}
-
 .cwf-logo-portfolio {
   width: 125px;
 }

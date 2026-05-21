@@ -39,13 +39,6 @@ export const Home = () => {
             </button>
           </Link>
 
-          <a href="http://www.cardswithfriendsgame.com" target="_blank" rel="noreferrer noopener">
-            <button className="home-button">
-              Play my Card Game!
-            </button>
-          </a>
-
-
         </div>
 
       </div>
