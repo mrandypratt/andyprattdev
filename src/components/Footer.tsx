@@ -25,8 +25,6 @@ export const Footer = () => {
           <LinkedInIcon fontSize='large' color="inherit" />
         </a>
       </div>
-
-      <p className="footer-text">I am looking for SWE opportunities	&#x1f440;</p>
     </footer>
   )
 }

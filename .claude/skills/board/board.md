@@ -8,13 +8,6 @@
 - **notes**: context (optional)
 -->
 
-### Remove "looking for SWE opportunities" footer line
-
-- **status**: ready
-- **size**: S
-- **priority**: 2
-- **notes**: One-line removal in `src/components/Footer.tsx:29`. Off-tone for the north-star "calm, technically mature" positioning.
-
 ### Fix apex DNS for andyprattdev.com
 
 - **status**: ready
