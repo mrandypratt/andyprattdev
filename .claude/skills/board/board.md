@@ -8,14 +8,6 @@
 - **notes**: context (optional)
 -->
 
-### Fix apex DNS for andyprattdev.com (via CDK adoption)
-
-- **status**: active
-- **size**: L
-- **priority**: 1
-- **plan**: 2026-05-21-apex-dns-cdk-migration
-- **notes**: Apex broken — GoDaddy HTTPS Domain Forwarding returns 405/empty. Plan now also folds in CDK adoption (TypeScript, single stack, `/infra` in repo, local-only deploys). End state: private S3 bucket `andyprattdev.com` (us-east-1) behind CloudFront OAC, new CloudFront distribution authored in CDK (old one decommissioned), Route 53 hosted zone with A/AAAA ALIAS + ACM validation CNAMEs, CloudFront Function 301s www→apex. Requires user nameserver swap at GoDaddy. Supersedes the "Scope CDK migration" card. Brief downtime on www accepted during alias cutover.
-
 ### Update resume PDF
 
 - **status**: blocked
@@ -69,26 +61,12 @@
 - **blocker**: waiting on user-sourced headshot photo
 - **notes**: Swap is trivial once the file exists. Replaces `src/assets/Profile.jpg`.
 
-### Scope CDK migration
-
-- **status**: ready
-- **size**: M
-- **priority**: 3
-- **notes**: Design doc in `docs/plans/`. Should S3 + CloudFront + ACM move into CDK? How to bootstrap? Wire to GitHub Actions on push vs. keep manual deploys? Cost considerations (user is cost-conscious about CI). Decision-only card; no infra changes.
-
 ### Dependency + build-tool upgrade plan
 
 - **status**: ready
 - **size**: M
 - **priority**: 2
 - **notes**: Design doc weighing incremental upgrades (React 17→18, TS 4.6→5, MUI 5.5→latest) vs. Vite migration (CRA is deprecated). Output: choose a path, then card the actual work. Should land before big new UI work on top of the stack.
-
-### Extend npm run deploy to invalidate CloudFront after sync
-
-- **status**: ready
-- **size**: S
-- **priority**: 3
-- **notes**: Small improvement noted in `docs/infrastructure.md`. May be folded into the CDK migration card depending on its outcome.
 
 ### Clean up vestigial elasticbeanstalk S3 bucket
 
