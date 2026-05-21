@@ -283,49 +283,36 @@ This is the brief-`www`-downtime window the user accepted.
 - [~] Open `https://andyprattdev.com` in a browser — site loads, URL bar stays on apex. _Awaiting user visual confirmation._
 - [~] Open `https://www.andyprattdev.com` in a browser — URL bar shifts to apex. _Awaiting user visual confirmation._
 
-## Phase 10: Repoint deploy script + decommission old distribution + old bucket
+## Phase 10: Repoint deploy script + decommission old distribution + old bucket (DONE)
 
-- [ ] Update `package.json` `deploy` script to target the new bucket + new distribution ID:
+- [x] Update `package.json` `deploy` script to target the new bucket + new distribution ID:
   ```
-  "deploy": "npm run build && aws s3 sync build/ s3://andyprattdev.com --delete && aws cloudfront create-invalidation --distribution-id <NEW_DIST_ID> --paths '/*'"
+  "deploy": "npm run build && aws s3 sync build/ s3://andyprattdev.com --delete && aws cloudfront create-invalidation --distribution-id E3OIYWCNDQ275Q --paths '/*'"
   ```
   This rolls in the previously-separate "Extend npm run deploy to invalidate CloudFront" board card — archive that card alongside this one.
-- [ ] Run `npm run deploy` once to confirm. The AWS account guard hook will allow it silently.
-- [ ] Visually confirm the site is current at `https://andyprattdev.com`.
-- [ ] Disable the old distribution `E2NOY0IXIWZPZD`:
-  ```
-  aws cloudfront get-distribution-config --id E2NOY0IXIWZPZD > /tmp/old-dist-disable.json
-  # Edit /tmp/old-dist-disable.json: set DistributionConfig.Enabled to false.
-  aws cloudfront update-distribution --id E2NOY0IXIWZPZD --if-match <ETag> \
-    --distribution-config file:///tmp/old-dist-disable-edited.json
-  ```
-- [ ] Wait for old distribution to reach `Deployed` with `Enabled: false` (~15 min).
-- [ ] Delete the old distribution:
-  ```
-  aws cloudfront delete-distribution --id E2NOY0IXIWZPZD --if-match <ETag>
-  ```
-- [ ] Empty + delete old bucket:
-  ```
-  aws s3 rm s3://www.andyprattdev.com --recursive
-  aws s3api delete-bucket --bucket www.andyprattdev.com --region us-east-2
-  ```
+- [x] Run `npm run deploy` once to confirm. The AWS account guard hook will allow it silently.
+- [x] Visually confirm the site is current at `https://andyprattdev.com`.
+- [x] Disable the old distribution `E2NOY0IXIWZPZD`.
+- [x] Wait for old distribution to reach `Deployed` with `Enabled: false` (~15 min).
+- [x] Delete the old distribution.
+- [x] Empty + delete old bucket (`s3://www.andyprattdev.com`, us-east-2).
 
-## Phase 11: Documentation and board cleanup
+## Phase 11: Documentation and board cleanup (DONE)
 
-- [ ] Rewrite `docs/infrastructure.md` end-to-end:
+- [x] Rewrite `docs/infrastructure.md` end-to-end:
   - New topology diagram: Route 53 → CloudFront (CDK-managed) → private S3 bucket via OAC.
   - "AWS access" / bucket region table → `us-east-1` only.
   - New "Infrastructure as code" section: `/infra` directory, single stack `AndyPrattDevSite`, local `cdk deploy` workflow, no CI/CD by choice.
   - Close all remaining open-questions checkboxes (DNS records, ACM cert SANs/ARN, Route 53 migration, CDK migration).
   - Add a "Cert renewal" subsection: expiry date `2026-10-29`, DNS-validated, CNAMEs live in Route 53.
-- [ ] Update `CLAUDE.md` commands table:
+- [x] Update `CLAUDE.md` commands table:
   - `npm run deploy` description updated for the new bucket + new distribution ID.
   - Add a row for the CDK workflow: `cd infra && cdk diff` / `cdk deploy`.
-- [ ] Archive board cards via `/board done`:
+- [x] Archive board cards via `/board done`:
   - "Fix apex DNS for andyprattdev.com (via CDK adoption)" — this card.
   - "Scope CDK migration" — superseded by this card; archive with `**status**: done` since CDK is now adopted.
   - "Extend npm run deploy to invalidate CloudFront after sync" — folded into this card; archive.
-- [ ] Commit work in succinct logical groupings. Suggested:
+- [x] Commit work in succinct logical groupings. Suggested:
   - `Scaffold CDK app in /infra` — `cdk init` output + first stack scaffold
   - `Add CDK stack for andyprattdev.com site infra` — full site-stack.ts with bucket, OAC, function, distribution, Route 53
   - `Cut aliases from old distribution to CDK-managed distribution` — old-dist alias removal + CDK redeploy with aliases
