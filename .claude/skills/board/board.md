@@ -8,13 +8,13 @@
 - **notes**: context (optional)
 -->
 
-### Fix apex DNS for andyprattdev.com
+### Fix apex DNS for andyprattdev.com (via CDK adoption)
 
-- **status**: ready
-- **size**: M
+- **status**: active
+- **size**: L
 - **priority**: 1
-- **plan**: 2026-05-21-apex-dns-route53-migration
-- **notes**: Apex broken — GoDaddy HTTPS Domain Forwarding returns 405/empty. Plan migrates DNS to Route 53 with apex-canonical end state: single S3 bucket `andyprattdev.com` (us-east-1), CloudFront Function 301s www→apex, Route 53 A/AAAA ALIAS for both names. Requires user nameserver swap at GoDaddy. Brief downtime accepted.
+- **plan**: 2026-05-21-apex-dns-cdk-migration
+- **notes**: Apex broken — GoDaddy HTTPS Domain Forwarding returns 405/empty. Plan now also folds in CDK adoption (TypeScript, single stack, `/infra` in repo, local-only deploys). End state: private S3 bucket `andyprattdev.com` (us-east-1) behind CloudFront OAC, new CloudFront distribution authored in CDK (old one decommissioned), Route 53 hosted zone with A/AAAA ALIAS + ACM validation CNAMEs, CloudFront Function 301s www→apex. Requires user nameserver swap at GoDaddy. Supersedes the "Scope CDK migration" card. Brief downtime on www accepted during alias cutover.
 
 ### Update resume PDF
 
