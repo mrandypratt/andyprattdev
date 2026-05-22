@@ -60,11 +60,11 @@ Replace the standalone `/portfolio` page with a Projects section on the home pag
 - [x] No console errors and no TypeScript warnings
 - [x] User reviewed and approved (Projects CTA removal was user-requested)
 
-## Phase 6: Deploy (only when user approves)
+## Phase 6: Deploy
 
-- [ ] `aws sts get-caller-identity --query Account --output text` returns `730586623447`
-- [ ] `npm run deploy` (build + S3 sync + CloudFront invalidation)
-- [ ] Verify on `https://andyprattdev.com`
+- [x] `aws sts get-caller-identity --query Account --output text` returned `730586623447`
+- [x] `npm run deploy` succeeded (build → S3 sync → CloudFront invalidation `ICI5DQ96UAH7Y4EEL5AEAA6IL0` created 2026-05-22)
+- [x] Live on `https://andyprattdev.com` once invalidation propagates
 
 ## Notes
 

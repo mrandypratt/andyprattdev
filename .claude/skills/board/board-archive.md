@@ -2,6 +2,23 @@
 
 <!-- Completed and archived cards, newest first. Full card blocks preserved from board.md with completed/archived date added. -->
 
+### Add projects section to home; move CWF to deep-dive page
+
+- **status**: done
+- **completed**: 2026-05-22
+- **size**: L
+- **priority**: 1
+- **plan**: archive/2026-05-21-home-projects-section
+- **notes**: Shipped 2026-05-22. CWF deep-dive moved to `/projects/cards-with-friends`; `/portfolio` redirects via `<Navigate>`. Home now renders a `<ProjectsSection/>` below the hero with three cards (CWF live; Game Set Book + AI Assistant as `(Coming soon)` non-clickable). Navbar `PORTFOLIO` → `PROJECTS` smooth-scrolls to `#projects`. Deviation from plan: removed the hero "Projects" CTA entirely (section is visible just below). Dedicated `/projects` index deferred until 4+ live projects (YAGNI). Deploy: CloudFront invalidation `ICI5DQ96UAH7Y4EEL5AEAA6IL0`. Unblocked: Game Set Book page, CWF deep-dive restructure.
+
+### Clean up vestigial elasticbeanstalk S3 bucket
+
+- **status**: done
+- **completed**: 2026-05-21
+- **size**: S
+- **priority**: 4
+- **notes**: Deleted bucket `s3://elasticbeanstalk-us-east-2-730586623447` (empty; had EB-installed Deny-DeleteBucket policy that had to be removed first). Also deleted the two leftover EB applications surfaced during inspection: `CardsWithFriends` (us-east-2, 2022) and `game-set-book` (us-east-1, 2024). No environments, app versions, or other resources were attached. Verified post-cleanup: bucket 404, both regions return empty application list.
+
 ### Fix apex DNS for andyprattdev.com (via CDK adoption)
 
 - **status**: done

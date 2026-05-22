@@ -16,14 +16,6 @@
 - **blocker**: waiting on updated resume content from user
 - **notes**: File swap at `src/assets/AndyPrattResume.pdf`. Content authoring is the user's task; this card unblocks when the new PDF is ready.
 
-### Add projects section to home; move CWF to deep-dive page
-
-- **status**: pipeline
-- **size**: L
-- **priority**: 1
-- **plan**: 2026-05-21-home-projects-section
-- **notes**: Committed locally on `main`; Phase 6 (deploy via `npm run deploy`) pending user approval. Deviation from plan: the "Projects" CTA on the home hero was removed entirely (section sits directly below hero, scroll-to-visible was redundant) — home CTAs are now Resume + About Me. Unblocks: Game Set Book page, CWF deep-dive restructure.
-
 ### Add /projects/game-set-book page (tennis scheduling app)
 
 - **status**: ready
