@@ -39,10 +39,11 @@
 
 ### Rewrite /about around engineering identity
 
-- **status**: ready
+- **status**: active
 - **size**: M
 - **priority**: 2
-- **notes**: Replace the three-paragraph essay (`src/views/About.tsx`) with north-star-aligned content: how I work, what I'm exploring with AI, values. Restyle layout. Personal/hobbies become a small aside, not a section header.
+- **plan**: 2026-05-22-about-page-iteration
+- **notes**: Structural rewrite landed (5-chapter layout, photo grid, new home hero with separate mobile photo). Remaining work tracked as checkboxes in the plan: tone iteration per section + photo recrops (Chicago + PNW first).
 
 ### New headshot for About + Home
 

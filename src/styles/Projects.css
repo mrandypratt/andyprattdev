@@ -169,6 +169,56 @@
   }
 }
 
+/* About card — layout: text on the left, photo on the right (desktop).
+   On mobile the in-card photo is hidden (a standalone photo above the card
+   takes over — see .home-hero-photo-standalone in Home.css). */
+.about-card {
+  flex-direction: row;
+  align-items: center;
+  gap: 40px;
+  padding: 36px 36px;
+}
+
+.about-card-text {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.about-card-photo {
+  width: 320px;
+  height: 320px;
+  border-radius: 24px;
+  object-fit: cover;
+  border: 2px solid #ffffff;
+  flex-shrink: 0;
+  transition: border-color 0.15s ease;
+}
+
+.project-card-link:hover .about-card .about-card-photo,
+.home-hero-link:hover .about-card .about-card-photo {
+  border-color: #5ce1e6;
+}
+
+/* Mobile: hide the in-card photo and let the standalone one above take over */
+@media (max-width: 720px) {
+  .about-card {
+    flex-direction: column;
+    gap: 0;
+    padding: 24px 28px;
+  }
+
+  .about-card-photo {
+    display: none;
+  }
+
+  .about-card-text {
+    width: 100%;
+  }
+}
+
 /* About card — interior typography for the hero copy */
 .about-card-greeting {
   font-size: 1rem;

@@ -1,89 +1,233 @@
+/* About page — single-column flow layout with photo-anchored chapters. */
+
 .about-container {
-  display: grid;
-  grid-template-areas: 
-    "nav nav"
-    "header header"
-    "content pictures"
-    "footer footer";
-  grid-template-rows: 64px .3fr 2.6fr 214px;
-  grid-template-columns: 1fr 1fr;
-  grid-row-gap: 50px;
-  grid-column-gap: 100px;
-  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
   width: 100vw;
+  padding-top: 64px; /* reserves space for the fixed Navbar */
+  box-sizing: border-box;
 }
 
-.about-header {
-  grid-area: header;
+.about-main {
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 40px 24px 80px 24px;
+  box-sizing: border-box;
+  flex: 1 0 auto;
+}
+
+/* INTRO */
+.about-intro {
   text-align: center;
-  font-weight: 500;
+  margin-bottom: 56px;
+}
+
+.about-title {
   font-size: 3rem;
-  margin: auto;
-}
-
-.about-content {
-  grid-area: content;
-  max-width: 500px;
-  font-weight: 300;
-  padding-left: 10%;
-  font-size: 1.10rem;
-  align-self: top;
-  justify-self: right;
-}
-
-.about-section-header {
   font-weight: 500;
+  margin: 0 0 16px 0;
+  color: #ffbd59;
 }
 
-.about-pictures {
-  grid-area: pictures;
-  align-self: top;
-  padding-top: 1rem;
+.about-lede {
+  font-size: 1.15rem;
+  font-weight: 300;
+  line-height: 1.6;
+  color: #d9d9d9;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
-.profile-pic {
-  max-width: 450px;
-  border: 5px solid white;
+/* CHAPTERS */
+.about-chapter {
+  margin-bottom: 56px;
 }
 
-@media (max-width: 1200px) { /* Medium Screens */
-  .profile-pic {
-    max-width: 80%;
+.about-chapter-header {
+  font-size: 1.75rem;
+  font-weight: 500;
+  margin: 0 0 16px 0;
+  color: #5ce1e6;
+}
+
+.about-chapter-body p,
+.about-chapter-intro {
+  font-size: 1.1rem;
+  font-weight: 300;
+  line-height: 1.7;
+  margin: 0 0 16px 0;
+}
+
+.about-chapter-intro {
+  color: #d9d9d9;
+  margin-bottom: 28px;
+}
+
+/* PHOTO GRID */
+.about-photo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 8px;
+}
+
+.about-photo {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.about-photo-img,
+.about-photo-placeholder {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 8px;
+  border: 2px solid #ffffff;
+  box-sizing: border-box;
+  display: block;
+  object-fit: cover;
+}
+
+.about-photo-placeholder {
+  background:
+    repeating-linear-gradient(
+      45deg,
+      #2c2c2c,
+      #2c2c2c 12px,
+      #333333 12px,
+      #333333 24px
+    );
+  border-color: #555;
+  border-style: dashed;
+  color: #888;
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 12px;
+}
+
+.about-photo-placeholder-label {
+  display: inline-block;
+}
+
+.about-photo-caption {
+  font-size: 0.95rem;
+  font-weight: 300;
+  line-height: 1.5;
+  color: #b8b8b8;
+}
+
+/* FINAL CHAPTER */
+.about-list {
+  font-size: 1.1rem;
+  font-weight: 300;
+  line-height: 1.7;
+  padding-left: 20px;
+  margin: 0 0 24px 0;
+}
+
+.about-list li {
+  margin-bottom: 6px;
+  max-width: none;
+}
+
+.about-outro {
+  font-size: 1.05rem;
+  font-weight: 300;
+  line-height: 1.7;
+  color: #d9d9d9;
+  margin: 0;
+}
+
+.about-link {
+  color: #5ce1e6;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(92, 225, 230, 0.4);
+}
+
+.about-link:hover {
+  border-bottom-color: #5ce1e6;
+}
+
+/* TABLET */
+@media (max-width: 900px) {
+  .about-photo-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  .about-title {
+    font-size: 2.5rem;
+  }
+
+  .about-chapter-header {
+    font-size: 1.5rem;
   }
 }
 
-@media (max-width: 880px) { /* Medium Screens  */
-  .about-container {
-    grid-template-areas: 
-      "nav"
-      "header"
-      "pictures"
-      "content"
-      "footer";
-    grid-template-rows: 64px .3fr 2.6fr 1fr .3fr;
+/* MOBILE */
+@media (max-width: 560px) {
+  .about-main {
+    padding: 28px 20px 60px 20px;
+  }
+
+  .about-intro {
+    margin-bottom: 40px;
+  }
+
+  .about-title {
+    font-size: 2rem;
+  }
+
+  .about-lede {
+    font-size: 1.05rem;
+  }
+
+  .about-chapter {
+    margin-bottom: 44px;
+  }
+
+  .about-chapter-header {
+    font-size: 1.35rem;
+  }
+
+  .about-chapter-body p,
+  .about-chapter-intro {
+    font-size: 1rem;
+  }
+
+  .about-photo-grid {
     grid-template-columns: 1fr;
-    grid-row-gap: 20px;
-  }
-
-  .about-pictures {
-    text-align: center;
-  }
-
-  .about-content {
-    font-weight: 300;
-    padding-left: 10%;
-    padding-right: 10%;
-    font-size: 1.10rem;
-    justify-self: center;
-  }
-
-  .profile-pic {
-    max-width: 350px;
+    gap: 18px;
   }
 }
 
-@media (max-width: 410px) { /* Small Screens  */
-  .profile-pic {
-    max-width: 80%;
-  }
-}
+/*
+  ============================================================================
+  PHOTO ASSET SPEC (referenced by About.tsx)
+  ----------------------------------------------------------------------------
+  Storage: src/assets/about/
+  Format:  .jpg preferred (smaller than .png for photos)
+  Aspect:  Crop landscape 4:3 — the grid enforces 4:3 via aspect-ratio.
+  Size:    ~1200x900 px is plenty (downscaled by the browser at all breakpoints).
+           Anything larger just inflates bundle size.
+
+  Filenames the About page is wired for:
+    - tennis-florida.jpg
+    - pacific-northwest.jpg
+    - chicago.jpg
+    - denver.jpg
+    - switzerland.jpg
+    - northeast.jpg
+
+  To wire one up: uncomment the matching import line at the top of About.tsx
+  and uncomment the matching `src={...}` line on the corresponding <PhotoFrame>.
+  ============================================================================
+*/
