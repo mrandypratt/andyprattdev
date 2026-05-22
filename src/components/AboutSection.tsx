@@ -29,7 +29,7 @@ export const AboutSection = () => (
           <p className="about-card-tail">
             who loves building products and solving problems.
           </p>
-          <div className="project-card-cta">Deep dive &rarr;</div>
+          <div className="project-card-cta">My story &rarr;</div>
         </div>
       </div>
     </Link>

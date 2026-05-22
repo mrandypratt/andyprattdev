@@ -188,9 +188,9 @@
 }
 
 .about-card-photo {
-  width: 320px;
-  height: 320px;
-  border-radius: 24px;
+  width: 274px;
+  height: 274px;
+  border-radius: 21px;
   object-fit: cover;
   border: 2px solid #ffffff;
   flex-shrink: 0;
