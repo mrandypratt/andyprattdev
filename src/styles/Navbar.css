@@ -102,49 +102,13 @@ a.nav-dropdown-item:hover {
   font-size: 0.75rem;
 }
 
-/* Projects sub-list (mobile menu) — visually nested under PROJECTS */
-.app-bar-menu-subgroup {
-  align-self: center;
-  text-align: left;
-  padding-left: 12px;
-  border-left: 2px solid #5ce1e6;
-  margin: 4px 0 10px 0;
-}
-
-.app-bar-menu-subgroup .app-bar-menu-item {
-  margin: 8px 0;
-}
-
-.app-bar-menu-subitem {
-  font-size: 0.875rem;
-  text-transform: uppercase;
-  letter-spacing: 0.02857em;
-  font-weight: 500;
-}
-
-.app-bar-menu-subitem::before {
-  content: "▸ ";
-  color: #5ce1e6;
-  margin-right: 4px;
-}
-
 .app-bar-menu-item-disabled {
-  color: #777;
+  opacity: 0.4;
   cursor: default;
 }
 
-.app-bar-menu-item-disabled::before {
-  color: #5ce1e6;
-  opacity: 0.5;
-}
-
-.app-bar-menu-coming {
-  color: #555;
-  font-size: 0.7rem;
-  text-transform: none;
-  letter-spacing: 0;
-  font-weight: 400;
-  margin-left: 4px;
+.app-bar-menu-item-disabled:hover {
+  color: white; /* override the menu-item hover so disabled items look static */
 }
 
 .app-bar {
@@ -157,7 +121,7 @@ a.nav-dropdown-item:hover {
 }
 
 .app-bar-menu {
-  padding-top: 60px;
+  padding: 56px 0 20px 0;
   position: fixed;
   background: #292929;
   box-shadow: -5px 0px 10px 5px rgb(18, 227, 238);
@@ -166,13 +130,12 @@ a.nav-dropdown-item:hover {
   z-index: 1000;
   top:0;
   right:0;
-  width: 40vw;
+  width: 80vw;
+  max-width: 400px;
   height: 100vh;
   display: flex;
   flex-direction: column;
   transition: 0.5s;
-  text-align: center;
-  /* transition:ease; */
 }
 
 .blur-bg {
@@ -188,30 +151,42 @@ a.nav-dropdown-item:hover {
 }
 
 .app-bar-menu-item {
-  margin: 15px;
+  margin: 0;
+  padding: 14px 28px;
   color: white;
   text-decoration: none;
   font-family: Roboto, Helvetica, Arial, sans-serif;
-  font-weight: 500;
-  font-size: 0.875rem;
-  line-height: 1.75;
-  letter-spacing: 0.02857em;
+  font-size: 1rem;
+  line-height: 1.4;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
 .app-bar-menu-item:hover {
   color:  #b3b3b3;
 }
 
-.close-feedback-icon {
-  color: white;
-  cursor: pointer;
-  position: fixed;
-  top: 0;
-  right: 0;
-  padding-right: 30px;
-  padding-top: 10px;
+.app-bar-menu-parent {
+  font-weight: 600;
 }
 
-.close-feedback-icon:hover {
+.app-bar-menu-child {
+  font-weight: 400;
+  padding-left: 56px;
+}
+
+.app-bar-menu-group-start {
+  margin-top: 20px;
+}
+
+.close-sidebar-icon {
+  color: white;
+  cursor: pointer;
+  position: absolute;
+  top: 12px;
+  right: 16px;
+}
+
+.close-sidebar-icon:hover {
   color: #b3b3b3;
 }

@@ -2,6 +2,15 @@
 
 <!-- Completed and archived cards, newest first. Full card blocks preserved from board.md with completed/archived date added. -->
 
+### Restyle Home hero + section headers to match Project Card pattern
+
+- **status**: done
+- **completed**: 2026-05-22
+- **size**: M
+- **priority**: 1
+- **plan**: archive/2026-05-22-restyle-home-hero-as-about-card
+- **notes**: Shipped 2026-05-22. Home hero replaced with a `<AboutSection/>` rendering a Project-Card-styled About card that links to `/about` (Deep dive →). Scope grew during execution to include a desktop navbar redesign (added HOME link, replaced single PROJECTS HashLink with click-to-toggle dropdown listing Cards with Friends + disabled Game Set Book/AI Assistant items, Escape/click-outside to close) and a full mobile drawer rewrite (Option A: 80vw wide, left-aligned, hierarchy via weight+indent rather than ornaments, disabled state via 0.4 opacity, dropped the teal vertical bar and arrow prefixes). Two follow-up fixes: `padding-top: 64px` on `.home-container` to restore navbar offset, `z-index: 1000` on `.navbar` so its stacking context elevates above page content. Deleted dead Home.css rules (hero/button styles, orange-pop, blue-pop, blue-split-text).
+
 ### Add projects section to home; move CWF to deep-dive page
 
 - **status**: done

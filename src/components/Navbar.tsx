@@ -114,57 +114,50 @@ const MobileNavbar = (): JSX.Element => {
         <MenuIcon fontSize="large"/>
       </div>
 
-      {menuDisplay && 
+      {menuDisplay &&
         <div className="app-bar-menu" onClick={toggleMenu}>
-
-          <div className="app-bar-header">
-
-          </div>
-
           <CloseRoundedIcon className="close-sidebar-icon" fontSize="large"/>
-          
+
           <Link to="/">
-            <div className="app-bar-menu-item">
-                HOME
+            <div className="app-bar-menu-item app-bar-menu-parent">
+              HOME
             </div>
           </Link>
 
           <HashLink to="/#projects" smooth scroll={(el) => scrollToProjects(el as HTMLElement)}>
-            <div className="app-bar-menu-item">
+            <div className="app-bar-menu-item app-bar-menu-parent app-bar-menu-group-start">
               PROJECTS
             </div>
           </HashLink>
 
-          <div className="app-bar-menu-subgroup">
-            <Link to="/projects/cards-with-friends">
-              <div className="app-bar-menu-item app-bar-menu-subitem">
-                Cards with Friends
-              </div>
-            </Link>
-
-            <div
-              className="app-bar-menu-item app-bar-menu-subitem app-bar-menu-item-disabled"
-              onClick={(e) => e.stopPropagation()}
-            >
-              Game Set Book <span className="app-bar-menu-coming">(coming soon)</span>
+          <Link to="/projects/cards-with-friends">
+            <div className="app-bar-menu-item app-bar-menu-child">
+              CARDS WITH FRIENDS
             </div>
+          </Link>
 
-            <div
-              className="app-bar-menu-item app-bar-menu-subitem app-bar-menu-item-disabled"
-              onClick={(e) => e.stopPropagation()}
-            >
-              AI Assistant <span className="app-bar-menu-coming">(coming soon)</span>
-            </div>
+          <div
+            className="app-bar-menu-item app-bar-menu-child app-bar-menu-item-disabled"
+            onClick={(e) => e.stopPropagation()}
+          >
+            GAME SET BOOK
+          </div>
+
+          <div
+            className="app-bar-menu-item app-bar-menu-child app-bar-menu-item-disabled"
+            onClick={(e) => e.stopPropagation()}
+          >
+            AI ASSISTANT
           </div>
 
           <a href={resume} target="_blank" rel="noreferrer noopener">
-            <div className="app-bar-menu-item">
+            <div className="app-bar-menu-item app-bar-menu-parent app-bar-menu-group-start">
               RESUME
             </div>
           </a>
 
           <Link to="/about">
-            <div className="app-bar-menu-item">
+            <div className="app-bar-menu-item app-bar-menu-parent">
               ABOUT
             </div>
           </Link>

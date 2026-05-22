@@ -52,14 +52,6 @@
 - **blocker**: waiting on user-sourced headshot photo
 - **notes**: Swap is trivial once the file exists. Replaces `src/assets/Profile.jpg`.
 
-### Restyle Home hero + section headers to match Project Card pattern
-
-- **status**: ready
-- **size**: M
-- **priority**: 1
-- **plan**: 2026-05-22-restyle-home-hero-as-about-card
-- **notes**: Plan extracts a new `AboutSection.tsx` (parallel to `ProjectsSection.tsx`), reuses `.project-card` / `.project-card-live` / `.project-card-cta` classes directly for the About card (no `<ProjectCard>` change needed), adds a small `.about-card-*` ruleset for hero typography, and deletes the dead hero CSS in `Home.css`. Resume already lives only in `Navbar.tsx` — no nav change. Reference screenshot attached to the originating board request.
-
 ### Dependency + build-tool upgrade plan
 
 - **status**: ready

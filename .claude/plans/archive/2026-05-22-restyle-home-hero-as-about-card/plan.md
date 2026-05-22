@@ -115,21 +115,57 @@ Exact font sizes will be tuned in the browser against the screenshot during Phas
 
 ## Phase 4: Browser verification
 
-- [ ] On desktop (>=1100px), confirm: "About Me" header and "Projects" header have identical typography, weight, color, and centering
-- [ ] On desktop, confirm: vertical spacing between sections matches the gap between Projects-section and the existing Footer
-- [ ] On desktop, confirm: About card hover state matches Cards-with-Friends hover (teal border, slight upward translate, lighter background)
-- [ ] On desktop, confirm: "Deep dive →" on the About card matches the CWF "Deep dive →" exactly (color, weight, position)
-- [ ] On desktop, confirm: clicking anywhere on the About card navigates to `/about`
-- [ ] On medium screens (502–1100px), confirm: card padding and font scaling look right
-- [ ] On mobile (<=502px), confirm: About card and Projects cards stack cleanly with consistent gutter
-- [ ] In the top nav (both desktop and mobile menu), confirm: PROJECTS / RESUME / ABOUT all still work; RESUME still opens the PDF
-- [ ] Confirm Home content area has NO buttons (no Resume button, no About Me button)
-- [ ] Confirm colors: greeting + tail are gray (#aaa), "Andy Pratt." is orange (#ffbd59), "Software Engineer" is teal (#5ce1e6)
+- [x] On desktop (>=1100px), confirm: "About Me" header and "Projects" header have identical typography, weight, color, and centering — resolved by removing the "About Me" header entirely (the card alone signals intent)
+- [x] On desktop, confirm: vertical spacing between sections matches the gap between Projects-section and the existing Footer
+- [x] On desktop, confirm: About card hover state matches Cards-with-Friends hover (teal border, slight upward translate, lighter background)
+- [x] On desktop, confirm: "Deep dive →" on the About card matches the CWF "Deep dive →" exactly (color, weight, position)
+- [x] On desktop, confirm: clicking anywhere on the About card navigates to `/about`
+- [x] On medium screens (502–1100px), confirm: card padding and font scaling look right
+- [x] On mobile (<=502px), confirm: About card and Projects cards stack cleanly with consistent gutter
+- [x] In the top nav (both desktop and mobile menu), confirm: PROJECTS / RESUME / ABOUT all still work; RESUME still opens the PDF
+- [x] Confirm Home content area has NO buttons (no Resume button, no About Me button)
+- [x] Confirm colors: greeting + tail are gray (#aaa), "Andy Pratt." is orange (#ffbd59), "Software Engineer" is teal (#5ce1e6)
+- [x] Fix: Home page lost the 64px top offset for the fixed navbar — added `padding-top: 64px` + `box-sizing: border-box` on `.home-container` to match About/Portfolio layouts
+- [x] Fix: project cards bleeding through the mobile drawer — added `z-index: 1000` on `.navbar` (was relying on tree order and getting beaten by sibling content)
 
-## Phase 5: Commit
+## Phase 5: First commit (About card + initial navbar work)
 
-- [ ] Single commit: `feat(home): restyle hero as About card under "About Me" section header`
-- [ ] Push and `npm run deploy` (separate decision — confirm with user before deploying)
+- [x] Commit: `Restyle Home hero as About card; add Projects dropdown to navbar`
+- [x] Push branch `restyle-home-hero-as-about-card` to origin
+
+## Phase 6: Scope additions — Navbar redesign
+
+Discovered during Phase 4 review: the existing PROJECTS link wasn't going to do the new home page justice, and the mobile drawer was visibly broken. These changes weren't in the original mapping but were necessary to ship.
+
+### Desktop navbar
+- [x] Add HOME link to the far-left of `.nav-button-container` (logo also links to /, but explicit HOME helps discoverability)
+- [x] Replace single PROJECTS HashLink with a click-to-toggle dropdown:
+  - PROJECTS becomes a `<button>` trigger with a chevron indicator (▾ closed / ▴ open)
+  - Dropdown menu renders Cards with Friends (live link), Game Set Book (disabled), AI Assistant (disabled)
+  - Click outside or press Escape to close (useEffect + useRef pattern)
+  - ARIA: `aria-expanded`, `aria-haspopup="menu"`, `role="menu"`/`role="menuitem"`, `aria-disabled`
+- [x] Widen `.nav-button-container` from 300px → 420px to fit 4 items
+- [x] Fix pre-existing invalid CSS: `align-self: "right"` (quoted string, no-op) → `align-items: center`
+- [x] Reset `<button>` chrome on `.nav-dropdown-trigger` (background/border/padding) without overriding font — so the button text matches `.desktop-nav-button` styling exactly
+
+### Mobile drawer (Option A — left-aligned wide drawer)
+After iterating through teal-bar/arrow ornaments and finding them visually noisy, settled on this principled rewrite:
+- [x] Widen drawer: 40vw → 80vw (capped at 400px so it doesn't get huge on tablets)
+- [x] Left-align all items (dropped `text-align: center` on `.app-bar-menu`)
+- [x] Uniform typography: 1rem uppercase with `letter-spacing: 0.05em` for every item
+- [x] Hierarchy via weight + indent — parents (HOME, PROJECTS, RESUME, ABOUT) at `font-weight: 600`, `padding: 14px 28px`; children (CARDS WITH FRIENDS, GAME SET BOOK, AI ASSISTANT) at `font-weight: 400`, `padding-left: 56px`
+- [x] Group separation: PROJECTS and RESUME get `margin-top: 20px` to create breathing room
+- [x] Disabled state via opacity (0.4) only — no separate "(coming soon)" label, no ornament
+- [x] Dropped all decorative classes: `.app-bar-menu-subgroup`, `.app-bar-menu-section-label`, `.app-bar-menu-subitem::before` (arrow), `.app-bar-menu-coming` (label)
+- [x] Fix close icon styling: `.close-sidebar-icon` was referenced in JSX but had no CSS — added `position: absolute; top: 12px; right: 16px`. Renamed dead `.close-feedback-icon` rule.
+- [x] Removed empty `.app-bar-header` div
+
+## Phase 7: Final commit + deploy
+
+- [ ] Single commit covering the navbar redesign + plan/board archival
+- [ ] Push
+- [ ] Verify AWS account (`aws sts get-caller-identity --query Account --output text` → `730586623447`)
+- [ ] `npm run deploy` (builds, syncs to S3, invalidates CloudFront E3OIYWCNDQ275Q)
 
 ## Notes
 
@@ -138,3 +174,4 @@ Exact font sizes will be tuned in the browser against the screenshot during Phas
 - **Out of scope:** rewriting `/about` page content (separate board card: "Rewrite /about around engineering identity"). The two cards may want to land in the same release for consistency, but they ship independently.
 - **Color tokens are duplicated.** `#ffbd59`, `#5ce1e6`, `#aaa` are hardcoded across multiple CSS files. Not refactoring in this plan — would expand scope. Worth a future card to centralize via CSS custom properties.
 - **CWF "Deep dive →" color.** In `Projects.css` `.project-card-cta` is `#ffbd59` (orange); the user's reference screenshot shows it teal-ish. Not changing in this plan — the About card inherits whatever the existing rule says so it stays consistent with the CWF card. If the screenshot's teal CTA is the actual desired state, file a separate card.
+- **Follow-up option B left open:** if the mobile drawer's PROJECTS sub-items feel too noisy by default, the next iteration would make PROJECTS collapsible with a right-aligned chevron and children hidden until tap.
