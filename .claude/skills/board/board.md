@@ -45,18 +45,24 @@
 - **plan**: 2026-05-22-about-page-iteration
 - **notes**: Structural rewrite landed (5-chapter layout, photo grid, new home hero with separate mobile photo). Remaining work tracked as checkboxes in the plan: tone iteration per section + photo recrops (Chicago + PNW first).
 
-### New headshot for About + Home
-
-- **status**: blocked
-- **size**: S
-- **priority**: 3
-- **blocker**: waiting on user-sourced headshot photo
-- **notes**: Swap is trivial once the file exists. Replaces `src/assets/Profile.jpg`.
-
 ### Dependency + build-tool upgrade plan
 
 - **status**: ready
 - **size**: M
 - **priority**: 2
 - **notes**: Design doc weighing incremental upgrades (React 17→18, TS 4.6→5, MUI 5.5→latest) vs. Vite migration (CRA is deprecated). Output: choose a path, then card the actual work. Should land before big new UI work on top of the stack.
+
+### Update browserslist caniuse-lite data
+
+- **status**: ready
+- **size**: S
+- **priority**: 4
+- **notes**: Build log emits `Browserslist: caniuse-lite is outdated` on every `npm run build`. Fix: `npx browserslist@latest --update-db`, verify build is clean, commit the updated `package-lock.json`. Cosmetic only — no functional impact, no user-facing change.
+
+### Clear Node fs.F_OK deprecation warning during build
+
+- **status**: backlog
+- **size**: S
+- **priority**: 5
+- **notes**: `npm run build` prints `DEP0176: fs.F_OK is deprecated` from inside `react-scripts`. Originates in CRA, not our code — will resolve naturally as part of the Dependency + build-tool upgrade plan (CRA→Vite or upgrading the toolchain). Tracked here so it doesn't get lost if the upgrade slips. Don't fix in isolation.
 

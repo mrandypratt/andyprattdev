@@ -2,6 +2,14 @@
 
 <!-- Completed and archived cards, newest first. Full card blocks preserved from board.md with completed/archived date added. -->
 
+### New headshot for About + Home
+
+- **status**: done
+- **completed**: 2026-05-22
+- **size**: S
+- **priority**: 3
+- **notes**: Shipped 2026-05-22 as part of the /about refactor commit (`26a985b`). User-sourced headshot replaces `src/assets/Profile.jpg`; flows through to the home hero card and About page automatically. Deployed via `npm run deploy` (CloudFront invalidation `IEB5RWNWPIYPR7XTOGO8RMWZOM`).
+
 ### Restyle Home hero + section headers to match Project Card pattern
 
 - **status**: done
