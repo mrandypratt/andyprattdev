@@ -162,10 +162,10 @@ After iterating through teal-bar/arrow ornaments and finding them visually noisy
 
 ## Phase 7: Final commit + deploy
 
-- [ ] Single commit covering the navbar redesign + plan/board archival
-- [ ] Push
-- [ ] Verify AWS account (`aws sts get-caller-identity --query Account --output text` → `730586623447`)
-- [ ] `npm run deploy` (builds, syncs to S3, invalidates CloudFront E3OIYWCNDQ275Q)
+- [x] Single commit covering the navbar redesign + plan/board archival (`a4391f1`)
+- [x] Push branch + fast-forward main + push main (`a4391f1` on origin/main)
+- [x] Verify AWS account (`aws sts get-caller-identity` returned `730586623447`)
+- [x] `npm run deploy` — built, synced to S3, CloudFront invalidation `I7UVFYIWWGW0Y81K9A8SOXCA2G` in progress
 
 ## Notes
 
