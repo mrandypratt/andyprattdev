@@ -168,3 +168,45 @@
     font-size: 1rem;
   }
 }
+
+/* About card — interior typography for the hero copy */
+.about-card-greeting {
+  font-size: 1rem;
+  color: #aaa;
+  margin: 0;
+}
+
+.about-card-name {
+  font-size: 2.5rem;
+  color: #ffbd59;
+  font-weight: 525;
+  margin: 0;
+}
+
+.about-card-role {
+  font-size: 1.4rem;
+  color: white;
+  margin: 0;
+  font-weight: 500;
+}
+
+.about-card-role-accent {
+  color: #5ce1e6;
+  font-weight: 600;
+}
+
+.about-card-tail {
+  font-size: 1rem;
+  color: #aaa;
+  margin: 0;
+}
+
+@media (max-width: 600px) {
+  .about-card-name {
+    font-size: 2rem;
+  }
+
+  .about-card-role {
+    font-size: 1.2rem;
+  }
+}

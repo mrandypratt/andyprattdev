@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom"
 import { HashLink } from "react-router-hash-link";
 import { APDevLogo } from '../assets/APDevLogo';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import resume from "../assets/AndyPrattResume.pdf";
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
@@ -14,6 +14,27 @@ const scrollToProjects = (el: HTMLElement) => {
 };
 
 const DesktopNavbar = (): JSX.Element => {
+  const [projectsOpen, setProjectsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!projectsOpen) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setProjectsOpen(false);
+      }
+    };
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setProjectsOpen(false);
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleEscape);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, [projectsOpen]);
+
   return (
     <nav className="navbar">
       <Link to="/">
@@ -22,11 +43,43 @@ const DesktopNavbar = (): JSX.Element => {
         </div>
       </Link>
       <div className="nav-button-container">
-        <HashLink to="/#projects" smooth scroll={(el) => scrollToProjects(el as HTMLElement)}>
+        <Link to="/">
           <div className="desktop-nav-button">
-              PROJECTS
+            HOME
           </div>
-        </HashLink>
+        </Link>
+
+        <div className="nav-dropdown" ref={dropdownRef}>
+          <button
+            type="button"
+            className="desktop-nav-button nav-dropdown-trigger"
+            onClick={() => setProjectsOpen((prev) => !prev)}
+            aria-expanded={projectsOpen}
+            aria-haspopup="menu"
+          >
+            PROJECTS <span className="nav-dropdown-chevron">{projectsOpen ? '▴' : '▾'}</span>
+          </button>
+          {projectsOpen && (
+            <div className="nav-dropdown-menu" role="menu">
+              <Link
+                to="/projects/cards-with-friends"
+                className="nav-dropdown-item"
+                role="menuitem"
+                onClick={() => setProjectsOpen(false)}
+              >
+                Cards with Friends
+              </Link>
+              <div className="nav-dropdown-item nav-dropdown-item-disabled" role="menuitem" aria-disabled="true">
+                Game Set Book
+                <span className="nav-dropdown-item-coming"> (coming soon)</span>
+              </div>
+              <div className="nav-dropdown-item nav-dropdown-item-disabled" role="menuitem" aria-disabled="true">
+                AI Assistant
+                <span className="nav-dropdown-item-coming"> (coming soon)</span>
+              </div>
+            </div>
+          )}
+        </div>
 
         <a href={resume} target="_blank" rel="noreferrer noopener">
           <div className="desktop-nav-button">
@@ -78,9 +131,31 @@ const MobileNavbar = (): JSX.Element => {
 
           <HashLink to="/#projects" smooth scroll={(el) => scrollToProjects(el as HTMLElement)}>
             <div className="app-bar-menu-item">
-                PROJECTS
+              PROJECTS
             </div>
           </HashLink>
+
+          <div className="app-bar-menu-subgroup">
+            <Link to="/projects/cards-with-friends">
+              <div className="app-bar-menu-item app-bar-menu-subitem">
+                Cards with Friends
+              </div>
+            </Link>
+
+            <div
+              className="app-bar-menu-item app-bar-menu-subitem app-bar-menu-item-disabled"
+              onClick={(e) => e.stopPropagation()}
+            >
+              Game Set Book <span className="app-bar-menu-coming">(coming soon)</span>
+            </div>
+
+            <div
+              className="app-bar-menu-item app-bar-menu-subitem app-bar-menu-item-disabled"
+              onClick={(e) => e.stopPropagation()}
+            >
+              AI Assistant <span className="app-bar-menu-coming">(coming soon)</span>
+            </div>
+          </div>
 
           <a href={resume} target="_blank" rel="noreferrer noopener">
             <div className="app-bar-menu-item">

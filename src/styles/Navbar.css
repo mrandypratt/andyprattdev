@@ -14,13 +14,14 @@ a {
   top: 0px;
   padding-top: 10px;
   background-color: #292929;
+  z-index: 1000;
 }
 
 .nav-button-container {
-  width: 300px;
+  width: 420px;
   display: flex;
   flex-direction: row;
-  align-self: "right";
+  align-items: center;
   justify-content: space-evenly;
 }
 
@@ -36,6 +37,114 @@ a {
 
 .desktop-nav-button:hover {
   color:  #b3b3b3;
+}
+
+/* Projects dropdown (desktop) */
+.nav-dropdown {
+  position: relative;
+}
+
+.nav-dropdown-trigger {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.nav-dropdown-trigger:hover {
+  color: #b3b3b3;
+}
+
+.nav-dropdown-chevron {
+  font-size: 0.7rem;
+  margin-left: 4px;
+  vertical-align: middle;
+}
+
+.nav-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #292929;
+  border: 1px solid #5ce1e6;
+  border-radius: 4px;
+  padding: 8px 0;
+  min-width: 220px;
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+  margin-top: 6px;
+}
+
+.nav-dropdown-item {
+  padding: 8px 16px;
+  color: white;
+  text-decoration: none;
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  letter-spacing: 0.02857em;
+  display: block;
+}
+
+a.nav-dropdown-item:hover {
+  background: #3a3a3a;
+  color: #5ce1e6;
+}
+
+.nav-dropdown-item-disabled {
+  color: #777;
+  cursor: default;
+}
+
+.nav-dropdown-item-coming {
+  color: #555;
+  font-size: 0.75rem;
+}
+
+/* Projects sub-list (mobile menu) — visually nested under PROJECTS */
+.app-bar-menu-subgroup {
+  align-self: center;
+  text-align: left;
+  padding-left: 12px;
+  border-left: 2px solid #5ce1e6;
+  margin: 4px 0 10px 0;
+}
+
+.app-bar-menu-subgroup .app-bar-menu-item {
+  margin: 8px 0;
+}
+
+.app-bar-menu-subitem {
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.02857em;
+  font-weight: 500;
+}
+
+.app-bar-menu-subitem::before {
+  content: "▸ ";
+  color: #5ce1e6;
+  margin-right: 4px;
+}
+
+.app-bar-menu-item-disabled {
+  color: #777;
+  cursor: default;
+}
+
+.app-bar-menu-item-disabled::before {
+  color: #5ce1e6;
+  opacity: 0.5;
+}
+
+.app-bar-menu-coming {
+  color: #555;
+  font-size: 0.7rem;
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 400;
+  margin-left: 4px;
 }
 
 .app-bar {
@@ -54,7 +163,7 @@ a {
   box-shadow: -5px 0px 10px 5px rgb(18, 227, 238);
   border:#5ce1e6;
   border-width: 2px;
-  z-index: 5;
+  z-index: 1000;
   top:0;
   right:0;
   width: 40vw;
@@ -75,8 +184,7 @@ a {
   background-color: #141414;
   opacity: 0.85;
   overflow: hidden; /* disable scrolling*/
-  z-index: 3; /* higher than all other items, but lower than 
-    the appbar*/
+  z-index: 999; /* below the menu but above all page content */
 }
 
 .app-bar-menu-item {

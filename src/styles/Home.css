@@ -1,174 +1,19 @@
 /* Home Screen */
 .home-container {
-  display: grid;
-  grid-template-areas:
-    "nav"
-    "content"
-    "projects"
-    "footer";
-  grid-template-rows: 64px auto auto auto;
-  grid-template-columns: 1fr;
-  grid-gap: 50px;
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
   width: 100vw;
+  padding-top: 64px; /* reserves space for the fixed Navbar (matches About + Portfolio layouts) */
+  box-sizing: border-box;
 }
 
 .home-container .projects-section {
-  grid-area: projects;
-}
-
-.home-content-container {
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  justify-self: center;
-  grid-area: content;
-} 
-
-.home-greeting {
-  margin: 0;
-  text-align: center;
-  font-weight: 500;
-  margin-bottom: 10px;
-  font-size: 2.5rem;
-}
-
-.home-paragraph {
-  margin-right: 15%;
-  margin-left: 15%;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  text-align: center;
-  font-weight: 500;
-  font-size: x-large;
-  font-size: 1.5rem;
-}
-
-.home-paragraph-container {
-  margin-top: 15px;
-}
-
-.orange-pop {
-  color: #ffbd59;
-  font-family: 'Roboto', sans-serif;
-  font-weight: 525;
-  font-size: 5em;
-  text-align: center;
-  margin:0;
-  padding-top: 10px;
-  padding-bottom: 10px;
-}
-
-.blue-pop {
-  color: #5ce1e6;
-  font-family: 'Roboto', sans-serif;
-  font-weight: 600;
-  font-size: 2rem;
-}
-
-.home-button-container {
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-  margin-top: 50px;
-  width: 95vw;
-  max-width: 1000px;
-}
-
-.home-button {
-  height: 70px;
-  background: #292929;
-  width: 200px;
-  color: white;
-  font-size: 1.40rem;
-  flex-wrap: wrap;
-  border-color: white;
-  border-width: 5px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-}
-
-.home-button:hover {
-  background: #3a3a3a;
-}
-
-.blue-split-text {
   margin-top: 20px;
-  margin-bottom: 20px;
-  font-size: 2.25rem;
 }
 
-@media (max-width: 1100px) { /* Medium Screens */
-  .home-page-container {
-    min-width: 80%;
-  }
-
-  .home-paragraph {
-    margin:auto;
-  }
-
-  .home-button-container {
-    flex-wrap:wrap;
-    flex-basis: 50px;
-  }
-
-  .home-button {
-    margin-top: 20px;
-  }
-}
-
-@media (max-width: 502px) { /* Mobile Screens */
-  .home-container {
-    grid-gap: 0px;
-  }
-
-  .home-content-container {
-    margin-top: 20px;
-    margin-bottom: 30px;
-  }
-
-  .orange-pop {
-    font-size: 4rem;
-    padding-bottom: 15px;
-    padding-top: 0px;
-  }
-
-  .blue-pop {
-    font-size: 1.5rem;
-  }
-
-  .home-paragraph {
-    font-size: 1em;
-    padding-left: 5px;
-    padding-right: 5px;
-  }
-
-  .home-paragraph-container {
-    margin-top: 0px;
-  }
-
-  .home-button {
-    height: 50px;
-    background: #292929;
-    width: 200px;
-    color: white;
-    font-size: 1rem;
-    flex-wrap: wrap;
-    border-color: white;
-    border-width: 5px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
-  }
-
-  .home-button-container {
-    margin-top: 10px;
-    flex-direction: column;
-  }
-
-  .home-greeting {
-    font-size: 1.75rem;
-    margin: 0;
+@media (max-width: 502px) {
+  .home-container .projects-section {
+    margin-top: 0;
   }
 }
