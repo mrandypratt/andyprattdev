@@ -20,18 +20,18 @@ This plan exists to **work the page section-by-section** rather than rewriting e
 
 For each section below: read the current prose in `About.tsx`, rewrite in Andy's voice, replace. Keep section structure (heading + body) consistent unless we decide otherwise.
 
-- [ ] **Intro / hero lede** — currently: *"The projects page is where I show the work. This page is everything else — how I got here, what pulls me back to the keyboard, and what I'm doing when I'm not at one."* Tighten or rephrase if it doesn't sound like Andy.
+- [x] **Intro / hero lede** — replaced with: *"I make my living at the keyboard, but I don't do all my living there."*
 - [ ] **"How I got here"** — current copy covers the accounting / steakhouse / spreadsheet → Python → editor-in-August-2020 arc. Make sure the chronology, framing, and specifics (job titles, restaurants, what kind of accounting work) sound right. Decide whether to name specific employers or keep it generic.
 - [ ] **"What pulls me toward software"** — three-thing draft (feedback loop / leverage / curve-never-flattens) + AI note. Confirm those are the *real* three things; rewrite if not. Decide whether the AI sentence stays or gets pulled into its own section / a dedicated "what I'm exploring" beat.
-- [ ] **"Outside of work" intro line** — currently: *"Tennis, travel, and a fiancée who's a much better photographer than I am."* Replace with whatever framing actually fits the moment.
-- [ ] **Photo grid captions** — six captions written from sparse notes; rewrite each to match how Andy would describe the trip/moment. Order is locked (chronological per Andy): tennis (FL) → PNW → Chicago → Denver → Switzerland → Northeast.
+- [x] **"Outside of work" intro line** — replaced with: *"Tennis, travel, and a fiancée who always expands my horizons."*
+- [x] **Photo grid captions** — six captions rewritten in Andy's voice. Grid also reflowed from 3×2 to 2×3 on desktop (pairs: tennis/PNW, Chicago/Denver, Switzerland/Northeast).
 - [ ] **"A few other things" list + outro** — current list: tennis/fitness/hiking, podcasts (Lex/Tim/Huberman), board+video games, live music + stand-up. Outro currently points back at `/projects`. Confirm the list is current and the outro lands.
 
 ## Photo grid — visual cleanup
 
-- [ ] **Recrop `chicago.jpg`** — current crop reads weird in the 4:3 grid frame. Recrop to 4:3 landscape, ~1200×900, with the subject framed naturally.
-- [ ] **Recrop `pacific-northwest.jpg`** — same: current crop is awkward in the grid. Recrop to 4:3.
-- [ ] **Audit the other four** (`tennis-florida`, `denver`, `switzerland`, `northeast`) — quick pass to confirm crops feel right; recrop any that don't.
+- [x] **Recrop `chicago.jpg`** — replaced by user.
+- [x] **Recrop `pacific-northwest.jpg`** — replaced by user.
+- [x] **Audit the other four** (`tennis-florida`, `denver`, `switzerland`, `northeast`) — confirmed crops look right alongside the new 2×3 grid layout.
 - [ ] **Decide on `acadia-hike.jpg`** — extra file uploaded that isn't wired. Options: pair it with `northeast.jpg` (split into Boston + Acadia), drop a 7th slot in, or leave on disk.
 
 ## Out of scope for this plan

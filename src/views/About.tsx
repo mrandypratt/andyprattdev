@@ -39,9 +39,7 @@ export const About = () => {
         <header className="about-intro">
           <h1 className="about-title">A little about me.</h1>
           <p className="about-lede">
-            The projects page is where I show the work. This page is everything else — how
-            I got here, what pulls me back to the keyboard, and what I'm doing when I'm
-            not at one.
+            I make my living at the keyboard, but I don't do all my living there.
           </p>
         </header>
 
@@ -89,7 +87,7 @@ export const About = () => {
         <section className="about-chapter">
           <h2 className="about-chapter-header">Outside of work</h2>
           <p className="about-chapter-intro">
-            Tennis, travel, and a fiancée who's a much better photographer than I am.
+            Tennis, travel, and a fiancée who always expands my horizons.
           </p>
 
           <div className="about-photo-grid">
@@ -114,19 +112,19 @@ export const About = () => {
             <PhotoFrame
               src={denverPhoto}
               alt="Remote work stint in Denver"
-              caption="And again from Denver — same idea, very different mountains."
+              caption="And again from Denver."
               placeholderLabel="Denver"
             />
             <PhotoFrame
               src={switzerlandPhoto}
               alt="Engagement in Switzerland"
-              caption="Got engaged in the Swiss Alps."
+              caption="Proposed to the love of my life in the Swiss Alps."
               placeholderLabel="Switzerland"
             />
             <PhotoFrame
               src={northeastPhoto}
               alt="Northeast trip — Boston and Maine"
-              caption="The Northeast — Boston, then up the Maine coast for lighthouses and lobster rolls."
+              caption="Northeast Coast — Boston, then up to Maine for boat rides and lobster rolls."
               placeholderLabel="Boston · Maine"
             />
           </div>
