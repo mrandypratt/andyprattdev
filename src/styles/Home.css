@@ -1,15 +1,20 @@
 /* Home Screen */
 .home-container {
   display: grid;
-  grid-template-areas: 
+  grid-template-areas:
     "nav"
     "content"
+    "projects"
     "footer";
-  grid-template-rows: 64px 1fr auto;
+  grid-template-rows: 64px auto auto auto;
   grid-template-columns: 1fr;
   grid-gap: 50px;
-  height: 100vh;
+  min-height: 100vh;
   width: 100vw;
+}
+
+.home-container .projects-section {
+  grid-area: projects;
 }
 
 .home-content-container {

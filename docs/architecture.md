@@ -40,21 +40,26 @@ andyprattdev/
 │   │       ├── V2/V2-Mockup.png, V2-Sessions-Mockup.png, V2-User-Flows.png, V2-End-Game-Buttons.png
 │   │       └── V3/V3-Mockup.png
 │   ├── components/
-│   │   ├── Navbar.tsx                 # DesktopNavbar + MobileNavbar (breakpoint 1000px)
+│   │   ├── Navbar.tsx                 # DesktopNavbar + MobileNavbar (breakpoint 1000px); PROJECTS link → /#projects
+│   │   ├── Sidebar.tsx                # In-page nav on CWF deep-dive (HashLink to /projects/cards-with-friends/#...)
+│   │   ├── ProjectsSection.tsx        # Section rendered on Home (id="projects"); hosts the project cards
+│   │   ├── ProjectCard.tsx            # Reusable card; live state (clickable, "Deep dive →") vs coming-soon state ("(Coming soon)", non-clickable)
+│   │   ├── CodeSnippets.tsx           # Rendered code blocks used inside the CWF version components
 │   │   └── Footer.tsx                 # Email / GitHub / LinkedIn icons + "looking for SWE opportunities" copy
 │   ├── views/                         # Page-level components
-│   │   ├── Home.tsx                   # Hero w/ name, tagline, 4 CTAs (Portfolio, Resume, About, Play Card Game)
+│   │   ├── Home.tsx                   # Hero + 2 CTAs (Resume, About Me); renders <ProjectsSection/> below the hero
 │   │   ├── About.tsx                  # Two-column essay + profile pic
-│   │   ├── Portfolio.tsx              # Cards with Friends hub — title, link to live game, 3 version cards
-│   │   ├── Project.tsx                # Currently a placeholder for all 3 project detail routes
 │   │   ├── Resume.tsx                 # ⚠ NOT routed — dead code
 │   │   ├── Error.tsx                  # Error boundary view (also not currently routed)
 │   │   └── Projects/
+│   │       ├── CardsWithFriends.tsx   # Deep-dive page at /projects/cards-with-friends (formerly Portfolio.tsx)
+│   │       ├── Version1.tsx, Version2.tsx, Version3.tsx  # Rendered inside CardsWithFriends.tsx
 │   │       ├── v1.md                  # ★ MVP writeup (142 lines) — NOT RENDERED IN UI
-│   │       └── v2.md                  # ★ Multi-device writeup (281 lines) — NOT RENDERED IN UI
+│   │       ├── v2.md                  # ★ Multi-device writeup (281 lines) — NOT RENDERED IN UI
+│   │       └── v3.md                  # ★ Single-player writeup — NOT RENDERED IN UI
 │   ├── styles/
 │   │   ├── App.css                    # Global: #292929 bg, white text, Roboto
-│   │   ├── Navbar.css, Home.css, About.css, Portfolio.css, Project.css, Footer.css
+│   │   ├── Navbar.css, Home.css, About.css, Portfolio.css, Sidebar.css, Projects.css, Footer.css
 │   │   └── ButtonTheme.tsx            # MUI theme augmentation (primary/neutral/danger)
 │   └── constants/
 │       └── views.tsx                  # VIEWS enum — defined but unused
@@ -67,12 +72,12 @@ andyprattdev/
 
 | Path | Component |
 |------|-----------|
-| `/` | Home |
+| `/` | Home (hero + ProjectsSection anchored at `#projects`) |
 | `/about` | About |
-| `/portfolio` | Portfolio |
-| `/portfolio/project-v1` | Project (placeholder) |
-| `/portfolio/project-v2` | Project (placeholder) |
-| `/portfolio/project-v3` | Project (placeholder) |
+| `/projects/cards-with-friends` | CardsWithFriends (CWF deep-dive) |
+| `/portfolio` | `<Navigate to="/projects/cards-with-friends" replace />` — preserves inbound links |
+
+No dedicated `/projects` index page — projects are surfaced as a section on Home. A standalone index can be reintroduced when the portfolio holds four or more live projects.
 
 No catch-all / 404 route. `Error.tsx` exists but isn't wired up.
 
@@ -99,7 +104,16 @@ The flagship portfolio entry. Live site: http://www.cardswithfriendsgame.com (li
 - **Logo:** `src/assets/CWFLogo.tsx` (inline SVG)
 - **⚠ Videos:** The markdown writeups contain *commented-out* video embed placeholders (e.g. `Create-Game-Phase.mp4`) but **no actual video files exist in this repo**. Either the videos live elsewhere or they were planned but never produced.
 
-The project detail pages (`/portfolio/project-v1`, `v2`, `v3`) all currently render the same `Project.tsx` "under construction" placeholder — the writeups sit unused on disk.
+The deep-dive lives at `/projects/cards-with-friends`. The three version sections (`Version1.tsx`, `Version2.tsx`, `Version3.tsx`) are rendered inline on that single page; the markdown writeups (`v1.md`, `v2.md`, `v3.md`) sit unused on disk and remain candidates for future restructure.
+
+## Home page Projects section
+
+The Home page surfaces projects via a `<ProjectsSection/>` rendered below the hero (anchor `id="projects"`). Each project is a `<ProjectCard/>` with two states:
+
+- **Live** — clickable card with a "Deep dive →" CTA pointing at the project's own URL.
+- **Coming soon** — title displays `(Coming soon)`; card is muted, has no CTA, and is not wrapped in a link.
+
+Today: Cards with Friends (live), Game Set Book (coming soon), AI Assistant (coming soon). When a coming-soon project ships, give the card an `href` and add a route + view file under `src/views/Projects/`.
 
 ## Known code-level issues
 

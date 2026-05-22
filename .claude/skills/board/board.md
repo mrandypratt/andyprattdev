@@ -16,20 +16,20 @@
 - **blocker**: waiting on updated resume content from user
 - **notes**: File swap at `src/assets/AndyPrattResume.pdf`. Content authoring is the user's task; this card unblocks when the new PDF is ready.
 
-### Stand up /projects index; move Cards with Friends to deep-dive page
+### Add projects section to home; move CWF to deep-dive page
 
-- **status**: ready
+- **status**: pipeline
 - **size**: L
 - **priority**: 1
-- **notes**: New `/projects` index + `/projects/cards-with-friends` deep-dive page. Move current Portfolio content as-is into the deep-dive page (restructure is a separate card). Update Home button from "Portfolio" to "Projects". Decide whether `/portfolio` 301s to `/projects` or stays as alias. Unblocks cards: Game Set Book page, CWF deep-dive restructure.
+- **plan**: 2026-05-21-home-projects-section
+- **notes**: Committed locally on `main`; Phase 6 (deploy via `npm run deploy`) pending user approval. Deviation from plan: the "Projects" CTA on the home hero was removed entirely (section sits directly below hero, scroll-to-visible was redundant) — home CTAs are now Resume + About Me. Unblocks: Game Set Book page, CWF deep-dive restructure.
 
 ### Add /projects/game-set-book page (tennis scheduling app)
 
-- **status**: blocked
+- **status**: ready
 - **size**: M
 - **priority**: 2
-- **blocker**: /projects index + page template (card: "Stand up /projects index")
-- **notes**: New per-project page for Game Set Book. App is no longer live; writeup content TBD. Use the page template established when /projects is stood up.
+- **notes**: Per-project page for Game Set Book. App is no longer live; writeup content TBD. Card already exists on Home in coming-soon state — work is: write content, add `src/views/Projects/GameSetBook.tsx`, add route `/projects/game-set-book`, flip the home card to live by adding `href`.
 
 ### Scope work writeups + extensible showcase structure
 
@@ -40,11 +40,10 @@
 
 ### Break up Cards with Friends deep dive
 
-- **status**: blocked
+- **status**: ready
 - **size**: L
 - **priority**: 3
-- **blocker**: /projects index + CWF deep-dive page (card: "Stand up /projects index")
-- **notes**: Split V1/V2/V3 inside the CWF deep-dive page. Render the existing `src/views/Projects/v1.md` and `v2.md` writeups (currently dead on disk). Elevate YouTube videos to the top of the page. Trim the verbose intro.
+- **notes**: Deep-dive page now lives at `src/views/Projects/CardsWithFriends.tsx` (route `/projects/cards-with-friends`). Split V1/V2/V3 inside it. Render the existing `src/views/Projects/v1.md`, `v2.md`, `v3.md` writeups (currently dead on disk). Elevate YouTube videos to the top of the page. Trim the verbose intro.
 
 ### Rewrite /about around engineering identity
 
@@ -67,11 +66,4 @@
 - **size**: M
 - **priority**: 2
 - **notes**: Design doc weighing incremental upgrades (React 17→18, TS 4.6→5, MUI 5.5→latest) vs. Vite migration (CRA is deprecated). Output: choose a path, then card the actual work. Should land before big new UI work on top of the stack.
-
-### Clean up vestigial elasticbeanstalk S3 bucket
-
-- **status**: ready
-- **size**: S
-- **priority**: 4
-- **notes**: `s3://elasticbeanstalk-us-east-2-730586623447` (us-east-2, created 2022-04-28) is unrelated to this site — auto-created by an old Elastic Beanstalk session, possibly from the Cards with Friends backend era. Inspect contents, confirm no live EB environments still reference it (check `aws elasticbeanstalk describe-environments`), then delete the bucket. Pure account hygiene; no user-visible effect.
 

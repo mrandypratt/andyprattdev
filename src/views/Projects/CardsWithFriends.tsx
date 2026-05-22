@@ -1,13 +1,13 @@
-import { CWFLogo } from "../assets/CWFLogo";
-import { Footer } from "../components/Footer";
-import { Navbar } from "../components/Navbar";
-import { Sidebar } from "../components/Sidebar";
-import "../styles/Portfolio.css"
-import { Version1 } from "./Projects/Version1";
-import { Version2 } from "./Projects/Version2";
-import { Version3 } from "./Projects/Version3";
+import { CWFLogo } from "../../assets/CWFLogo";
+import { Footer } from "../../components/Footer";
+import { Navbar } from "../../components/Navbar";
+import { Sidebar } from "../../components/Sidebar";
+import "../../styles/Portfolio.css"
+import { Version1 } from "./Version1";
+import { Version2 } from "./Version2";
+import { Version3 } from "./Version3";
 
-export const Portfolio = () => {
+export const CardsWithFriends = () => {
   return (
     <div className="portfolio-container">
 
@@ -32,7 +32,7 @@ export const Portfolio = () => {
             Below is a full break-down of the process divided into 3 major versions.  I have detailed my journey from ideation, through numerous features, to its current (and likely final) state.  Just keep scrolling to see my journey!
           </p>
         </div>
-      
+
         <Version1/>
         <Version2/>
         <Version3/>

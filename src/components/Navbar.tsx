@@ -1,10 +1,17 @@
 import { Link } from "react-router-dom"
+import { HashLink } from "react-router-hash-link";
 import { APDevLogo } from '../assets/APDevLogo';
 import { useState, useEffect } from 'react';
 import resume from "../assets/AndyPrattResume.pdf";
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import "../styles/Navbar.css"
+
+const scrollToProjects = (el: HTMLElement) => {
+  const yCoordinate = el.getBoundingClientRect().top + window.pageYOffset;
+  const yOffset = -65;
+  window.scrollTo({ top: yCoordinate + yOffset, behavior: "smooth" });
+};
 
 const DesktopNavbar = (): JSX.Element => {
   return (
@@ -15,11 +22,11 @@ const DesktopNavbar = (): JSX.Element => {
         </div>
       </Link>
       <div className="nav-button-container">
-        <Link to="/portfolio">
+        <HashLink to="/#projects" smooth scroll={(el) => scrollToProjects(el as HTMLElement)}>
           <div className="desktop-nav-button">
-              PORTFOLIO
+              PROJECTS
           </div>
-        </Link>
+        </HashLink>
 
         <a href={resume} target="_blank" rel="noreferrer noopener">
           <div className="desktop-nav-button">
@@ -69,11 +76,11 @@ const MobileNavbar = (): JSX.Element => {
             </div>
           </Link>
 
-          <Link to="/portfolio">
+          <HashLink to="/#projects" smooth scroll={(el) => scrollToProjects(el as HTMLElement)}>
             <div className="app-bar-menu-item">
-                PORTFOLIO
+                PROJECTS
             </div>
-          </Link>
+          </HashLink>
 
           <a href={resume} target="_blank" rel="noreferrer noopener">
             <div className="app-bar-menu-item">

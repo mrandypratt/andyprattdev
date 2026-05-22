@@ -1,6 +1,6 @@
-import {Routes, Route} from "react-router-dom"
+import {Routes, Route, Navigate} from "react-router-dom"
 import { About } from "./views/About"
-import { Portfolio } from "./views/Portfolio"
+import { CardsWithFriends } from "./views/Projects/CardsWithFriends"
 import { Home } from "./views/Home"
 
 export const MainRoutes = () => {
@@ -8,7 +8,8 @@ export const MainRoutes = () => {
     <Routes>
       <Route path="/" element={<Home/>} />
       <Route path="/about" element={<About/>} />
-      <Route path="/portfolio" element={<Portfolio/>} />
+      <Route path="/projects/cards-with-friends" element={<CardsWithFriends/>} />
+      <Route path="/portfolio" element={<Navigate to="/projects/cards-with-friends" replace />} />
     </Routes>
   )
 }
