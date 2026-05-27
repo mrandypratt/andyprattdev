@@ -45,24 +45,48 @@
 - **plan**: 2026-05-22-about-page-iteration
 - **notes**: Structural rewrite landed (5-chapter layout, photo grid, new home hero with separate mobile photo). Remaining work tracked as checkboxes in the plan: tone iteration per section + photo recrops (Chicago + PNW first).
 
-### Dependency + build-tool upgrade plan
+### Migrate CRA → Vite
 
 - **status**: ready
 - **size**: M
 - **priority**: 2
-- **notes**: Design doc weighing incremental upgrades (React 17→18, TS 4.6→5, MUI 5.5→latest) vs. Vite migration (CRA is deprecated). Output: choose a path, then card the actual work. Should land before big new UI work on top of the stack.
+- **notes**: Keystone of the stack upgrade. Decisions in `docs/plans/stack-upgrade.md`. Install `vite` + `@vitejs/plugin-react`; add `vite.config.ts` with `build.outDir: 'build'` (keeps `npm run deploy` untouched); move `index.html` to repo root and strip `%PUBLIC_URL%` (3 tags); rewrite start/build/test scripts; remove `react-scripts`. The three bump cards below land on this same branch. Clears the `fs.F_OK` + `caniuse-lite` warnings.
+
+### Bump React 17 → 18 + TS 4.6 → 5
+
+- **status**: blocked
+- **size**: S
+- **priority**: 2
+- **blocker**: lands on the CRA → Vite branch — start after Vite is in
+- **notes**: Convert `src/index.tsx` `ReactDOM.render` → `createRoot`. Bump react/react-dom + @types to 18, typescript to 5, tsconfig `target` es5 → es2020. StrictMode double-invoke is dev-only; effects (Sidebar/Navbar scroll listeners) have cleanup. See `docs/plans/stack-upgrade.md`.
+
+### Bump MUI 5 → 7
+
+- **status**: blocked
+- **size**: S
+- **priority**: 2
+- **blocker**: lands on the CRA → Vite branch
+- **notes**: Bump @mui/material + @mui/icons-material 5.5 → 7. Highest-risk item: `src/styles/ButtonTheme.tsx` module augmentation (Theme/Palette/PaletteColor/ThemeOptions) — verify it compiles and the button still themes. Six icon imports are path-stable. See `docs/plans/stack-upgrade.md`.
+
+### Bump React Router 6 → 7
+
+- **status**: blocked
+- **size**: S
+- **priority**: 2
+- **blocker**: lands on the CRA → Vite branch
+- **notes**: Bump react-router-dom 6 → 7 (mostly a rename; Routes/Route/Navigate are compatible). Open risk: `react-router-hash-link` peer dep may lag RR7 — verify hash nav in Sidebar/Navbar; if broken, replace with a ~15-line `useScrollToHash` helper (decide with evidence). See `docs/plans/stack-upgrade.md`.
 
 ### Update browserslist caniuse-lite data
 
 - **status**: ready
 - **size**: S
 - **priority**: 4
-- **notes**: Build log emits `Browserslist: caniuse-lite is outdated` on every `npm run build`. Fix: `npx browserslist@latest --update-db`, verify build is clean, commit the updated `package-lock.json`. Cosmetic only — no functional impact, no user-facing change.
+- **notes**: SUPERSEDED by `Migrate CRA → Vite` — auto-resolves when CRA leaves. Delete this card when that migration lands; do not work in isolation. (Original: `npm run build` emits `Browserslist: caniuse-lite is outdated`.)
 
 ### Clear Node fs.F_OK deprecation warning during build
 
 - **status**: backlog
 - **size**: S
 - **priority**: 5
-- **notes**: `npm run build` prints `DEP0176: fs.F_OK is deprecated` from inside `react-scripts`. Originates in CRA, not our code — will resolve naturally as part of the Dependency + build-tool upgrade plan (CRA→Vite or upgrading the toolchain). Tracked here so it doesn't get lost if the upgrade slips. Don't fix in isolation.
+- **notes**: SUPERSEDED by `Migrate CRA → Vite` — `DEP0176: fs.F_OK is deprecated` originates in `react-scripts` and disappears when CRA leaves. Delete this card when that migration lands; don't fix in isolation.
 

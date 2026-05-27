@@ -16,6 +16,8 @@ Code-level inventory of the portfolio app. For "why this exists" see `north-star
 
 `tsconfig.json` has `strict: true`.
 
+> **Planned migration:** one-branch upgrade to Vite + React 18 + TS 5 + MUI 7 + React Router 7. Decisions, audit, and smoke-test checklist live in [`plans/stack-upgrade.md`](plans/stack-upgrade.md).
+
 ## Directory map
 
 ```

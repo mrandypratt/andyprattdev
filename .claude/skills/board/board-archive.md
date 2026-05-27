@@ -2,6 +2,15 @@
 
 <!-- Completed and archived cards, newest first. Full card blocks preserved from board.md with completed/archived date added. -->
 
+### Dependency + build-tool upgrade plan
+
+- **status**: done
+- **completed**: 2026-05-26
+- **size**: M
+- **priority**: 2
+- **plan**: archive/2026-05-24-stack-upgrade-design
+- **notes**: Design doc only — completed 2026-05-26. Decisions ratified with user: one-branch migration to Vite + React 18 + TS 5 + MUI 7 + RR 7, output kept at `build/` so `npm run deploy` is untouched, verify `react-router-hash-link` under RR7 (replace with helper only if broken). Audit captured in `docs/plans/stack-upgrade.md` (linked from `architecture.md`). Spawned 4 execution cards: `Migrate CRA → Vite` (ready) + 3 blocked bump cards on the same branch. Two existing cards (browserslist, fs.F_OK) annotated SUPERSEDED — delete when the Vite migration lands, not before.
+
 ### New headshot for About + Home
 
 - **status**: done
