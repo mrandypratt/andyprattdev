@@ -45,9 +45,11 @@ Default CRA ESLint config only. No custom rules. No separate `lint` script.
 
 ## Git workflow
 
-The repo is currently a single-`main` setup with no protected-branch rules. Recent history shows feature branches merged via GitHub PR (e.g. PR #12, `single-page-portfolio`).
+Solo single-`main` setup. `main` has **no protected-branch rules and no required PR review** — commit and push directly to `main`. There's no CI gate; `npm run deploy` ships content from local (see "Deploy workflow" above).
 
-Convention: branch off `main`, open a PR, merge via GitHub UI.
+Branches and PRs are optional, not required — use one only when you want to stage risky work in isolation. Earlier history used feature branches merged via GitHub PR (e.g. PR #12, `single-page-portfolio`), but that ceremony is not expected for routine solo work.
+
+> Note for agents: some Claude Code skills (`/plan-worker`, `/board`) default to auto-creating feature branches and refuse to commit to `main`. That default does not apply here — see the git-workflow note in `CLAUDE.md`.
 
 ## Git identity
 

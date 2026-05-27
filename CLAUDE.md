@@ -56,6 +56,7 @@ A `PreToolUse` hook (`.claude/hooks/aws-account-guard.sh`, wired in `.claude/set
 
 ## Working notes for agents
 
+- **Git workflow: commit directly to `main`.** This is a solo personal project — `main` has no branch protection and no PR review. Some skills (e.g. `/plan-worker`, `/board`) default to "never commit to main" and auto-create feature branches; that ceremony is unnecessary here. Commit and push straight to `main` unless the user explicitly asks for a branch. There's no CI gate — `npm run deploy` ships from local. See `docs/development.md` for details.
 - The user prefers "discuss → commit" over "draft and edit." Confirm structural decisions in chat before generating files.
 - Cards with Friends writeups (`src/views/Projects/v1.md`, `v2.md`) are high-value content currently unrendered in the UI. Preserve them.
 - If you discover infrastructure or stack facts not yet captured in `docs/`, update the relevant doc rather than creating a new one. Keep `CLAUDE.md` slim.
