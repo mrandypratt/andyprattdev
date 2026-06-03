@@ -13,7 +13,7 @@ The substance lives in `docs/`. Read in this order before doing work:
 
 ## Quick facts
 
-- React 17 + TypeScript 4.6 + CRA 5 — all behind current major versions (flagged in `architecture.md`).
+- React 18 + TypeScript 5 + Vite 6 + MUI 7 + React Router 7 (stack upgraded from CRA in 2026-06; see `architecture.md`).
 - No backend code in this repo. The Cards with Friends backend lives in a separate repo.
 - No tests. Default CRA ESLint. No CI/CD — both content (`npm run deploy`) and infra (`cd infra && npx cdk deploy`) ship from local.
 - AWS access via SSO (already configured on this machine).

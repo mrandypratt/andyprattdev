@@ -2,7 +2,7 @@
 
 Decision record for modernizing the portfolio's frontend toolchain. This doc fixes the *what* and *why*; the actual code changes are tracked as separate board cards (see "Execution cards" below). Companion to `architecture.md`.
 
-**Status:** Decided (2026-05-26). Ready to execute.
+**Status:** ✅ Executed (2026-06). Migrated on a single branch: Vite 6, React 18.3, TS 5.9, MUI 7.3, React Router 7.16. `fs.F_OK` + `caniuse-lite` warnings gone. `react-router-hash-link` accepted RR7 with no shim needed (the open risk did not materialize). **One miss in the audit:** six image assets were loaded via CommonJS `require(...)` in `Version1/2/3.tsx` — a CRA/webpack idiom Vite leaves as a bare `require` (runtime `ReferenceError`). Converted to ESM `import`. The CRA touchpoint audit only checked `.jpg`/`.pdf` module imports, not `require()` of `.png`.
 
 ## Problem
 

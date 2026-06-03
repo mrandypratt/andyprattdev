@@ -6,31 +6,33 @@ Code-level inventory of the portfolio app. For "why this exists" see `north-star
 
 | Area | Tool | Version | Notes |
 |------|------|---------|-------|
-| React | react / react-dom | 17.0.2 | Outdated — current is 18.x |
-| TypeScript | typescript | 4.6.2 | Outdated — current is 5.x |
-| Build | react-scripts (CRA) | 5.0.0 | CRA is deprecated by the React team; consider Vite migration |
-| Routing | react-router-dom | 6.4.3 | |
-| UI | @mui/material, @mui/icons-material | 5.5.x | Used mainly for icons + button theme |
+| React | react / react-dom | 18.3.x | `createRoot` in `src/index.tsx`; StrictMode on |
+| TypeScript | typescript | 5.x | `tsconfig` target `es2020` |
+| Build | Vite + @vitejs/plugin-react | 6.x | Config in `vite.config.ts`; dev server on `:3000`, prod output to `build/` |
+| Routing | react-router-dom | 7.x | `react-router-hash-link` works against RR7 with no shim |
+| UI | @mui/material, @mui/icons-material | 7.x | Used mainly for icons; `ButtonTheme.tsx` augmentation is dead code (compiles, unused) |
 | Styling | Emotion + plain CSS | 11.8.x | Per-component `.css` files in `src/styles/` |
-| Testing | @testing-library/react | 12.1.4 | No test files currently exist |
+| Testing | — | — | No test framework. CRA's Jest/testing-library deps were removed in the Vite migration; Vitest is a deferred follow-up |
 
 `tsconfig.json` has `strict: true`.
 
-> **Planned migration:** one-branch upgrade to Vite + React 18 + TS 5 + MUI 7 + React Router 7. Decisions, audit, and smoke-test checklist live in [`plans/stack-upgrade.md`](plans/stack-upgrade.md).
+> **Stack upgrade complete (2026-06):** migrated CRA → Vite and bumped React 17→18, TS 4.6→5, MUI 5→7, React Router 6→7 on a single branch. The `fs.F_OK` and `caniuse-lite` build warnings are gone with CRA. Decisions, audit, and smoke-test checklist live in [`plans/stack-upgrade.md`](plans/stack-upgrade.md). Note: image assets that were loaded via CommonJS `require(...)` (a CRA idiom Vite doesn't support) are now ESM `import`s in the `Version1/2/3.tsx` files.
 
 ## Directory map
 
 ```
 andyprattdev/
-├── public/
-│   ├── index.html                     # Loads Roboto from Google Fonts
+├── index.html                         # Vite entry HTML (repo root); loads Roboto, scripts /src/index.tsx
+├── vite.config.ts                     # Vite config — dev :3000, build.outDir 'build'
+├── public/                            # Served at site root by Vite (favicon, manifest, robots)
 │   ├── APDevFaviconColorized.png
-│   ├── manifest.json                  # PWA placeholder (default CRA)
+│   ├── manifest.json                  # PWA placeholder
 │   └── robots.txt
 ├── src/
-│   ├── index.tsx                      # Entry point
+│   ├── index.tsx                      # Entry point (createRoot)
 │   ├── Routes.tsx                     # All routes defined here (BrowserRouter)
 │   ├── global.d.ts                    # Module declarations for .pdf / .jpg
+│   ├── vite-env.d.ts                  # /// <reference types="vite/client" />
 │   ├── assets/
 │   │   ├── Profile.jpg                # ★ Profile picture (slated for replacement)
 │   │   ├── UnderConstruction.jpg      # Placeholder for unbuilt project detail pages

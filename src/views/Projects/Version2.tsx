@@ -1,8 +1,8 @@
 import { codeSnippets } from "../../components/CodeSnippets";
-const V2UserFlow = require("../../assets/Project/V2/V2-User-Flows.png");
-const V2Mockup = require("../../assets/Project/V2/V2-Mockup.png");
-const V2Session = require("../../assets/Project/V2/V2-Sessions-Mockup.png");
-const V2EndGame = require("../../assets/Project/V2/V2-End-Game-Buttons.png");
+import V2UserFlow from "../../assets/Project/V2/V2-User-Flows.png";
+import V2Mockup from "../../assets/Project/V2/V2-Mockup.png";
+import V2Session from "../../assets/Project/V2/V2-Sessions-Mockup.png";
+import V2EndGame from "../../assets/Project/V2/V2-End-Game-Buttons.png";
 
 export const Version2 = () => {
   return (

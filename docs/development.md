@@ -23,18 +23,19 @@ Then configure your git identity for this repo — see "Git identity" below — 
 
 | Command | Purpose |
 |---------|---------|
-| `npm start` | CRA dev server at http://localhost:3000. Hot reload; type errors print in the terminal and overlay in the browser. |
-| `npm run build` | Production build into `./build`. |
-| `npm test` | Jest test runner. No tests currently exist. |
+| `npm start` (or `npm run dev`) | Vite dev server at http://localhost:3000 (opens the browser). HMR; type errors print in the terminal. |
+| `npm run build` | `tsc` typecheck, then `vite build` into `./build`. |
+| `npm run preview` | Serve the production `build/` locally to smoke-test the bundle. |
+| `npm test` | No test framework configured (placeholder; exits 0). |
 | `npm run deploy` | `aws s3 sync build/ s3://andyprattdev`. Requires `aws sso login` first. See `infrastructure.md`. |
 
 ## Type checking
 
-There is no standalone `tsc` script — type checking runs as part of `npm start` and `npm run build`. If you want a one-shot check without starting the dev server: `npx tsc --noEmit`.
+Type checking runs as part of `npm run build` (`tsc` runs before `vite build`). Vite's dev server does not block on type errors, so for a one-shot check use `npx tsc --noEmit`.
 
 ## Linting
 
-Default CRA ESLint config only. No custom rules. No separate `lint` script.
+No ESLint config (CRA's bundled lint left with `react-scripts`). No `lint` script.
 
 ## Deploy workflow
 

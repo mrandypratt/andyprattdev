@@ -1,5 +1,5 @@
 import { codeSnippets } from "../../components/CodeSnippets";
-const V1Mockup = require("../../assets/Project/V1/V1-Mockup.png");
+import V1Mockup from "../../assets/Project/V1/V1-Mockup.png";
 
 export const Version1 = () => {
   return (

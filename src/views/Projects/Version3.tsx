@@ -1,5 +1,5 @@
 import { codeSnippets } from "../../components/CodeSnippets";
-const V3Mockup = require("../../assets/Project/V3/V3-Mockup.png")
+import V3Mockup from "../../assets/Project/V3/V3-Mockup.png";
 
 export const Version3 = () => {
   return (
