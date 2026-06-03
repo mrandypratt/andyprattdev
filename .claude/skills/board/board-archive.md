@@ -2,6 +2,38 @@
 
 <!-- Completed and archived cards, newest first. Full card blocks preserved from board.md with completed/archived date added. -->
 
+### Migrate CRA → Vite
+
+- **status**: done
+- **completed**: 2026-06-03
+- **size**: M
+- **priority**: 2
+- **notes**: Shipped 2026-06-03 (commit `8bc801e`). Replaced react-scripts with Vite 6 + @vitejs/plugin-react; `index.html` moved to repo root, `vite.config.ts` keeps dev on :3000 and `build.outDir: 'build'` so the deploy script is untouched. `fs.F_OK` + `caniuse-lite` warnings gone. Landed the three bump cards on the same commit. Unplanned fix: six CommonJS `require()` image loads in `Version1/2/3.tsx` (CRA idiom Vite doesn't support) converted to ESM imports — caused a `require is not defined` runtime error caught in browser testing; documented in `stack-upgrade.md`. Not yet deployed.
+
+### Bump React 17 → 18 + TS 4.6 → 5
+
+- **status**: done
+- **completed**: 2026-06-03
+- **size**: S
+- **priority**: 2
+- **notes**: Shipped 2026-06-03 (commit `8bc801e`) on the Vite migration commit. react/react-dom → 18.3.1 (`createRoot` in `src/index.tsx`), typescript → 5.9, tsconfig `target` es5 → es2020. Typecheck + build clean.
+
+### Bump MUI 5 → 7
+
+- **status**: done
+- **completed**: 2026-06-03
+- **size**: S
+- **priority**: 2
+- **notes**: Shipped 2026-06-03 (commit `8bc801e`). @mui/material + @mui/icons-material → 7.3. The flagged high-risk item (`ButtonTheme.tsx` module augmentation) turned out to be dead code — defined but never imported anywhere; it compiles under MUI 7. Six icon imports path-stable.
+
+### Bump React Router 6 → 7
+
+- **status**: done
+- **completed**: 2026-06-03
+- **size**: S
+- **priority**: 2
+- **notes**: Shipped 2026-06-03 (commit `8bc801e`). react-router-dom → 7.16. The open risk (`react-router-hash-link` peer dep lagging RR7) did not materialize — clean install with no `--legacy-peer-deps`, hash nav verified in browser. The `useScrollToHash` fallback was not needed. Dropped vestigial `@types/react-router-dom@5`.
+
 ### Dependency + build-tool upgrade plan
 
 - **status**: done
