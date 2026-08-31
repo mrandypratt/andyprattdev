@@ -7,6 +7,10 @@ import "../styles/Library.css";
 const BOOKS_PER_SHELF = 6;
 const SHELF_NUMERALS = ["I", "II", "III", "IV", "V", "VI"];
 
+/* Below this width the catalog card stops being a pinned column and becomes a
+   bottom sheet over the shelf. Must stay in sync with Library.css. */
+const COMPACT_QUERY = "(max-width: 899px)";
+
 /* Spine palette — bg/fg pairs. Dark spines take light lettering and vice versa. */
 const SPINE_COLORS = [
   { bg: "#7E3231", fg: "#F0E4D2" }, // oxblood
@@ -45,10 +49,22 @@ const Meter = ({ rating, tone }: MeterProps) => (
 
 export const Library = () => {
   const [selected, setSelected] = useState<number | null>(null);
+  const [isCompact, setIsCompact] = useState(() => window.matchMedia(COMPACT_QUERY).matches);
   const spineRefs = useRef<Record<number, HTMLButtonElement | null>>({});
   const browseRef = useRef<HTMLDivElement | null>(null);
   const rankRef = useRef<HTMLDivElement | null>(null);
   const cardRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    const query = window.matchMedia(COMPACT_QUERY);
+    const handleChange = (event: MediaQueryListEvent) => setIsCompact(event.matches);
+    query.addEventListener("change", handleChange);
+    return () => query.removeEventListener("change", handleChange);
+  }, []);
+
+  /* On narrow screens the card is a modal bottom sheet — there is no room to
+     put it beside the shelf, and scrolling down to it was the whole problem. */
+  const isOverlay = isCompact && selected !== null;
 
   const closeCard = useCallback(
     (returnFocus: boolean) => {
@@ -82,11 +98,27 @@ export const Library = () => {
       } else if (event.key === "ArrowRight") {
         event.preventDefault();
         step(1);
+      } else if (event.key === "Tab" && isOverlay) {
+        // The sheet is modal, so keep Tab from wandering behind the scrim.
+        const focusable = cardRef.current?.querySelectorAll<HTMLElement>(
+          "button:not([disabled])"
+        );
+        if (!focusable || focusable.length === 0) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        const active = document.activeElement;
+        if (event.shiftKey && (active === first || active === cardRef.current)) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && active === last) {
+          event.preventDefault();
+          first.focus();
+        }
       }
     };
     document.addEventListener("keydown", handleKeydown);
     return () => document.removeEventListener("keydown", handleKeydown);
-  }, [selected, closeCard, step]);
+  }, [selected, closeCard, step, isOverlay]);
 
   // Clicking away from the shelf, the card, or the ranking puts the book back.
   useEffect(() => {
@@ -100,11 +132,11 @@ export const Library = () => {
     return () => document.removeEventListener("mousedown", handlePointerDown);
   }, [selected, closeCard]);
 
-  /* Only move the page when the card would otherwise be invisible. On desktop the
-     card is pinned beside the shelf, so browsing never scrolls; this is here for
-     the single-column layout and for jumps from the ranking. */
+  /* Only move the page when the card would otherwise be invisible. The card is
+     pinned beside the shelf on desktop and overlaid on mobile, so browsing never
+     scrolls; this is the fallback for in-between widths and ranking jumps. */
   useEffect(() => {
-    if (selected === null || !cardRef.current) return;
+    if (selected === null || isCompact || !cardRef.current) return;
     const rect = cardRef.current.getBoundingClientRect();
     const navHeight = 72;
     const onScreen = rect.bottom > navHeight && rect.top < window.innerHeight;
@@ -114,7 +146,23 @@ export const Library = () => {
       behavior: reducedMotion ? "auto" : "smooth",
       block: "center",
     });
-  }, [selected]);
+  }, [selected, isCompact]);
+
+  // Hold the page still behind the sheet.
+  useEffect(() => {
+    if (!isOverlay) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [isOverlay]);
+
+  // Hand focus to the sheet when it opens so Esc and the arrows are live.
+  useEffect(() => {
+    if (!isOverlay) return;
+    cardRef.current?.focus({ preventScroll: true });
+  }, [isOverlay]);
 
   const shelfCount = Math.ceil(BOOKS.length / BOOKS_PER_SHELF);
   const shelves = Array.from({ length: shelfCount }, (_, shelfIndex) =>
@@ -201,9 +249,23 @@ export const Library = () => {
             <p className="library-shelf-hint">Tap a spine to pull its card</p>
           </section>
 
-          <div className="library-card-column">
+          <div className={`library-card-column${isOverlay ? " library-card-overlay" : ""}`}>
+            {isOverlay && (
+              <div className="library-card-scrim" onClick={() => closeCard(false)} />
+            )}
+
             {openBook && selected !== null ? (
-              <article className="library-card" ref={cardRef} aria-live="polite">
+              <article
+                className="library-card"
+                ref={cardRef}
+                tabIndex={-1}
+                aria-live="polite"
+                role={isOverlay ? "dialog" : undefined}
+                aria-modal={isOverlay || undefined}
+                aria-label={isOverlay ? `${openBook.title} — catalog card` : undefined}
+              >
+                {isOverlay && <span className="library-card-handle" aria-hidden="true" />}
+
                 <div className="library-card-head">
                   <span className="library-card-number">
                     Card N&ordm; {String(selected + 1).padStart(2, "0")}
@@ -239,34 +301,41 @@ export const Library = () => {
                   </div>
                 </div>
 
-                <div className="library-card-main">
-                  <div className="library-card-identity">
-                    <h3 className="library-card-title">{openBook.title}</h3>
-                    <p className="library-card-author">{openBook.author}</p>
-                    <div className="library-card-meta">
-                      <span>
-                        Finished <b>{openBook.finished}</b>
-                      </span>
-                      <span className="library-card-meta-score">
-                        Score <Meter rating={openBook.rating} tone="paper" />
-                      </span>
+                {/* Everything below the head scrolls; the head — and so the
+                    arrows and Reshelve — stays put at a fixed sheet height. */}
+                <div className="library-card-body">
+                  <div className="library-card-main">
+                    <div className="library-card-identity">
+                      <h3 className="library-card-title">{openBook.title}</h3>
+                      <p className="library-card-author">{openBook.author}</p>
+                      <div className="library-card-meta">
+                        <span>
+                          Finished <b>{openBook.finished}</b>
+                        </span>
+                        <span className="library-card-meta-score">
+                          Score <Meter rating={openBook.rating} tone="paper" />
+                        </span>
+                      </div>
+                    </div>
+
+                    <div
+                      className="library-stamp"
+                      aria-label={`Rated ${openBook.rating} out of 10`}
+                    >
+                      <span className="library-stamp-score">{openBook.rating}/10</span>
+                      <span className="library-stamp-date">{openBook.finished}</span>
                     </div>
                   </div>
 
-                  <div className="library-stamp" aria-label={`Rated ${openBook.rating} out of 10`}>
-                    <span className="library-stamp-score">{openBook.rating}/10</span>
-                    <span className="library-stamp-date">{openBook.finished}</span>
+                  <div className="library-card-take">
+                    <span className="library-card-take-label">The take</span>
+                    <p className={openBook.take ? undefined : "library-card-take-empty"}>
+                      {openBook.take ?? NO_TAKE_YET}
+                    </p>
                   </div>
-                </div>
 
-                <div className="library-card-take">
-                  <span className="library-card-take-label">The take</span>
-                  <p className={openBook.take ? undefined : "library-card-take-empty"}>
-                    {openBook.take ?? NO_TAKE_YET}
-                  </p>
+                  <div className="library-card-hole" />
                 </div>
-
-                <div className="library-card-hole" />
               </article>
             ) : (
               <div className="library-card-resting" aria-hidden="true">

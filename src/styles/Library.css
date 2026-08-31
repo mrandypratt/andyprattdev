@@ -4,7 +4,11 @@
    accents, Roboto throughout (the only webfont the site loads).
 
    Layout: single column by default. At 900px the shelf narrows to fit its own
-   content and the catalog card pins beside it, so browsing never scrolls. */
+   content and the catalog card pins beside it, so browsing never scrolls.
+
+   The card is a flex column in both modes: .library-card-head is a fixed-size
+   item and .library-card-body scrolls, so the arrows and Reshelve hold their
+   position regardless of how long a take runs. */
 
 .library-container {
   --lib-gold: #ffbd59;
@@ -22,6 +26,13 @@
   --lib-ink-faint: #7b6f52;
   --lib-stamp: #9a5f16;
   --lib-nav-clearance: 84px; /* fixed navbar is 64px */
+  --lib-card-pad-x: 28px; /* card gutter */
+  /* Fixed height for the mobile sheet — deliberately not max-height. Roughly
+     three quarters of the screen: enough that the shelf still shows above it,
+     and because the height never varies with content the arrows and Reshelve
+     stay put as you walk the shelf. Longer takes scroll inside the body. */
+  --lib-sheet-height: 78vh;
+  --lib-sheet-height: 78dvh; /* dvh where supported: excludes mobile browser chrome */
 
   display: flex;
   flex-direction: column;
@@ -120,8 +131,10 @@
   display: flex;
   align-items: flex-end;
   gap: 5px;
-  /* Generous head room so a hovered spine's tooltip has somewhere to go
-     without being clipped by the case's overflow. */
+  /* Head room for a hovered spine's tooltip. The case clips vertically wherever
+     it has to scroll horizontally (overflow-x: auto forces overflow-y: auto), so
+     the reserve is only needed at widths that scroll. The 721px rule below turns
+     overflow off and tightens this right up. */
   padding: 96px 24px 0;
   min-width: min-content;
 }
@@ -314,7 +327,7 @@
   background: linear-gradient(180deg, var(--lib-paper) 0%, var(--lib-paper-dim) 100%);
   color: var(--lib-ink);
   border-radius: 6px;
-  padding: 22px 28px 18px;
+  padding: 22px var(--lib-card-pad-x) 18px;
   box-shadow: 0 24px 50px rgba(0, 0, 0, 0.55);
   animation: library-card-in 0.2s ease both;
 }
@@ -328,6 +341,13 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* Wraps everything under the head. It only becomes a scroll container when the
+   card has a bounded height (the mobile sheet, or a desktop card taller than the
+   viewport); otherwise it is an inert div. */
+.library-card-body {
+  min-width: 0;
 }
 
 .library-card-head {
@@ -677,6 +697,22 @@
   text-align: right;
 }
 
+/* ---------- Shelf clearance above the mobile scale ----------
+   From here up, the case is comfortably narrower than the viewport, so it never
+   needs to scroll — which means the hover tip can overflow the case instead of
+   the shelf reserving ~96px of dead air above the tallest spine for it. */
+@media (min-width: 721px) {
+  .library-bookcase {
+    overflow: visible;
+  }
+
+  .library-books {
+    /* Just enough air over the tallest spine to read as shelf clearance,
+       matching the proportions of the scaled-down mobile case. */
+    padding-top: 32px;
+  }
+}
+
 /* ---------- Two-column browsing (desktop) ----------
    The shelf column sizes to the bookcase; the card pins beside it so clicking
    through books never moves the page. */
@@ -705,10 +741,132 @@
   .library-card {
     max-width: none;
     margin: 0;
+    /* A pinned card can't be scrolled past, so cap it at the viewport and let
+       the body scroll instead of clipping the end of a long take. */
+    max-height: calc(100vh - var(--lib-nav-clearance) - 24px);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .library-card-head {
+    flex: 0 0 auto;
+  }
+
+  .library-card-body {
+    flex: 1 1 auto;
+    overflow-y: auto;
   }
 
   .library-card-resting {
     display: block;
+  }
+}
+
+/* ---------- Mobile bottom sheet (below 900px) ----------
+   No room to pin the card beside the shelf, and scrolling down to it was the
+   original complaint — so the card comes up over the shelf instead. The
+   breakpoint must stay in sync with COMPACT_QUERY in Library.tsx. */
+@media (max-width: 899px) {
+  .library-card-column {
+    margin-top: 0; /* the slot is empty until a book is pulled */
+  }
+
+  .library-card-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1100; /* over the fixed navbar (1000) */
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+  }
+
+  .library-card-scrim {
+    position: absolute;
+    inset: 0;
+    background: rgba(12, 12, 12, 0.74);
+    animation: library-scrim-in 0.18s ease both;
+  }
+
+  .library-card-overlay .library-card {
+    position: relative;
+    width: 100%;
+    max-width: 640px;
+    margin: 0;
+    /* Fixed, not max-height: the sheet is the same size for every book, so the
+       controls sit in the same place no matter how long the take is. */
+    height: var(--lib-sheet-height);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* the body scrolls, the sheet doesn't */
+    padding-top: 26px; /* clears the grab handle */
+    border-radius: 12px 12px 0 0;
+    box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.6);
+    animation: library-sheet-in 0.24s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .library-card-overlay .library-card-head {
+    flex: 0 0 auto;
+  }
+
+  .library-card-overlay .library-card-body {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain; /* don't hand scrolling back to the page */
+  }
+
+  /* Fade the bottom edge so an unfinished take reads as scrollable. */
+  .library-card-overlay .library-card::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 30px;
+    background: linear-gradient(to top, var(--lib-paper-dim), rgba(227, 217, 192, 0));
+    pointer-events: none;
+  }
+
+  .library-card-overlay .library-card:focus {
+    outline: none; /* the sheet takes focus programmatically, not by intent */
+  }
+
+  .library-card-handle {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 42px;
+    height: 4px;
+    border-radius: 2px;
+    background: rgba(38, 34, 27, 0.22);
+  }
+
+  /* The sheet has its own ground, so the punch-hole detail would read as a
+     floating dot. Drop it and reclaim the space. */
+  .library-card-overlay .library-card-hole {
+    display: none;
+  }
+}
+
+@keyframes library-scrim-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes library-sheet-in {
+  from {
+    transform: translateY(18px);
+  }
+  to {
+    transform: translateY(0);
   }
 }
 
@@ -747,8 +905,12 @@
     font-size: 0.62rem;
   }
 
+  .library-container {
+    --lib-card-pad-x: 20px;
+  }
+
   .library-card {
-    padding: 18px 20px 14px;
+    padding: 18px var(--lib-card-pad-x) 14px;
   }
 
   .library-card-main {
@@ -785,7 +947,9 @@
   .library-rank-row,
   .library-card-step,
   .library-reshelve,
-  .library-card {
+  .library-card,
+  .library-card-scrim,
+  .library-card-overlay .library-card {
     transition: none;
     animation: none;
   }
