@@ -87,7 +87,8 @@ export const About = () => {
               understanding. When I discovered that I could use my brain to
               understand a problem and build a solution to handle it, I knew I
               was chasing the right dream. I love the flow state of programming,
-              going deep on trade-offs, and .
+              going deep on trade-offs, and the sense of satisfaction when a
+              program works.
             </p>
             <p>
               Now with the advent of LLMs and agentic development I feel equally
