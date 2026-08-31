@@ -17,13 +17,20 @@ type PhotoFrameProps = {
   placeholderLabel: string;
 };
 
-const PhotoFrame = ({ src, alt, caption, placeholderLabel }: PhotoFrameProps) => (
+const PhotoFrame = ({
+  src,
+  alt,
+  caption,
+  placeholderLabel,
+}: PhotoFrameProps) => (
   <figure className="about-photo">
     {src ? (
       <img className="about-photo-img" src={src} alt={alt} loading="lazy" />
     ) : (
       <div className="about-photo-placeholder" aria-label={alt}>
-        <span className="about-photo-placeholder-label">{placeholderLabel}</span>
+        <span className="about-photo-placeholder-label">
+          {placeholderLabel}
+        </span>
       </div>
     )}
     <figcaption className="about-photo-caption">{caption}</figcaption>
@@ -39,7 +46,8 @@ export const About = () => {
         <header className="about-intro">
           <h1 className="about-title">A little about me.</h1>
           <p className="about-lede">
-            I make my living at the keyboard, but I don't do all my living there.
+            I make my living at the keyboard, but I don't do all my living
+            there.
           </p>
         </header>
 
@@ -47,39 +55,50 @@ export const About = () => {
           <h2 className="about-chapter-header">How I got here</h2>
           <div className="about-chapter-body">
             <p>
-              I didn't grow up writing code. Through college and the years after, I
-              worked in fine-dining steakhouses — long nights, fast feedback, a lot of
-              people. By day I was building an accounting career: the kind of work that
-              rewards structure, patience, and an eye for systems that are almost
-              working.
+              I didn't grow up writing code. Through college and the years
+              after, I spent my days building an accounting career and my nights
+              working in fine-dining restaurants and steakhouses. I've had a
+              great deal of passion for people, hard work, and learning
+              throughout my life which I was able to channel through these
+              avenues, but after a few years I felt the itch for something more.
             </p>
             <p>
-              The shift to software came sideways. Accounting meant spreadsheets, and
-              spreadsheets meant repetition. I started writing macros, then small Python
-              scripts to handle the things Excel couldn't. The first time I opened a
-              real code editor was August 2020. The puzzle-shaped problems I'd been
-              chasing in accounting — break a system down, find the leverage point,
-              build the tool — turned out to be the job description for software
-              engineers.
+              My path to software was paved through hard work, determination,
+              and the will to try something new in the face of life's
+              challenges. Accounting is riddled with tedious and often manual
+              processes. I started with small Python and VBA scripts to handle
+              the things Excel couldn't, which eventually led me down a 3 year
+              journey to learn computer science, programming, and software
+              development. After building a few apps for myself and leaning on a
+              couple of very important mentors, I was able to finally break into
+              a role in softward.
             </p>
-            <p>I've been chasing that thread ever since.</p>
+            <p>And as the old saying goes, "The rest is history."</p>
           </div>
         </section>
 
         <section className="about-chapter">
-          <h2 className="about-chapter-header">What pulls me toward software</h2>
+          <h2 className="about-chapter-header">Why software?</h2>
           <div className="about-chapter-body">
             <p>
-              Three things, mostly. The feedback loop — you write something, run it,
-              and find out in seconds whether you were right. The leverage — a good
-              piece of code does the same job a thousand times without complaint. And
-              the fact that the learning curve never really flattens; every new project
-              hands me something I didn't know I was missing.
+              I've always had a penchant for going deep to understand things
+              that capture my seemingly insatiable curiosity. Software is
+              crystallized intelligence and data is the raw material for
+              understanding. When I discovered that I could use my brain to
+              understand a problem and build a solution to handle it, I knew I
+              was chasing the right dream. I love the flow state of programming,
+              going deep on trade-offs, and .
             </p>
             <p>
-              These days, that curiosity is pointed squarely at AI: how it changes the
-              way engineers build, what it doesn't change, and where it earns its keep
-              in real systems.
+              Now with the advent of LLMs and agentic development I feel equally
+              drawn on the quest to understand and harness the power of AI to
+              build better quality software and ship more quickly while. Harness
+              engineering become an increasingly important part of software
+              engineering in order to improve velocity while not sacrificing
+              quality and security. I love finding optimizations that allow me
+              to explore the meta-process of software development to open doors
+              that were previously locked by the limitations of the human brain
+              alone.
             </p>
           </div>
         </section>
@@ -94,13 +113,13 @@ export const About = () => {
             <PhotoFrame
               src={tennisFloridaPhoto}
               alt="Andy at a tennis tournament in Florida"
-              caption="A tennis tournament in Florida — tennis has been a constant for years."
-              placeholderLabel="Tennis · Florida"
+              caption="Tennis tournament at Crandon Park in Key Biscayne, FL"
+              placeholderLabel="Tennis in Florida"
             />
             <PhotoFrame
               src={pacificNorthwestPhoto}
               alt="Pacific Northwest trip"
-              caption="Pacific Northwest — driving the coast from San Francisco up to Seattle."
+              caption="Pacific Northwest road trip from San Francisco up to Seattle."
               placeholderLabel="Pacific Northwest"
             />
             <PhotoFrame
@@ -112,7 +131,7 @@ export const About = () => {
             <PhotoFrame
               src={denverPhoto}
               alt="Remote work stint in Denver"
-              caption="And again from Denver."
+              caption="And two months in Denver."
               placeholderLabel="Denver"
             />
             <PhotoFrame
@@ -124,8 +143,8 @@ export const About = () => {
             <PhotoFrame
               src={northeastPhoto}
               alt="Northeast trip — Boston and Maine"
-              caption="Northeast Coast — Boston, then up to Maine for boat rides and lobster rolls."
-              placeholderLabel="Boston · Maine"
+              caption="Northeast Coast road trip from Boston up to Maine for boat rides and lobster rolls."
+              placeholderLabel="Boston & Maine"
             />
           </div>
         </section>
