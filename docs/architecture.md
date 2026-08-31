@@ -139,8 +139,13 @@ The Game Set Book and AI Assistant coming-soon cards were removed in 2026-08 —
 Reading history: a wooden bookcase of clickable spines, a paper catalog card for the selected book, and a full ranking sorted by score.
 
 - **Data:** `src/data/books.ts` — the only file to edit when adding a book. Shelf order is array order; the ranking sorts by `rating` on its own. Spine color, height, and width are assigned automatically from the index. A book with no `take` still shelves and ranks; its card says the write-up isn't done yet.
-- **View:** `src/views/Library.tsx`. Six books per shelf. Spine selection is local state; Escape or "Reshelve" closes the card and returns focus to the spine.
-- **Styles:** `src/styles/Library.css`. Library texture (wood planks, gilded spine bands, cream ruled card, wax-stamp score) sits on the site palette — `#292929` ground, `#ffbd59` gold, `#5ce1e6` cyan focus rings, Roboto only. Component-scoped CSS variables are declared on `.library-container`.
+- **View:** `src/views/Library.tsx`. Six books per shelf. Spine selection is a single piece of local state (`selected`), which the shelf, the card, and the ranking all read from.
+- **Browsing model** — the page is meant to feel like handling books, so nothing jumps:
+  - Click a spine to pull it (gold edge, lifted out of the shelf); click it again, press Esc, hit "Reshelve", or click anywhere outside the shelf/card/ranking to put it back. Esc and "Reshelve" return focus to the spine.
+  - `←` / `→` arrow keys and the card's arrow buttons walk the shelf in place. They stop at the ends rather than wrapping.
+  - The page scrolls **only** when the card is entirely off-screen — so the desktop layout never scrolls while browsing, and jumps from the ranking still land on the card.
+- **Layout:** single column below 900px; at 900px `.library-browse` becomes a two-column grid — the bookcase sizes to its own content (`width: fit-content`) in an `auto` track and the card column pins beside it with `position: sticky`. A dashed resting panel holds the card slot open so the grid doesn't reflow on the first click. ⚠ The desktop layout is a first pass: the case is a tall narrow column and hasn't been tuned for wide viewports.
+- **Styles:** `src/styles/Library.css`. Library texture (wood planks, gilded spine bands, cream ruled card, wax-stamp score) sits on the site palette — `#292929` ground, `#ffbd59` gold, `#5ce1e6` cyan focus rings, Roboto only. Component-scoped CSS variables are declared on `.library-container`. Spine dimensions come from JS as `--spine-h` / `--spine-w` custom properties so CSS can shrink the whole case with one `--spine-scale` factor (0.74 below 720px); hover tips are hidden on touch.
 - Originated as a standalone HTML mock (`andy-library.html`, since deleted) reworked into the site theme.
 
 ## Known code-level issues

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { CSSProperties, useCallback, useEffect, useRef, useState } from "react";
 import { Footer } from "../components/Footer";
 import { Navbar } from "../components/Navbar";
 import { BOOKS } from "../data/books";
@@ -18,6 +18,9 @@ const SPINE_COLORS = [
   { bg: "#2F5D5A", fg: "#E2F0EC" }, // teal
   { bg: "#5C3A56", fg: "#F0E2ED" }, // plum
 ];
+
+/* Base dimensions in px. Library.css scales these down on small screens via
+   the --spine-h / --spine-w custom properties. */
 const SPINE_HEIGHTS = [188, 168, 202, 162, 182, 196, 172, 206, 178, 194, 166, 190];
 const SPINE_WIDTHS = [42, 36, 48, 34, 40, 44, 38, 46, 36, 42, 35, 47];
 
@@ -43,34 +46,73 @@ const Meter = ({ rating, tone }: MeterProps) => (
 export const Library = () => {
   const [selected, setSelected] = useState<number | null>(null);
   const spineRefs = useRef<Record<number, HTMLButtonElement | null>>({});
+  const browseRef = useRef<HTMLDivElement | null>(null);
+  const rankRef = useRef<HTMLDivElement | null>(null);
   const cardRef = useRef<HTMLElement | null>(null);
 
-  const closeCard = useCallback(() => {
-    setSelected((current) => {
-      if (current !== null) {
-        spineRefs.current[current]?.focus();
+  const closeCard = useCallback(
+    (returnFocus: boolean) => {
+      if (returnFocus && selected !== null) {
+        spineRefs.current[selected]?.focus({ preventScroll: true });
       }
-      return null;
+      setSelected(null);
+    },
+    [selected]
+  );
+
+  /* Walk the shelf in place. Stops at the ends rather than wrapping so the
+     controls can disable themselves and the position stays obvious. */
+  const step = useCallback((delta: number) => {
+    setSelected((current) => {
+      if (current === null) return current;
+      const next = current + delta;
+      return next < 0 || next >= BOOKS.length ? current : next;
     });
   }, []);
 
-  // Escape reshelves the open card.
+  // Escape reshelves; left/right walk the shelf while a card is open.
   useEffect(() => {
     if (selected === null) return;
     const handleKeydown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") closeCard();
+      if (event.key === "Escape") {
+        closeCard(true);
+      } else if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        step(-1);
+      } else if (event.key === "ArrowRight") {
+        event.preventDefault();
+        step(1);
+      }
     };
     document.addEventListener("keydown", handleKeydown);
     return () => document.removeEventListener("keydown", handleKeydown);
+  }, [selected, closeCard, step]);
+
+  // Clicking away from the shelf, the card, or the ranking puts the book back.
+  useEffect(() => {
+    if (selected === null) return;
+    const handlePointerDown = (event: MouseEvent) => {
+      const target = event.target as Node;
+      if (browseRef.current?.contains(target) || rankRef.current?.contains(target)) return;
+      closeCard(false);
+    };
+    document.addEventListener("mousedown", handlePointerDown);
+    return () => document.removeEventListener("mousedown", handlePointerDown);
   }, [selected, closeCard]);
 
-  // Pull the card into view when a spine is picked.
+  /* Only move the page when the card would otherwise be invisible. On desktop the
+     card is pinned beside the shelf, so browsing never scrolls; this is here for
+     the single-column layout and for jumps from the ranking. */
   useEffect(() => {
     if (selected === null || !cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const navHeight = 72;
+    const onScreen = rect.bottom > navHeight && rect.top < window.innerHeight;
+    if (onScreen) return;
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     cardRef.current.scrollIntoView({
       behavior: reducedMotion ? "auto" : "smooth",
-      block: "nearest",
+      block: "center",
     });
   }, [selected]);
 
@@ -104,101 +146,139 @@ export const Library = () => {
           </p>
         </header>
 
-        <section className="library-shelf-section" aria-labelledby="library-shelf-heading">
-          <h2 id="library-shelf-heading" className="library-visually-hidden">
-            The shelf
-          </h2>
+        <div className="library-browse" ref={browseRef}>
+          <section className="library-shelf-column" aria-labelledby="library-shelf-heading">
+            <h2 id="library-shelf-heading" className="library-visually-hidden">
+              The shelf
+            </h2>
 
-          <div className="library-bookcase">
-            {shelves.map((shelf, shelfIndex) => (
-              <div className="library-shelf" key={shelfIndex}>
-                <div className="library-books">
-                  {shelf.map(({ book, index }) => {
-                    const color = SPINE_COLORS[index % SPINE_COLORS.length];
-                    const isSelected = selected === index;
-                    return (
-                      <button
-                        type="button"
-                        key={book.title}
-                        ref={(node) => {
-                          spineRefs.current[index] = node;
-                        }}
-                        className={`library-spine${isSelected ? " library-spine-selected" : ""}`}
-                        style={{
-                          background: `linear-gradient(90deg, rgba(0,0,0,0.20), rgba(255,255,255,0.07) 30%, rgba(0,0,0,0.14)), ${color.bg}`,
-                          color: color.fg,
-                          width: SPINE_WIDTHS[index % SPINE_WIDTHS.length],
-                          height: SPINE_HEIGHTS[index % SPINE_HEIGHTS.length],
-                        }}
-                        aria-label={`${book.title} by ${book.author}, rated ${book.rating} out of 10. Open the card.`}
-                        onClick={() => setSelected(isSelected ? null : index)}
-                      >
-                        <span className="library-spine-title">{book.title}</span>
-                        <span className="library-tip" aria-hidden="true">
-                          <span className="library-tip-title">{book.title}</span>
-                          <span className="library-tip-author">{book.author}</span>
-                          <span className="library-tip-score">{book.rating} / 10</span>
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-                <div className="library-plank">
-                  <span className="library-plaque">
-                    Shelf {SHELF_NUMERALS[shelfIndex] ?? shelfIndex + 1}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <p className="library-shelf-hint">Click a spine to pull the card</p>
-        </section>
-
-        {openBook && selected !== null && (
-          <section className="library-card-section">
-            <article className="library-card" ref={cardRef} aria-live="polite">
-              <div className="library-card-head">
-                <span>
-                  Andy&rsquo;s Library &mdash; Card N&ordm;{" "}
-                  {String(selected + 1).padStart(2, "0")}
-                </span>
-                <button type="button" className="library-reshelve" onClick={closeCard}>
-                  Reshelve &#8617;
-                </button>
-              </div>
-
-              <div className="library-card-main">
-                <div className="library-card-identity">
-                  <h3 className="library-card-title">{openBook.title}</h3>
-                  <p className="library-card-author">{openBook.author}</p>
-                  <div className="library-card-meta">
-                    <span>
-                      Finished <b>{openBook.finished}</b>
-                    </span>
-                    <span className="library-card-meta-score">
-                      Score <Meter rating={openBook.rating} tone="paper" />
+            <div className="library-bookcase">
+              {shelves.map((shelf, shelfIndex) => (
+                <div className="library-shelf" key={shelfIndex}>
+                  <div className="library-books">
+                    {shelf.map(({ book, index }) => {
+                      const color = SPINE_COLORS[index % SPINE_COLORS.length];
+                      const isSelected = selected === index;
+                      return (
+                        <button
+                          type="button"
+                          key={book.title}
+                          ref={(node) => {
+                            spineRefs.current[index] = node;
+                          }}
+                          className={`library-spine${isSelected ? " library-spine-selected" : ""}`}
+                          style={
+                            {
+                              background: `linear-gradient(90deg, rgba(0,0,0,0.20), rgba(255,255,255,0.07) 30%, rgba(0,0,0,0.14)), ${color.bg}`,
+                              color: color.fg,
+                              "--spine-h": `${SPINE_HEIGHTS[index % SPINE_HEIGHTS.length]}px`,
+                              "--spine-w": `${SPINE_WIDTHS[index % SPINE_WIDTHS.length]}px`,
+                            } as CSSProperties
+                          }
+                          aria-label={`${book.title} by ${book.author}, rated ${book.rating} out of 10`}
+                          aria-pressed={isSelected}
+                          onClick={() => setSelected(isSelected ? null : index)}
+                        >
+                          <span className="library-spine-title">{book.title}</span>
+                          <span className="library-tip" aria-hidden="true">
+                            <span className="library-tip-title">{book.title}</span>
+                            <span className="library-tip-author">{book.author}</span>
+                            <span className="library-tip-score">{book.rating} / 10</span>
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <div className="library-plank">
+                    <span className="library-plaque">
+                      Shelf {SHELF_NUMERALS[shelfIndex] ?? shelfIndex + 1}
                     </span>
                   </div>
                 </div>
+              ))}
+            </div>
 
-                <div className="library-stamp" aria-label={`Rated ${openBook.rating} out of 10`}>
-                  <span className="library-stamp-score">{openBook.rating}/10</span>
-                  <span className="library-stamp-date">{openBook.finished}</span>
+            <p className="library-shelf-hint">Tap a spine to pull its card</p>
+          </section>
+
+          <div className="library-card-column">
+            {openBook && selected !== null ? (
+              <article className="library-card" ref={cardRef} aria-live="polite">
+                <div className="library-card-head">
+                  <span className="library-card-number">
+                    Card N&ordm; {String(selected + 1).padStart(2, "0")}
+                    <span className="library-card-of"> of {BOOKS.length}</span>
+                  </span>
+
+                  <div className="library-card-controls">
+                    <button
+                      type="button"
+                      className="library-card-step"
+                      onClick={() => step(-1)}
+                      disabled={selected === 0}
+                      aria-label="Previous book"
+                    >
+                      &larr;
+                    </button>
+                    <button
+                      type="button"
+                      className="library-card-step"
+                      onClick={() => step(1)}
+                      disabled={selected === BOOKS.length - 1}
+                      aria-label="Next book"
+                    >
+                      &rarr;
+                    </button>
+                    <button
+                      type="button"
+                      className="library-reshelve"
+                      onClick={() => closeCard(true)}
+                    >
+                      Reshelve &#8617;
+                    </button>
+                  </div>
                 </div>
-              </div>
 
-              <div className="library-card-take">
-                <span className="library-card-take-label">The take</span>
-                <p className={openBook.take ? undefined : "library-card-take-empty"}>
-                  {openBook.take ?? NO_TAKE_YET}
+                <div className="library-card-main">
+                  <div className="library-card-identity">
+                    <h3 className="library-card-title">{openBook.title}</h3>
+                    <p className="library-card-author">{openBook.author}</p>
+                    <div className="library-card-meta">
+                      <span>
+                        Finished <b>{openBook.finished}</b>
+                      </span>
+                      <span className="library-card-meta-score">
+                        Score <Meter rating={openBook.rating} tone="paper" />
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="library-stamp" aria-label={`Rated ${openBook.rating} out of 10`}>
+                    <span className="library-stamp-score">{openBook.rating}/10</span>
+                    <span className="library-stamp-date">{openBook.finished}</span>
+                  </div>
+                </div>
+
+                <div className="library-card-take">
+                  <span className="library-card-take-label">The take</span>
+                  <p className={openBook.take ? undefined : "library-card-take-empty"}>
+                    {openBook.take ?? NO_TAKE_YET}
+                  </p>
+                </div>
+
+                <div className="library-card-hole" />
+              </article>
+            ) : (
+              <div className="library-card-resting" aria-hidden="true">
+                <p className="library-card-resting-title">Pull a book down</p>
+                <p className="library-card-resting-copy">
+                  Click any spine and its catalog card opens here. Then walk the shelf with the
+                  arrows or your &larr; and &rarr; keys, and press Esc to reshelve.
                 </p>
               </div>
-
-              <div className="library-card-hole" />
-            </article>
-          </section>
-        )}
+            )}
+          </div>
+        </div>
 
         <section className="library-block" aria-labelledby="library-ranking-heading">
           <p className="library-eyebrow">Best to worst</p>
@@ -210,13 +290,16 @@ export const Library = () => {
             finished it out of spite.
           </p>
 
-          <div className="library-rank-list">
+          <div className="library-rank-list" ref={rankRef}>
             {ranked.map(({ book, index }, position) => (
               <button
                 type="button"
                 key={book.title}
-                className="library-rank-row"
-                onClick={() => setSelected(index)}
+                className={`library-rank-row${
+                  selected === index ? " library-rank-row-selected" : ""
+                }`}
+                onClick={() => setSelected(selected === index ? null : index)}
+                aria-pressed={selected === index}
               >
                 <span className="library-rank-num">{String(position + 1).padStart(2, "0")}</span>
                 <span className="library-rank-body">

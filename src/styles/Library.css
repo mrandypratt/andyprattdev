@@ -1,7 +1,10 @@
 /* THE LIBRARY (/library)
    Bookshelf aesthetic — wood, spines, and a paper catalog card — rendered in the
    site palette: #292929 ground, white body copy, #ffbd59 gold and #5ce1e6 cyan
-   accents, Roboto throughout (the only webfont the site loads). */
+   accents, Roboto throughout (the only webfont the site loads).
+
+   Layout: single column by default. At 900px the shelf narrows to fit its own
+   content and the catalog card pins beside it, so browsing never scrolls. */
 
 .library-container {
   --lib-gold: #ffbd59;
@@ -18,12 +21,13 @@
   --lib-ink-soft: #5c5546;
   --lib-ink-faint: #7b6f52;
   --lib-stamp: #9a5f16;
+  --lib-nav-clearance: 84px; /* fixed navbar is 64px */
 
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   width: 100%;
-  padding-top: 64px; /* clears the fixed Navbar, matching Home + About */
+  padding-top: 64px; /* reserves space for the fixed Navbar, matching Home + About */
   box-sizing: border-box;
 }
 
@@ -84,12 +88,22 @@
   max-width: 620px;
 }
 
-/* ---------- Bookcase ---------- */
-.library-shelf-section {
-  padding: 8px 0 32px;
+/* ---------- Browse region (shelf + card) ---------- */
+.library-browse {
+  padding: 8px 0 40px;
 }
 
+.library-shelf-column {
+  min-width: 0;
+}
+
+/* ---------- Bookcase ---------- */
 .library-bookcase {
+  /* Sizes to the widest shelf rather than stretching across the column, so the
+     case reads as a real piece of furniture instead of a banner. */
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto;
   border: 12px solid transparent;
   border-image: linear-gradient(160deg, var(--lib-wood-hi), var(--lib-wood-lo)) 1;
   background: linear-gradient(180deg, var(--lib-case) 0%, var(--lib-case-deep) 100%);
@@ -106,7 +120,9 @@
   display: flex;
   align-items: flex-end;
   gap: 5px;
-  padding: 96px 28px 0;
+  /* Generous head room so a hovered spine's tooltip has somewhere to go
+     without being clipped by the case's overflow. */
+  padding: 96px 24px 0;
   min-width: min-content;
 }
 
@@ -136,14 +152,19 @@
 
 /* ---------- Spines ---------- */
 .library-spine {
+  /* --spine-h / --spine-w come from Library.tsx; the scale factor lets small
+     screens shrink the whole case without touching the data. */
+  --spine-scale: 1;
   position: relative;
+  width: calc(var(--spine-w) * var(--spine-scale));
+  height: calc(var(--spine-h) * var(--spine-scale));
   border: none;
   cursor: pointer;
   font-family: inherit;
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  padding: 22px 0 0 0;
+  padding: 18px 0 0 0;
   border-radius: 2px 2px 0 0;
   flex: 0 0 auto;
   box-shadow:
@@ -166,11 +187,11 @@
 }
 
 .library-spine::before {
-  top: 10px;
+  top: 8px;
 }
 
 .library-spine::after {
-  bottom: 12px;
+  bottom: 10px;
 }
 
 .library-spine:hover,
@@ -188,9 +209,17 @@
   outline-offset: 3px;
 }
 
-.library-spine-selected {
-  transform: translateY(-8px);
-  z-index: 3;
+/* The pulled book stays out of the shelf, with a gold edge so it's obvious
+   which card you're reading. */
+.library-spine-selected,
+.library-spine-selected:hover {
+  transform: translateY(-18px);
+  box-shadow:
+    inset -3px 0 5px rgba(0, 0, 0, 0.3),
+    inset 2px 0 3px rgba(255, 255, 255, 0.12),
+    0 0 0 2px var(--lib-gold),
+    0 16px 24px rgba(0, 0, 0, 0.6);
+  z-index: 5;
 }
 
 .library-spine-title {
@@ -274,8 +303,9 @@
 }
 
 /* ---------- Catalog card ---------- */
-.library-card-section {
-  padding: 12px 0 48px;
+.library-card-column {
+  min-width: 0;
+  margin-top: 24px;
 }
 
 .library-card {
@@ -284,15 +314,15 @@
   background: linear-gradient(180deg, var(--lib-paper) 0%, var(--lib-paper-dim) 100%);
   color: var(--lib-ink);
   border-radius: 6px;
-  padding: 26px 32px 20px;
+  padding: 22px 28px 18px;
   box-shadow: 0 24px 50px rgba(0, 0, 0, 0.55);
-  animation: library-card-in 0.26s ease both;
+  animation: library-card-in 0.2s ease both;
 }
 
 @keyframes library-card-in {
   from {
     opacity: 0;
-    transform: translateY(14px);
+    transform: translateY(10px);
   }
   to {
     opacity: 1;
@@ -303,8 +333,9 @@
 .library-card-head {
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
+  align-items: center;
   gap: 16px;
+  flex-wrap: wrap;
   font-size: 0.65rem;
   font-weight: 700;
   letter-spacing: 0.22em;
@@ -314,33 +345,62 @@
   padding-bottom: 8px;
 }
 
+.library-card-of {
+  color: #9c8f6c;
+}
+
+.library-card-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.library-card-step,
 .library-reshelve {
   border: 1px solid #9c8f6c;
   background: transparent;
   color: #6b5f42;
   font-family: inherit;
-  font-size: 0.65rem;
   font-weight: 700;
-  letter-spacing: 0.18em;
   text-transform: uppercase;
-  padding: 4px 10px;
   border-radius: 3px;
   cursor: pointer;
   white-space: nowrap;
-  transition: border-color 0.14s ease, color 0.14s ease;
+  transition: border-color 0.14s ease, color 0.14s ease, background-color 0.14s ease;
 }
 
+.library-card-step {
+  font-size: 0.85rem;
+  line-height: 1;
+  padding: 5px 10px;
+}
+
+.library-reshelve {
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  padding: 5px 10px;
+  margin-left: 4px;
+}
+
+.library-card-step:hover:not(:disabled),
+.library-card-step:focus-visible:not(:disabled),
 .library-reshelve:hover,
 .library-reshelve:focus-visible {
   border-color: var(--lib-ink);
   color: var(--lib-ink);
+  background: rgba(38, 34, 27, 0.06);
+}
+
+.library-card-step:disabled {
+  opacity: 0.35;
+  cursor: default;
 }
 
 .library-card-main {
   display: flex;
   justify-content: space-between;
   gap: 24px;
-  padding: 20px 0 6px;
+  padding: 18px 0 6px;
 }
 
 .library-card-identity {
@@ -348,7 +408,7 @@
 }
 
 .library-card-title {
-  font-size: 2rem;
+  font-size: 1.9rem;
   font-weight: 500;
   line-height: 1.15;
   margin: 0;
@@ -414,7 +474,7 @@
 }
 
 .library-card-take {
-  margin-top: 12px;
+  margin-top: 10px;
   font-size: 1.05rem;
   font-weight: 300;
   line-height: 28px;
@@ -452,8 +512,34 @@
   height: 15px;
   border-radius: 50%;
   background: #292929;
-  margin: 20px auto 0;
+  margin: 18px auto 0;
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+/* Resting state — holds the card slot open on desktop so the layout doesn't
+   jump when a book is pulled. Hidden in the single-column layout. */
+.library-card-resting {
+  display: none;
+  border: 1px dashed var(--lib-rule);
+  border-radius: 6px;
+  padding: 28px 26px;
+}
+
+.library-card-resting-title {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--lib-gold);
+}
+
+.library-card-resting-copy {
+  margin: 12px 0 0 0;
+  font-size: 1rem;
+  font-weight: 300;
+  line-height: 1.6;
+  color: var(--lib-muted);
 }
 
 /* ---------- Meter ---------- */
@@ -530,11 +616,12 @@
   background: none;
   border: none;
   border-bottom: 1px solid var(--lib-rule);
+  border-left: 2px solid transparent;
   color: inherit;
   font-family: inherit;
   cursor: pointer;
   padding: 14px 10px;
-  transition: background-color 0.14s ease;
+  transition: background-color 0.14s ease, border-left-color 0.14s ease;
 }
 
 .library-rank-row:hover {
@@ -544,6 +631,11 @@
 .library-rank-row:focus-visible {
   outline: 2px solid var(--lib-cyan);
   outline-offset: -2px;
+}
+
+.library-rank-row-selected {
+  background: rgba(255, 189, 89, 0.07);
+  border-left-color: var(--lib-gold);
 }
 
 .library-rank-num {
@@ -585,7 +677,43 @@
   text-align: right;
 }
 
-/* ---------- Responsive ---------- */
+/* ---------- Two-column browsing (desktop) ----------
+   The shelf column sizes to the bookcase; the card pins beside it so clicking
+   through books never moves the page. */
+@media (min-width: 900px) {
+  .library-browse {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 36px;
+    align-items: start;
+  }
+
+  .library-bookcase {
+    margin: 0;
+  }
+
+  .library-shelf-hint {
+    display: none; /* the resting panel explains the interaction instead */
+  }
+
+  .library-card-column {
+    position: sticky;
+    top: var(--lib-nav-clearance);
+    margin-top: 0;
+  }
+
+  .library-card {
+    max-width: none;
+    margin: 0;
+  }
+
+  .library-card-resting {
+    display: block;
+  }
+}
+
+/* ---------- Small screens ----------
+   Scale the whole case down so the shelf and the card share a viewport. */
 @media (max-width: 720px) {
   .library-main {
     padding: 0 4%;
@@ -603,8 +731,24 @@
     font-size: 1rem;
   }
 
+  .library-spine {
+    --spine-scale: 0.74;
+  }
+
+  .library-books {
+    padding: 26px 16px 0; /* no tooltips to make room for on touch */
+  }
+
+  .library-tip {
+    display: none; /* tapping a spine opens the card outright */
+  }
+
+  .library-spine-title {
+    font-size: 0.62rem;
+  }
+
   .library-card {
-    padding: 20px 22px 16px;
+    padding: 18px 20px 14px;
   }
 
   .library-card-main {
@@ -639,6 +783,7 @@
   .library-spine,
   .library-tip,
   .library-rank-row,
+  .library-card-step,
   .library-reshelve,
   .library-card {
     transition: none;
