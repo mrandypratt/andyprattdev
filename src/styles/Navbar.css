@@ -18,7 +18,7 @@ a {
 }
 
 .nav-button-container {
-  width: 420px;
+  width: 520px;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -37,78 +37,6 @@ a {
 
 .desktop-nav-button:hover {
   color:  #b3b3b3;
-}
-
-/* Projects dropdown (desktop) */
-.nav-dropdown {
-  position: relative;
-}
-
-.nav-dropdown-trigger {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-}
-
-.nav-dropdown-trigger:hover {
-  color: #b3b3b3;
-}
-
-.nav-dropdown-chevron {
-  font-size: 0.7rem;
-  margin-left: 4px;
-  vertical-align: middle;
-}
-
-.nav-dropdown-menu {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  background: #292929;
-  border: 1px solid #5ce1e6;
-  border-radius: 4px;
-  padding: 8px 0;
-  min-width: 220px;
-  display: flex;
-  flex-direction: column;
-  z-index: 10;
-  margin-top: 6px;
-}
-
-.nav-dropdown-item {
-  padding: 8px 16px;
-  color: white;
-  text-decoration: none;
-  font-family: Roboto, Helvetica, Arial, sans-serif;
-  font-weight: 500;
-  font-size: 0.875rem;
-  letter-spacing: 0.02857em;
-  display: block;
-}
-
-a.nav-dropdown-item:hover {
-  background: #3a3a3a;
-  color: #5ce1e6;
-}
-
-.nav-dropdown-item-disabled {
-  color: #777;
-  cursor: default;
-}
-
-.nav-dropdown-item-coming {
-  color: #555;
-  font-size: 0.75rem;
-}
-
-.app-bar-menu-item-disabled {
-  opacity: 0.4;
-  cursor: default;
-}
-
-.app-bar-menu-item-disabled:hover {
-  color: white; /* override the menu-item hover so disabled items look static */
 }
 
 .app-bar {
@@ -168,15 +96,6 @@ a.nav-dropdown-item:hover {
 
 .app-bar-menu-parent {
   font-weight: 600;
-}
-
-.app-bar-menu-child {
-  font-weight: 400;
-  padding-left: 56px;
-}
-
-.app-bar-menu-group-start {
-  margin-top: 20px;
 }
 
 .close-sidebar-icon {

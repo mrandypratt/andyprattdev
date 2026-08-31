@@ -44,29 +44,32 @@ andyprattdev/
 │   │       ├── V2/V2-Mockup.png, V2-Sessions-Mockup.png, V2-User-Flows.png, V2-End-Game-Buttons.png
 │   │       └── V3/V3-Mockup.png
 │   ├── components/
-│   │   ├── Navbar.tsx                 # DesktopNavbar + MobileNavbar (breakpoint 1000px); PROJECTS link → /#projects
-│   │   ├── Sidebar.tsx                # In-page nav on CWF deep-dive (HashLink to /projects/cards-with-friends/#...)
-│   │   ├── ProjectsSection.tsx        # Section rendered on Home (id="projects"); hosts the project cards
-│   │   ├── ProjectCard.tsx            # Reusable card; live state (clickable, "Deep dive →") vs coming-soon state ("(Coming soon)", non-clickable)
+│   │   ├── Navbar.tsx                 # DesktopNavbar + MobileNavbar (breakpoint 1000px); flat links: HOME / PROJECTS / LIBRARY / RESUME / ABOUT
+│   │   ├── Sidebar.tsx                # In-page nav on CWF deep-dive (HashLink to /projects/#...)
+│   │   ├── ProjectsSection.tsx        # "Explore" section rendered on Home (id="projects"); hosts the three cards
+│   │   ├── ProjectCard.tsx            # Reusable card; internal `href`, external `externalHref` (new tab), custom `cta`; live vs coming-soon state
 │   │   ├── CodeSnippets.tsx           # Rendered code blocks used inside the CWF version components
 │   │   └── Footer.tsx                 # Email / GitHub / LinkedIn icons + "looking for SWE opportunities" copy
 │   ├── views/                         # Page-level components
 │   │   ├── Home.tsx                   # Hero + 2 CTAs (Resume, About Me); renders <ProjectsSection/> below the hero
 │   │   ├── About.tsx                  # Two-column essay + profile pic
+│   │   ├── Library.tsx                # Reading history at /library — bookshelf of spines, catalog card, ranking
 │   │   ├── Resume.tsx                 # ⚠ NOT routed — dead code
 │   │   ├── Error.tsx                  # Error boundary view (also not currently routed)
 │   │   └── Projects/
-│   │       ├── CardsWithFriends.tsx   # Deep-dive page at /projects/cards-with-friends (formerly Portfolio.tsx)
+│   │       ├── CardsWithFriends.tsx   # Deep-dive page at /projects (formerly Portfolio.tsx)
 │   │       ├── Version1.tsx, Version2.tsx, Version3.tsx  # Rendered inside CardsWithFriends.tsx
 │   │       ├── v1.md                  # ★ MVP writeup (142 lines) — NOT RENDERED IN UI
 │   │       ├── v2.md                  # ★ Multi-device writeup (281 lines) — NOT RENDERED IN UI
 │   │       └── v3.md                  # ★ Single-player writeup — NOT RENDERED IN UI
 │   ├── styles/
 │   │   ├── App.css                    # Global: #292929 bg, white text, Roboto
-│   │   ├── Navbar.css, Home.css, About.css, Portfolio.css, Sidebar.css, Projects.css, Footer.css
+│   │   ├── Navbar.css, Home.css, About.css, Portfolio.css, Sidebar.css, Projects.css, Library.css, Footer.css
 │   │   └── ButtonTheme.tsx            # MUI theme augmentation (primary/neutral/danger)
-│   └── constants/
-│       └── views.tsx                  # VIEWS enum — defined but unused
+│   ├── constants/
+│   │   └── views.tsx                  # VIEWS enum — defined but unused
+│   └── data/
+│       └── books.ts                   # ★ The shelf — single source of truth for /library (title, author, rating, finished, optional take)
 ├── package.json
 ├── tsconfig.json
 └── README.md                          # Only contains deploy instructions
@@ -76,12 +79,16 @@ andyprattdev/
 
 | Path | Component |
 |------|-----------|
-| `/` | Home (hero + ProjectsSection anchored at `#projects`) |
+| `/` | Home (hero + "Explore" section anchored at `#projects`) |
 | `/about` | About |
-| `/projects/cards-with-friends` | CardsWithFriends (CWF deep-dive) |
-| `/portfolio` | `<Navigate to="/projects/cards-with-friends" replace />` — preserves inbound links |
+| `/library` | Library (reading history) |
+| `/projects` | CardsWithFriends (CWF deep-dive) |
+| `/projects/cards-with-friends` | `<Navigate to="/projects" replace />` — retired path, preserves inbound links |
+| `/portfolio` | `<Navigate to="/projects" replace />` — preserves inbound links |
 
-No dedicated `/projects` index page — projects are surfaced as a section on Home. A standalone index can be reintroduced when the portfolio holds four or more live projects.
+There is no `/projects` index page. Cards with Friends is the only project write-up, so it *is* `/projects`. If a second live project ever lands, `/projects` becomes an index and CWF moves back to its own child path.
+
+Deep links into the CWF page use hash anchors (`/projects/#version-2-tools`) driven by `Sidebar.tsx`. The old `/projects/cards-with-friends/#...` anchors still land on the right page via the redirect, but the hash is dropped by `<Navigate>`.
 
 No catch-all / 404 route. `Error.tsx` exists but isn't wired up.
 
@@ -108,16 +115,33 @@ The flagship portfolio entry. Live site: http://www.cardswithfriendsgame.com (li
 - **Logo:** `src/assets/CWFLogo.tsx` (inline SVG)
 - **⚠ Videos:** The markdown writeups contain *commented-out* video embed placeholders (e.g. `Create-Game-Phase.mp4`) but **no actual video files exist in this repo**. Either the videos live elsewhere or they were planned but never produced.
 
-The deep-dive lives at `/projects/cards-with-friends`. The three version sections (`Version1.tsx`, `Version2.tsx`, `Version3.tsx`) are rendered inline on that single page; the markdown writeups (`v1.md`, `v2.md`, `v3.md`) sit unused on disk and remain candidates for future restructure.
+The deep-dive lives at `/projects`. The three version sections (`Version1.tsx`, `Version2.tsx`, `Version3.tsx`) are rendered inline on that single page; the markdown writeups (`v1.md`, `v2.md`, `v3.md`) sit unused on disk and remain candidates for future restructure.
 
-## Home page Projects section
+## Home page "Explore" section
 
-The Home page surfaces projects via a `<ProjectsSection/>` rendered below the hero (anchor `id="projects"`). Each project is a `<ProjectCard/>` with two states:
+The Home page surfaces its three destinations via a `<ProjectsSection/>` rendered below the hero (anchor `id="projects"`, kept for inbound links; the visible header reads "Explore"). Each is a `<ProjectCard/>`:
 
-- **Live** — clickable card with a "Deep dive →" CTA pointing at the project's own URL.
-- **Coming soon** — title displays `(Coming soon)`; card is muted, has no CTA, and is not wrapped in a link.
+| Card | Link | CTA |
+|------|------|-----|
+| Cards with Friends | `href="/projects"` | Deep dive → |
+| The Library | `href="/library"` | Browse the shelf → |
+| Résumé | `externalHref={AndyPrattResume.pdf}` (new tab) | Open the résumé → |
 
-Today: Cards with Friends (live), Game Set Book (coming soon), AI Assistant (coming soon). When a coming-soon project ships, give the card an `href` and add a route + view file under `src/views/Projects/`.
+`ProjectCard` states:
+
+- **Live** — clickable (`Link` for `href`, `<a target="_blank">` for `externalHref`), with a CTA that defaults to "Deep dive" and is overridable via `cta`.
+- **Coming soon** — no `href`/`externalHref`; title displays `(Coming soon)`, card is muted, no CTA, not wrapped in a link. No cards currently use this state.
+
+The Game Set Book and AI Assistant coming-soon cards were removed in 2026-08 — the site highlights one project deeply rather than teasing unbuilt ones.
+
+## The Library (`/library`)
+
+Reading history: a wooden bookcase of clickable spines, a paper catalog card for the selected book, and a full ranking sorted by score.
+
+- **Data:** `src/data/books.ts` — the only file to edit when adding a book. Shelf order is array order; the ranking sorts by `rating` on its own. Spine color, height, and width are assigned automatically from the index. A book with no `take` still shelves and ranks; its card says the write-up isn't done yet.
+- **View:** `src/views/Library.tsx`. Six books per shelf. Spine selection is local state; Escape or "Reshelve" closes the card and returns focus to the spine.
+- **Styles:** `src/styles/Library.css`. Library texture (wood planks, gilded spine bands, cream ruled card, wax-stamp score) sits on the site palette — `#292929` ground, `#ffbd59` gold, `#5ce1e6` cyan focus rings, Roboto only. Component-scoped CSS variables are declared on `.library-container`.
+- Originated as a standalone HTML mock (`andy-library.html`, since deleted) reworked into the site theme.
 
 ## Known code-level issues
 

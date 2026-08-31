@@ -1,40 +1,12 @@
 import { Link } from "react-router-dom"
-import { HashLink } from "react-router-hash-link";
 import { APDevLogo } from '../assets/APDevLogo';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import resume from "../assets/AndyPrattResume.pdf";
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import "../styles/Navbar.css"
 
-const scrollToProjects = (el: HTMLElement) => {
-  const yCoordinate = el.getBoundingClientRect().top + window.pageYOffset;
-  const yOffset = -65;
-  window.scrollTo({ top: yCoordinate + yOffset, behavior: "smooth" });
-};
-
 const DesktopNavbar = (): JSX.Element => {
-  const [projectsOpen, setProjectsOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!projectsOpen) return;
-    const handleClickOutside = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-        setProjectsOpen(false);
-      }
-    };
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setProjectsOpen(false);
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    document.addEventListener('keydown', handleEscape);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-      document.removeEventListener('keydown', handleEscape);
-    };
-  }, [projectsOpen]);
-
   return (
     <nav className="navbar">
       <Link to="/">
@@ -49,37 +21,17 @@ const DesktopNavbar = (): JSX.Element => {
           </div>
         </Link>
 
-        <div className="nav-dropdown" ref={dropdownRef}>
-          <button
-            type="button"
-            className="desktop-nav-button nav-dropdown-trigger"
-            onClick={() => setProjectsOpen((prev) => !prev)}
-            aria-expanded={projectsOpen}
-            aria-haspopup="menu"
-          >
-            PROJECTS <span className="nav-dropdown-chevron">{projectsOpen ? '▴' : '▾'}</span>
-          </button>
-          {projectsOpen && (
-            <div className="nav-dropdown-menu" role="menu">
-              <Link
-                to="/projects/cards-with-friends"
-                className="nav-dropdown-item"
-                role="menuitem"
-                onClick={() => setProjectsOpen(false)}
-              >
-                Cards with Friends
-              </Link>
-              <div className="nav-dropdown-item nav-dropdown-item-disabled" role="menuitem" aria-disabled="true">
-                Game Set Book
-                <span className="nav-dropdown-item-coming"> (coming soon)</span>
-              </div>
-              <div className="nav-dropdown-item nav-dropdown-item-disabled" role="menuitem" aria-disabled="true">
-                AI Assistant
-                <span className="nav-dropdown-item-coming"> (coming soon)</span>
-              </div>
-            </div>
-          )}
-        </div>
+        <Link to="/projects">
+          <div className="desktop-nav-button">
+            PROJECTS
+          </div>
+        </Link>
+
+        <Link to="/library">
+          <div className="desktop-nav-button">
+            LIBRARY
+          </div>
+        </Link>
 
         <a href={resume} target="_blank" rel="noreferrer noopener">
           <div className="desktop-nav-button">
@@ -103,7 +55,7 @@ const MobileNavbar = (): JSX.Element => {
   const toggleMenu = () => {
     setMenuDisplay(!menuDisplay);
   }
-  
+
   return (
     <div className="navbar">
       <Link to="/">
@@ -124,34 +76,20 @@ const MobileNavbar = (): JSX.Element => {
             </div>
           </Link>
 
-          <HashLink to="/#projects" smooth scroll={(el) => scrollToProjects(el as HTMLElement)}>
-            <div className="app-bar-menu-item app-bar-menu-parent app-bar-menu-group-start">
+          <Link to="/projects">
+            <div className="app-bar-menu-item app-bar-menu-parent">
               PROJECTS
-            </div>
-          </HashLink>
-
-          <Link to="/projects/cards-with-friends">
-            <div className="app-bar-menu-item app-bar-menu-child">
-              CARDS WITH FRIENDS
             </div>
           </Link>
 
-          <div
-            className="app-bar-menu-item app-bar-menu-child app-bar-menu-item-disabled"
-            onClick={(e) => e.stopPropagation()}
-          >
-            GAME SET BOOK
-          </div>
-
-          <div
-            className="app-bar-menu-item app-bar-menu-child app-bar-menu-item-disabled"
-            onClick={(e) => e.stopPropagation()}
-          >
-            AI ASSISTANT
-          </div>
+          <Link to="/library">
+            <div className="app-bar-menu-item app-bar-menu-parent">
+              LIBRARY
+            </div>
+          </Link>
 
           <a href={resume} target="_blank" rel="noreferrer noopener">
-            <div className="app-bar-menu-item app-bar-menu-parent app-bar-menu-group-start">
+            <div className="app-bar-menu-item app-bar-menu-parent">
               RESUME
             </div>
           </a>

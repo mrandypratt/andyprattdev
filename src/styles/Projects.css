@@ -260,3 +260,13 @@
     font-size: 1.2rem;
   }
 }
+
+/* Icon-based card logos (Library, Résumé) — the CWF card supplies its own SVG logo. */
+.project-card-icon {
+  color: #ffbd59;
+  transition: color 0.15s ease;
+}
+
+.project-card-link:hover .project-card-icon {
+  color: #5ce1e6;
+}

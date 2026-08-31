@@ -8,7 +8,12 @@ type ProjectCardProps = {
   summary?: string;
   techChips?: string[];
   logo?: ReactNode;
+  /** Internal route. */
   href?: string;
+  /** External URL or bundled asset (PDF). Opens in a new tab. */
+  externalHref?: string;
+  /** Overrides the default call to action on a linked card. */
+  cta?: string;
 };
 
 export const ProjectCard = ({
@@ -18,8 +23,10 @@ export const ProjectCard = ({
   techChips,
   logo,
   href,
+  externalHref,
+  cta = "Deep dive",
 }: ProjectCardProps) => {
-  const isLive = Boolean(href);
+  const isLive = Boolean(href || externalHref);
 
   const inner = (
     <div className={`project-card${isLive ? " project-card-live" : " project-card-coming-soon"}`}>
@@ -47,15 +54,28 @@ export const ProjectCard = ({
 
       {isLive && (
         <div className="project-card-cta">
-          Deep dive &rarr;
+          {cta} &rarr;
         </div>
       )}
     </div>
   );
 
-  if (isLive) {
+  if (externalHref) {
     return (
-      <Link to={href!} className="project-card-link">
+      <a
+        href={externalHref}
+        className="project-card-link"
+        target="_blank"
+        rel="noreferrer noopener"
+      >
+        {inner}
+      </a>
+    );
+  }
+
+  if (href) {
+    return (
+      <Link to={href} className="project-card-link">
         {inner}
       </Link>
     );
