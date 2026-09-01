@@ -5,7 +5,7 @@ import { BOOKS } from "../data/books";
 import "../styles/Library.css";
 
 const BOOKS_PER_SHELF = 6;
-const SHELF_NUMERALS = ["I", "II", "III", "IV", "V", "VI"];
+const SHELF_NUMERALS = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"];
 
 /* Below this width the catalog card stops being a pinned column and becomes a
    bottom sheet over the shelf. Must stay in sync with Library.css. */
