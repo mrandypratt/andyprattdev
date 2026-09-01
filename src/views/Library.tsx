@@ -1,11 +1,39 @@
-import { CSSProperties, useCallback, useEffect, useRef, useState } from "react";
+import { CSSProperties, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Footer } from "../components/Footer";
 import { Navbar } from "../components/Navbar";
-import { BOOKS } from "../data/books";
+import { Book, BOOKS } from "../data/books";
 import "../styles/Library.css";
 
 const BOOKS_PER_SHELF = 6;
 const SHELF_NUMERALS = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"];
+
+/* ---------- Shelf order ----------
+   Sorting rearranges the running order and nothing else: spine color, height,
+   and width are all keyed to a book's index in BOOKS, so a book carries the
+   same spine wherever it lands and the case doesn't repaint on every sort. */
+type SortKey = "rating" | "title" | "author";
+
+const SORT_OPTIONS: { key: SortKey; label: string; up: string; down: string }[] = [
+  { key: "rating", label: "Rating", up: "lowest first", down: "highest first" },
+  { key: "title", label: "Title", up: "A to Z", down: "Z to A" },
+  { key: "author", label: "Author", up: "A to Z", down: "Z to A" },
+];
+
+/* The direction each key opens in: best books first, but names A to Z. */
+const SORT_OPENS_DESCENDING: Record<SortKey, boolean> = {
+  rating: true,
+  title: false,
+  author: false,
+};
+
+/* Ascending comparators; descending is the same order negated. Title breaks
+   every tie, so the shelf is stable however it's arranged. Author sorts on the
+   name as written — no first/last parsing. */
+const compareAscending = (key: SortKey) => (a: Book, b: Book) => {
+  if (key === "rating") return a.rating - b.rating || a.title.localeCompare(b.title);
+  if (key === "author") return a.author.localeCompare(b.author) || a.title.localeCompare(b.title);
+  return a.title.localeCompare(b.title);
+};
 
 /* Below this width the catalog card stops being a pinned column and becomes a
    bottom sheet over the shelf. Must stay in sync with Library.css. */
@@ -83,6 +111,8 @@ const Meter = ({ rating, tone }: MeterProps) => (
 export const Library = () => {
   const [selected, setSelected] = useState<number | null>(null);
   const [isCompact, setIsCompact] = useState(() => window.matchMedia(COMPACT_QUERY).matches);
+  const [sortKey, setSortKey] = useState<SortKey>("rating");
+  const [descending, setDescending] = useState(SORT_OPENS_DESCENDING.rating);
   const spineRefs = useRef<Record<number, HTMLButtonElement | null>>({});
   const browseRef = useRef<HTMLDivElement | null>(null);
   const rankRef = useRef<HTMLDivElement | null>(null);
@@ -94,6 +124,27 @@ export const Library = () => {
     query.addEventListener("change", handleChange);
     return () => query.removeEventListener("change", handleChange);
   }, []);
+
+  /* Shelf order as indices into BOOKS, so `selected` stays a stable book id and
+     a re-sort keeps the open card open rather than jumping to another book. */
+  const order = useMemo(() => {
+    const compare = compareAscending(sortKey);
+    return BOOKS.map((_, index) => index).sort((a, b) => {
+      const result = compare(BOOKS[a], BOOKS[b]);
+      return descending ? -result : result;
+    });
+  }, [sortKey, descending]);
+
+  /* Same control for both jobs: a new key opens in its natural direction, the
+     key already in use flips. */
+  const selectSort = (key: SortKey) => {
+    if (key === sortKey) {
+      setDescending((current) => !current);
+    } else {
+      setSortKey(key);
+      setDescending(SORT_OPENS_DESCENDING[key]);
+    }
+  };
 
   /* On narrow screens the card is a modal bottom sheet — there is no room to
      put it beside the shelf, and scrolling down to it was the whole problem. */
@@ -109,15 +160,19 @@ export const Library = () => {
     [selected]
   );
 
-  /* Walk the shelf in place. Stops at the ends rather than wrapping so the
-     controls can disable themselves and the position stays obvious. */
-  const step = useCallback((delta: number) => {
-    setSelected((current) => {
-      if (current === null) return current;
-      const next = current + delta;
-      return next < 0 || next >= BOOKS.length ? current : next;
-    });
-  }, []);
+  /* Walk the shelf in place, in whatever order it's currently sorted into.
+     Stops at the ends rather than wrapping so the controls can disable
+     themselves and the position stays obvious. */
+  const step = useCallback(
+    (delta: number) => {
+      setSelected((current) => {
+        if (current === null) return current;
+        const next = order.indexOf(current) + delta;
+        return next < 0 || next >= order.length ? current : order[next];
+      });
+    },
+    [order]
+  );
 
   // Escape reshelves; left/right walk the shelf while a card is open.
   useEffect(() => {
@@ -197,12 +252,14 @@ export const Library = () => {
     cardRef.current?.focus({ preventScroll: true });
   }, [isOverlay]);
 
-  const shelfCount = Math.ceil(BOOKS.length / BOOKS_PER_SHELF);
+  const shelfCount = Math.ceil(order.length / BOOKS_PER_SHELF);
   const shelves = Array.from({ length: shelfCount }, (_, shelfIndex) =>
-    BOOKS.map((book, index) => ({ book, index })).filter(
-      ({ index }) => Math.floor(index / BOOKS_PER_SHELF) === shelfIndex
-    )
+    order.slice(shelfIndex * BOOKS_PER_SHELF, (shelfIndex + 1) * BOOKS_PER_SHELF)
   );
+
+  /* Where the open book sits on the shelf as sorted — drives the card number
+     and the ends of the arrow walk. */
+  const shelfPosition = selected === null ? -1 : order.indexOf(selected);
 
   const ranked = BOOKS.map((book, index) => ({ book, index })).sort(
     (a, b) => b.book.rating - a.book.rating
@@ -221,9 +278,9 @@ export const Library = () => {
             Every book I've finished, <span className="library-title-accent">shelved and scored.</span>
           </h1>
           <p className="library-lede">
-            Reading is where most of my thinking starts. Hover a spine for a peek, pull one down for
-            the full take, or skip to the ranking. Everything is scored out of ten — no cowardly
-            sevens across the board.
+            Reading is where most of my thinking starts. Sort the shelf how you like, hover a spine
+            for a peek, pull one down for the full take, or skip to the ranking. Everything is scored
+            out of ten — no cowardly sevens across the board.
           </p>
         </header>
 
@@ -233,11 +290,37 @@ export const Library = () => {
               The shelf
             </h2>
 
+            <div className="library-sort" role="group" aria-label="Sort the shelf">
+              <span className="library-sort-label">Sort</span>
+              {SORT_OPTIONS.map(({ key, label, up, down }) => {
+                const isActive = sortKey === key;
+                const isDescending = isActive ? descending : SORT_OPENS_DESCENDING[key];
+                return (
+                  <button
+                    type="button"
+                    key={key}
+                    className={`library-sort-option${
+                      isActive ? " library-sort-option-active" : ""
+                    }`}
+                    onClick={() => selectSort(key)}
+                    aria-pressed={isActive}
+                    aria-label={`Sort by ${label.toLowerCase()}, ${isDescending ? down : up}`}
+                  >
+                    {label}
+                    <span className="library-sort-caret" aria-hidden="true">
+                      {isDescending ? "\u25BE" : "\u25B4"}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+
             <div className="library-bookcase">
               {shelves.map((shelf, shelfIndex) => (
                 <div className="library-shelf" key={shelfIndex}>
                   <div className="library-books">
-                    {shelf.map(({ book, index }) => {
+                    {shelf.map((index) => {
+                      const book = BOOKS[index];
                       const color = SPINE_COLORS[index % SPINE_COLORS.length];
                       const fit = spineFit(book.title, index);
                       const isSelected = selected === index;
@@ -303,7 +386,7 @@ export const Library = () => {
 
                 <div className="library-card-head">
                   <span className="library-card-number">
-                    Card N&ordm; {String(selected + 1).padStart(2, "0")}
+                    Card N&ordm; {String(shelfPosition + 1).padStart(2, "0")}
                     <span className="library-card-of"> of {BOOKS.length}</span>
                   </span>
 
@@ -312,7 +395,7 @@ export const Library = () => {
                       type="button"
                       className="library-card-step"
                       onClick={() => step(-1)}
-                      disabled={selected === 0}
+                      disabled={shelfPosition === 0}
                       aria-label="Previous book"
                     >
                       &larr;
@@ -321,7 +404,7 @@ export const Library = () => {
                       type="button"
                       className="library-card-step"
                       onClick={() => step(1)}
-                      disabled={selected === BOOKS.length - 1}
+                      disabled={shelfPosition === order.length - 1}
                       aria-label="Next book"
                     >
                       &rarr;

@@ -108,6 +108,68 @@
   min-width: 0;
 }
 
+/* ---------- Shelf sort ----------
+   Sits above the case and reorders the spines. The caret is always in the
+   layout and only fades in on the active option, so switching sorts doesn't
+   jog the row sideways. */
+.library-sort {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 0 0 16px 0;
+}
+
+.library-sort-label {
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--lib-muted);
+  margin-right: 2px;
+}
+
+.library-sort-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--lib-rule);
+  border-radius: 3px;
+  background: transparent;
+  color: var(--lib-muted);
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: border-color 0.14s ease, color 0.14s ease, background-color 0.14s ease;
+}
+
+.library-sort-option:hover,
+.library-sort-option:focus-visible {
+  border-color: var(--lib-gold);
+  color: #ffffff;
+}
+
+.library-sort-option-active {
+  border-color: var(--lib-gold);
+  background: rgba(255, 189, 89, 0.12);
+  color: var(--lib-gold);
+}
+
+.library-sort-caret {
+  font-size: 0.62rem;
+  line-height: 1;
+  opacity: 0;
+}
+
+.library-sort-option-active .library-sort-caret {
+  opacity: 1;
+}
+
 /* ---------- Bookcase ---------- */
 .library-bookcase {
   /* Sizes to the widest shelf rather than stretching across the column, so the
@@ -734,6 +796,10 @@
 
   .library-bookcase {
     margin: 0;
+  }
+
+  .library-sort {
+    justify-content: flex-start;
   }
 
   .library-shelf-hint {
