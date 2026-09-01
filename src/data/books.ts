@@ -233,7 +233,7 @@ export const BOOKS: Book[] = [
       "Eric Ries evangelized some of the most fundamental startup philosophy present in many product teams today: MVPs, product market fit, user driven development, and agile. The company Eric founded is quite interesting, an online community where people interact as avatars. This book is very insightful for anyone looking for a framework to think about product leadership and entrepreneurship, but the advice can certainly be distilled to be a bit more concise and it’s primarily focused on digital products.",
   },
   {
-    title: "Quick Start Guide to Large Language Models",
+    title: "Quick Start Guide to LLMs",
     author: "Sinan Ozdemir",
     rating: 8.5,
     finished: "2024",

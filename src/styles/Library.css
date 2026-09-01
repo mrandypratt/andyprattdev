@@ -177,7 +177,9 @@
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  padding: 18px 0 0 0;
+  /* Every internal measurement scales with the spine, so the title-fit math in
+     Library.tsx (computed at scale 1) stays true at every breakpoint. */
+  padding: calc(18px * var(--spine-scale)) 0 0 0;
   border-radius: 2px 2px 0 0;
   flex: 0 0 auto;
   box-shadow:
@@ -200,11 +202,11 @@
 }
 
 .library-spine::before {
-  top: 8px;
+  top: calc(8px * var(--spine-scale));
 }
 
 .library-spine::after {
-  bottom: 10px;
+  bottom: calc(10px * var(--spine-scale));
 }
 
 .library-spine:hover,
@@ -241,10 +243,12 @@
      curly apostrophe upright, which breaks the run — "Omnivore ’ s". `sideways`
      turns the whole line together so punctuation stays with its word. */
   text-orientation: sideways;
-  font-size: 0.7rem;
+  /* --spine-title-scale comes from Library.tsx: 1 for titles that fit outright,
+     lower for the few long enough to need smaller lettering. */
+  font-size: calc(0.7rem * var(--spine-scale) * var(--spine-title-scale, 1));
   font-weight: 500;
   letter-spacing: 0.06em;
-  max-height: calc(100% - 20px);
+  max-height: calc(100% - 20px * var(--spine-scale));
   overflow: hidden;
   pointer-events: none;
 }
@@ -894,7 +898,7 @@
   }
 
   .library-spine {
-    --spine-scale: 0.74;
+    --spine-scale: 0.8;
   }
 
   .library-books {
@@ -903,10 +907,6 @@
 
   .library-tip {
     display: none; /* tapping a spine opens the card outright */
-  }
-
-  .library-spine-title {
-    font-size: 0.62rem;
   }
 
   .library-container {

@@ -23,10 +23,43 @@ const SPINE_COLORS = [
   { bg: "#5C3A56", fg: "#F0E2ED" }, // plum
 ];
 
-/* Base dimensions in px. Library.css scales these down on small screens via
-   the --spine-h / --spine-w custom properties. */
+/* Base dimensions in px — the decorative variation that keeps the shelf from
+   looking like a barcode. Library.css scales these down on small screens via
+   the --spine-h / --spine-w custom properties. A book is never shorter than
+   this, but spineFit below will make it taller when its title needs the room. */
 const SPINE_HEIGHTS = [188, 168, 202, 162, 182, 196, 172, 206, 178, 194, 166, 190];
 const SPINE_WIDTHS = [42, 36, 48, 34, 40, 44, 38, 46, 36, 42, 35, 47];
+
+/* Spine lettering runs the length of the book, so a title physically has to fit
+   between the two gilded bands or it gets clipped. These mirror Library.css:
+   18px of padding above the text plus a 20px reserve below it, and roughly
+   6.5px of run per character at the base 0.7rem Roboto with 0.06em tracking. */
+const TITLE_PX_PER_CHAR = 6.5;
+const TITLE_CLEARANCE = 38;
+/* The per-character figure is an average, so a title of unusually wide letters
+   would run long. This keeps every one off the edge of its reserve. */
+const TITLE_SLACK = 6;
+/* Past this a long title would leave the book towering over its neighbors, so
+   the lettering shrinks instead — which is what a real spine does. */
+const TALLEST_SPINE = 238;
+const SMALLEST_TITLE_SCALE = 0.78;
+
+/* Height and lettering scale for one spine. Grows the book to fit its title,
+   then shrinks the lettering for the handful too long to solve with height. */
+const spineFit = (title: string, index: number) => {
+  const run = title.length * TITLE_PX_PER_CHAR;
+  const titleScale = Math.max(
+    SMALLEST_TITLE_SCALE,
+    Math.min(1, (TALLEST_SPINE - TITLE_CLEARANCE - TITLE_SLACK) / run)
+  );
+  return {
+    height: Math.max(
+      SPINE_HEIGHTS[index % SPINE_HEIGHTS.length],
+      Math.ceil(run * titleScale + TITLE_CLEARANCE + TITLE_SLACK)
+    ),
+    titleScale,
+  };
+};
 
 const NO_TAKE_YET = "I haven't written this one up yet — the rating stands on its own for now.";
 
@@ -206,6 +239,7 @@ export const Library = () => {
                   <div className="library-books">
                     {shelf.map(({ book, index }) => {
                       const color = SPINE_COLORS[index % SPINE_COLORS.length];
+                      const fit = spineFit(book.title, index);
                       const isSelected = selected === index;
                       return (
                         <button
@@ -219,8 +253,9 @@ export const Library = () => {
                             {
                               background: `linear-gradient(90deg, rgba(0,0,0,0.20), rgba(255,255,255,0.07) 30%, rgba(0,0,0,0.14)), ${color.bg}`,
                               color: color.fg,
-                              "--spine-h": `${SPINE_HEIGHTS[index % SPINE_HEIGHTS.length]}px`,
+                              "--spine-h": `${fit.height}px`,
                               "--spine-w": `${SPINE_WIDTHS[index % SPINE_WIDTHS.length]}px`,
+                              "--spine-title-scale": fit.titleScale,
                             } as CSSProperties
                           }
                           aria-label={`${book.title} by ${book.author}, rated ${book.rating} out of 10`}
