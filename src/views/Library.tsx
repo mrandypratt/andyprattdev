@@ -1,4 +1,12 @@
-import { CSSProperties, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  CSSProperties,
+  TouchEvent as ReactTouchEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Footer } from "../components/Footer";
 import { Navbar } from "../components/Navbar";
 import { Book, BOOKS } from "../data/books";
@@ -38,6 +46,15 @@ const compareAscending = (key: SortKey) => (a: Book, b: Book) => {
 /* Below this width the catalog card stops being a pinned column and becomes a
    bottom sheet over the shelf. Must stay in sync with Library.css. */
 const COMPACT_QUERY = "(max-width: 899px)";
+
+/* ---------- Swipe, on the bottom sheet only ----------
+   Left for the next book, right for the previous, down to reshelve — the same
+   three moves the arrows and Reshelve already offer, minus the aiming. */
+const SWIPE_SLOP = 12; /* travel before a drag commits to an axis */
+const SWIPE_COMMIT = 60; /* travel that reads as a swipe rather than a nudge */
+const SWIPE_RESIST = 0.3; /* dragging past either end of the shelf goes nowhere fast */
+const SWIPE_SLIDE_MS = 165; /* the card leaving; the one arriving matches it */
+const SWIPE_DROP_MS = 200; /* the card falling back to the shelf, or settling home */
 
 /* Spine palette — bg/fg pairs. Dark spines take light lettering and vice versa. */
 const SPINE_COLORS = [
@@ -117,6 +134,7 @@ export const Library = () => {
   const browseRef = useRef<HTMLDivElement | null>(null);
   const rankRef = useRef<HTMLDivElement | null>(null);
   const cardRef = useRef<HTMLElement | null>(null);
+  const cardBodyRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const query = window.matchMedia(COMPACT_QUERY);
@@ -267,6 +285,140 @@ export const Library = () => {
 
   const openBook = selected === null ? null : BOOKS[selected];
 
+  /* ---------- Swipe plumbing ----------
+     A drag updates every frame, so it drives the sheet's transform straight on
+     the node and keeps out of React state. The open animation uses fill-mode:
+     both, which would outrank an inline transform for the life of the sheet —
+     clearing it here hands control over the moment a finger lands. */
+  const moveSheet = useCallback((transform: string, ms: number, flush = false) => {
+    const node = cardRef.current;
+    if (!node) return;
+    node.style.animation = "none";
+    node.style.transition = ms > 0 ? `transform ${ms}ms cubic-bezier(0.22, 1, 0.36, 1)` : "none";
+    node.style.transform = transform;
+    /* Commit the untransitioned position before the next call transitions away
+       from it, or the two collapse into one and nothing animates. */
+    if (flush) void node.offsetHeight;
+  }, []);
+
+  const reducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* True while the sheet is animating itself — a second gesture mid-flight
+     would fight the one already running. */
+  const sliding = useRef(false);
+  const swipe = useRef({ startX: 0, startY: 0, dx: 0, dy: 0, axis: "", live: false });
+
+  /* Walk to a neighbour: the open card leaves in the direction of the swipe and
+     the next one comes in from the other side. */
+  const slideTo = useCallback(
+    (delta: number) => {
+      if (reducedMotion()) {
+        step(delta);
+        moveSheet("translate3d(0, 0, 0)", 0);
+        return;
+      }
+      sliding.current = true;
+      moveSheet(`translate3d(${delta > 0 ? "-104%" : "104%"}, 0, 0)`, SWIPE_SLIDE_MS);
+      window.setTimeout(() => {
+        step(delta);
+        moveSheet(`translate3d(${delta > 0 ? "104%" : "-104%"}, 0, 0)`, 0, true);
+        moveSheet("translate3d(0, 0, 0)", SWIPE_SLIDE_MS);
+        sliding.current = false;
+      }, SWIPE_SLIDE_MS);
+    },
+    [moveSheet, step]
+  );
+
+  // Drop the sheet off the bottom of the screen, then reshelve the book.
+  const slideAway = useCallback(() => {
+    if (reducedMotion()) {
+      closeCard(false);
+      return;
+    }
+    sliding.current = true;
+    moveSheet("translate3d(0, 110%, 0)", SWIPE_DROP_MS);
+    window.setTimeout(() => {
+      sliding.current = false;
+      closeCard(false);
+    }, SWIPE_DROP_MS - 20);
+  }, [closeCard, moveSheet]);
+
+  // A sheet that closed mid-flight leaves its flags behind; clear them.
+  useEffect(() => {
+    if (isOverlay) return;
+    sliding.current = false;
+    swipe.current.live = false;
+  }, [isOverlay]);
+
+  const handleTouchStart = (event: ReactTouchEvent<HTMLElement>) => {
+    if (!isOverlay || sliding.current || event.touches.length !== 1) return;
+    const touch = event.touches[0];
+    swipe.current = {
+      startX: touch.clientX,
+      startY: touch.clientY,
+      dx: 0,
+      dy: 0,
+      axis: "",
+      live: true,
+    };
+  };
+
+  const handleTouchMove = (event: ReactTouchEvent<HTMLElement>) => {
+    const gesture = swipe.current;
+    if (!gesture.live || event.touches.length !== 1) return;
+    const touch = event.touches[0];
+    gesture.dx = touch.clientX - gesture.startX;
+    gesture.dy = touch.clientY - gesture.startY;
+
+    if (!gesture.axis) {
+      if (Math.abs(gesture.dx) < SWIPE_SLOP && Math.abs(gesture.dy) < SWIPE_SLOP) return;
+      if (Math.abs(gesture.dx) > Math.abs(gesture.dy)) {
+        gesture.axis = "x";
+      } else if (gesture.dy > 0 && (cardBodyRef.current?.scrollTop ?? 0) <= 0) {
+        gesture.axis = "y";
+      } else {
+        /* Upward, or downward from partway into a long take: that drag belongs
+           to the body's own scroll, so let go of it entirely. */
+        gesture.live = false;
+        return;
+      }
+    }
+
+    if (gesture.axis === "x") {
+      const atEnd =
+        gesture.dx < 0 ? shelfPosition >= order.length - 1 : shelfPosition <= 0;
+      moveSheet(`translate3d(${atEnd ? gesture.dx * SWIPE_RESIST : gesture.dx}px, 0, 0)`, 0);
+    } else {
+      moveSheet(`translate3d(0, ${Math.max(0, gesture.dy)}px, 0)`, 0);
+    }
+  };
+
+  const handleTouchEnd = () => {
+    const gesture = swipe.current;
+    if (!gesture.live) return;
+    gesture.live = false;
+
+    if (gesture.axis === "x" && Math.abs(gesture.dx) >= SWIPE_COMMIT) {
+      const delta = gesture.dx < 0 ? 1 : -1; // the card travels with the finger
+      const next = shelfPosition + delta;
+      if (next >= 0 && next < order.length) {
+        slideTo(delta);
+        return;
+      }
+    }
+    if (gesture.axis === "y" && gesture.dy >= SWIPE_COMMIT) {
+      slideAway();
+      return;
+    }
+    if (gesture.axis) moveSheet("translate3d(0, 0, 0)", SWIPE_DROP_MS);
+  };
+
+  const handleTouchCancel = () => {
+    if (!swipe.current.live) return;
+    swipe.current.live = false;
+    moveSheet("translate3d(0, 0, 0)", SWIPE_DROP_MS);
+  };
+
   return (
     <div className="library-container">
       <Navbar />
@@ -381,6 +533,10 @@ export const Library = () => {
                 role={isOverlay ? "dialog" : undefined}
                 aria-modal={isOverlay || undefined}
                 aria-label={isOverlay ? `${openBook.title} — catalog card` : undefined}
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
+                onTouchCancel={handleTouchCancel}
               >
                 {isOverlay && <span className="library-card-handle" aria-hidden="true" />}
 
@@ -419,9 +575,15 @@ export const Library = () => {
                   </div>
                 </div>
 
+                {isOverlay && (
+                  <p className="library-card-swipe-hint" aria-hidden="true">
+                    Swipe to browse &middot; pull down to reshelve
+                  </p>
+                )}
+
                 {/* Everything below the head scrolls; the head — and so the
                     arrows and Reshelve — stays put at a fixed sheet height. */}
-                <div className="library-card-body">
+                <div className="library-card-body" ref={cardBodyRef}>
                   <div className="library-card-main">
                     <div className="library-card-identity">
                       <h3 className="library-card-title">{openBook.title}</h3>
