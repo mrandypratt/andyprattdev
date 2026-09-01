@@ -109,33 +109,37 @@
 }
 
 /* ---------- Shelf sort ----------
-   Sits above the case and reorders the spines. The caret is always in the
-   layout and only fades in on the active option, so switching sorts doesn't
-   jog the row sideways. */
+   One segmented control rather than four loose chips: it reads as a single
+   piece of hardware on the case, and it stays narrow enough to sit inside the
+   case's width on desktop and on one line on a phone — four separate chips
+   overflowed the case and orphaned the fourth onto its own row. The caret is
+   always in the layout and only fades in on the active option, so switching
+   sorts doesn't jog the row sideways. */
 .library-sort {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 8px;
   margin: 0 0 16px 0;
 }
 
-.library-sort-label {
-  font-size: 0.7rem;
-  font-weight: 500;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--lib-muted);
-  margin-right: 2px;
+.library-sort-track {
+  display: inline-flex;
+  align-items: stretch;
+  max-width: 100%;
+  border: 1px solid var(--lib-rule);
+  border-radius: 3px;
+  /* Keeps the active segment's fill inside the rounded ends. */
+  overflow: hidden;
 }
 
 .library-sort-option {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
-  border: 1px solid var(--lib-rule);
-  border-radius: 3px;
+  border: 0;
+  /* Hairline between segments; the track draws the outer frame. */
+  border-left: 1px solid var(--lib-rule);
   background: transparent;
   color: var(--lib-muted);
   font-family: inherit;
@@ -143,19 +147,29 @@
   font-weight: 500;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  padding: 6px 12px;
+  white-space: nowrap;
+  padding: 7px 14px;
   cursor: pointer;
-  transition: border-color 0.14s ease, color 0.14s ease, background-color 0.14s ease;
+  transition: color 0.14s ease, background-color 0.14s ease;
 }
 
-.library-sort-option:hover,
+.library-sort-option:first-child {
+  border-left: 0;
+}
+
+.library-sort-option:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+}
+
+/* The track clips a normal focus ring, so draw it inside the segment. */
 .library-sort-option:focus-visible {
-  border-color: var(--lib-gold);
+  outline: 1px solid var(--lib-gold);
+  outline-offset: -3px;
   color: #ffffff;
 }
 
 .library-sort-option-active {
-  border-color: var(--lib-gold);
   background: rgba(255, 189, 89, 0.12);
   color: var(--lib-gold);
 }
@@ -798,6 +812,12 @@
     margin: 0;
   }
 
+  /* The case stops centering itself in this layout, so the control lines up
+     with its left edge instead of drifting past its right one. */
+  .library-sort {
+    justify-content: flex-start;
+  }
+
   .library-sort {
     justify-content: flex-start;
   }
@@ -983,6 +1003,19 @@
     --spine-scale: 0.8;
   }
 
+  /* Equal-width segments keep the control one tidy row at any phone size. */
+  .library-sort-track {
+    width: 100%;
+  }
+
+  .library-sort-option {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 10px 4px;
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+  }
+
   .library-books {
     padding: 26px 16px 0; /* no tooltips to make room for on touch */
   }
@@ -1024,6 +1057,17 @@
 
   .library-rank-score .library-meter {
     display: none;
+  }
+}
+
+/* Small phones: the four segments still share one row, just in tighter type
+   rather than wrapping or clipping "Rating". */
+@media (max-width: 400px) {
+  .library-sort-option {
+    padding: 10px 2px;
+    font-size: 0.6rem;
+    letter-spacing: 0.03em;
+    gap: 4px;
   }
 }
 

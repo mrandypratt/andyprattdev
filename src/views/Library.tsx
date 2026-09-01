@@ -30,7 +30,7 @@ const SHELF_NUMERALS = [
    Sorting rearranges the running order and nothing else: spine color, height,
    and width are all keyed to a book's index in BOOKS, so a book carries the
    same spine wherever it lands and the case doesn't repaint on every sort. */
-type SortKey = "rating" | "title" | "author";
+type SortKey = "rating" | "year" | "title" | "author";
 
 const SORT_OPTIONS: {
   key: SortKey;
@@ -39,6 +39,7 @@ const SORT_OPTIONS: {
   down: string;
 }[] = [
   { key: "rating", label: "Rating", up: "lowest first", down: "highest first" },
+  { key: "year", label: "Year", up: "oldest first", down: "newest first" },
   { key: "title", label: "Title", up: "A to Z", down: "Z to A" },
   { key: "author", label: "Author", up: "A to Z", down: "Z to A" },
 ];
@@ -46,19 +47,28 @@ const SORT_OPTIONS: {
 /* The direction each key opens in: best books first, but names A to Z. */
 const SORT_OPENS_DESCENDING: Record<SortKey, boolean> = {
   rating: true,
+  year: true,
   title: false,
   author: false,
 };
 
 /* Ascending comparators; descending is the same order negated. Title breaks
    every tie, so the shelf is stable however it's arranged. Author sorts on the
-   name as written — no first/last parsing. */
+   name as written — no first/last parsing. Year reads `finished` as a number;
+   anything that isn't a plain year sorts as the oldest thing on the shelf. */
 const compareAscending = (key: SortKey) => (a: Book, b: Book) => {
   if (key === "rating")
     return a.rating - b.rating || a.title.localeCompare(b.title);
+  if (key === "year")
+    return finishedYear(a) - finishedYear(b) || a.title.localeCompare(b.title);
   if (key === "author")
     return a.author.localeCompare(b.author) || a.title.localeCompare(b.title);
   return a.title.localeCompare(b.title);
+};
+
+const finishedYear = (book: Book) => {
+  const year = Number.parseInt(book.finished, 10);
+  return Number.isNaN(year) ? -Infinity : year;
 };
 
 /* Below this width the catalog card stops being a pinned column and becomes a
@@ -513,30 +523,31 @@ export const Library = () => {
               role="group"
               aria-label="Sort the shelf"
             >
-              <span className="library-sort-label">Sort</span>
-              {SORT_OPTIONS.map(({ key, label, up, down }) => {
-                const isActive = sortKey === key;
-                const isDescending = isActive
-                  ? descending
-                  : SORT_OPENS_DESCENDING[key];
-                return (
-                  <button
-                    type="button"
-                    key={key}
-                    className={`library-sort-option${
-                      isActive ? " library-sort-option-active" : ""
-                    }`}
-                    onClick={() => selectSort(key)}
-                    aria-pressed={isActive}
-                    aria-label={`Sort by ${label.toLowerCase()}, ${isDescending ? down : up}`}
-                  >
-                    {label}
-                    <span className="library-sort-caret" aria-hidden="true">
-                      {isDescending ? "\u25BE" : "\u25B4"}
-                    </span>
-                  </button>
-                );
-              })}
+              <span className="library-sort-track">
+                {SORT_OPTIONS.map(({ key, label, up, down }) => {
+                  const isActive = sortKey === key;
+                  const isDescending = isActive
+                    ? descending
+                    : SORT_OPENS_DESCENDING[key];
+                  return (
+                    <button
+                      type="button"
+                      key={key}
+                      className={`library-sort-option${
+                        isActive ? " library-sort-option-active" : ""
+                      }`}
+                      onClick={() => selectSort(key)}
+                      aria-pressed={isActive}
+                      aria-label={`Sort by ${label.toLowerCase()}, ${isDescending ? down : up}`}
+                    >
+                      {label}
+                      <span className="library-sort-caret" aria-hidden="true">
+                        {isDescending ? "\u25BE" : "\u25B4"}
+                      </span>
+                    </button>
+                  );
+                })}
+              </span>
             </div>
 
             <div className="library-bookcase">
