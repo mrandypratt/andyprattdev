@@ -237,6 +237,10 @@
 
 .library-spine-title {
   writing-mode: vertical-rl;
+  /* `mixed` (the default) rotates Latin letters but leaves punctuation like the
+     curly apostrophe upright, which breaks the run — "Omnivore ’ s". `sideways`
+     turns the whole line together so punctuation stays with its word. */
+  text-orientation: sideways;
   font-size: 0.7rem;
   font-weight: 500;
   letter-spacing: 0.06em;
