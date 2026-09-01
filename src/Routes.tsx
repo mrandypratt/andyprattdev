@@ -3,9 +3,12 @@ import { About } from "./views/About"
 import { Library } from "./views/Library"
 import { CardsWithFriends } from "./views/Projects/CardsWithFriends"
 import { Home } from "./views/Home"
+import { ScrollToTop } from "./components/ScrollToTop"
 
 export const MainRoutes = () => {
   return (
+    <>
+    <ScrollToTop/>
     <Routes>
       <Route path="/" element={<Home/>} />
       <Route path="/about" element={<About/>} />
@@ -17,5 +20,6 @@ export const MainRoutes = () => {
       <Route path="/projects/cards-with-friends" element={<Navigate to="/projects" replace />} />
       <Route path="/portfolio" element={<Navigate to="/projects" replace />} />
     </Routes>
+    </>
   )
 }
