@@ -494,8 +494,8 @@ export const Library = () => {
           </h1>
           <p className="library-lede">
             Seeing a person's shelf is a peek into their minds. Browse away and
-            see what's been on mine along with my takeaways. Full ranked list at
-            the bottom.
+            see what's been on my mind along with my takeaways. Full ranked list
+            at the bottom.
           </p>
         </header>
 
