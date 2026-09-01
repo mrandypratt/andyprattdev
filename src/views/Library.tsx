@@ -503,9 +503,10 @@ export const Library = () => {
             <span className="library-title-accent">shaped me.</span>
           </h1>
           <p className="library-lede">
-            Seeing a person's shelf is a peek into their minds. Browse away and
-            see what's been on my mind along with my takeaways. Full ranked list
-            at the bottom.
+            I love rummaging through people's bookshelves. It gives a peek into
+            the thoughts they've entertained and makes easy kindling for deep
+            conversation. Browse away and see what's been on my mind along with
+            my takeaways for each book.
           </p>
         </header>
 
