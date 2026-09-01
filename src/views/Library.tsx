@@ -9,7 +9,7 @@ import {
 } from "react";
 import { Footer } from "../components/Footer";
 import { Navbar } from "../components/Navbar";
-import { Book, BOOKS } from "../data/books";
+import { Book, BOOKS, WANT_TO_READ } from "../data/books";
 import "../styles/Library.css";
 
 const BOOKS_PER_SHELF = 6;
@@ -775,6 +775,33 @@ export const Library = () => {
                   <span className="library-rank-value">{book.rating}</span>
                 </span>
               </button>
+            ))}
+          </div>
+        </section>
+
+        <section
+          className="library-block"
+          aria-labelledby="library-queue-heading"
+        >
+          <p className="library-eyebrow">Next up</p>
+          <h2 id="library-queue-heading" className="library-block-header">
+            Want to read
+          </h2>
+          <p className="library-block-sub">
+            My ever-growing list of books I'd like to read with a brief
+            description of why it's earned a spot on the queue.
+          </p>
+
+          <div className="library-queue-list">
+            {WANT_TO_READ.map((book) => (
+              <div className="library-queue-row" key={book.title}>
+                <div className="library-queue-head">
+                  <span className="library-queue-title">{book.title}</span>
+                  <span className="library-queue-author">{book.author}</span>
+                  <span className="library-queue-year">{book.year}</span>
+                </div>
+                <p className="library-queue-why">{book.why}</p>
+              </div>
             ))}
           </div>
         </section>

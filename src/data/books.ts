@@ -276,3 +276,109 @@ export const BOOKS: Book[] = [
     take: "This rating is a little unfair, because this is such an influential book and the ideas at the core of the book are very interesting. It’s just a dense read, that even a non-fiction guy like me could only make it halfway through. The concepts of the two parts of the brain for thinking and reacting was powerful and thoroughly explored and allows readers to be able to observe their own behavior in a new light. I learned that my brain sometimes lies to me when it’s convenient to store energy and we are really not that reliable when push comes to shove. I can try to try to have the right heuristics and biases to be the exception, but even that is likely just overconfidence.",
   },
 ];
+
+export type WantToRead = {
+  title: string;
+  author: string;
+  /** First publication year of the edition I'm after. */
+  year: string;
+  /** One line on why it's queued — the hook, not a summary. */
+  why: string;
+};
+
+/* =========================================================
+   THE QUEUE — books I haven't read yet, so they get no
+   spine and no rating. Order here is display order.
+   ========================================================= */
+export const WANT_TO_READ: WantToRead[] = [
+  {
+    title: "A Brief History of Intelligence",
+    author: "Max S. Bennett",
+    year: "2023",
+    why: "The type of grand sweeping book I love applied to the technology I find most fascinating makes an easy next pick.",
+  },
+  {
+    title: "Co-Intelligence: Living and Working with AI",
+    author: "Ethan Mollick",
+    year: "2024",
+    why: "A book to give a framework on how to think about working with Models as collaborators.",
+  },
+  {
+    title: "The Structure of Scientific Revolutions",
+    author: "Thomas S. Kuhn",
+    year: "1962",
+    why: 'Said to be timeless, I\'m curious how the book that defined "paradigm shift" applies to today.',
+  },
+  {
+    title: "Chaos: Making a New Science",
+    author: "James Gleick",
+    year: "1987",
+    why: "Gleick's precursor to The Information highlighting the unpredictability of deterministic systems.",
+  },
+  {
+    title: "Thinking in Systems",
+    author: "Donella H. Meadows",
+    year: "2008",
+    why: "I love thinking about the behaviors of systems and scale and this book keeps popping up on my recommendations.",
+  },
+  {
+    title: "Factfulness",
+    author: "Hans Rosling",
+    year: "2018",
+    why: "Evidence backed reasons that the world isn't awful sounds like the antidote to the AI wave and Chomsky",
+  },
+  {
+    title: "Seeing Like a State",
+    author: "James C. Scott",
+    year: "1998",
+    why: "I've seen successes and failures of large institutions, so diving into the mechanisms of how govenment plans fail seems relevant.",
+  },
+  {
+    title: "The Inner Game of Tennis",
+    author: "W. Timothy Gallwey",
+    year: "1974",
+    why: "This book has been recommended by people who play tennis competitively and even many who don't. Learning how to harness the self-critic is a universal good.",
+  },
+  {
+    title: "The Master Switch",
+    author: "Tim Wu",
+    year: "2010",
+    why: "Learn how information technology starts open and ends consolidated would apply well to today's AI landscape.",
+  },
+  {
+    title: "Lifespan",
+    author: "David A. Sinclair",
+    year: "2019",
+    why: "I have no delusions about cheating death, but a book about how aging works seems helpful to live a healthy life.",
+  },
+  {
+    title: "Debt: The First 5,000 Years",
+    author: "David Graeber",
+    year: "2014",
+    why: "I understand this book to be Sapiens through the lens of how the modern financial system came to be.",
+  },
+  {
+    title: "Manufacturing Consent",
+    author: "Edward S. Herman and Noam Chomsky",
+    year: "1988",
+    why: "Chomsky's perspecives on power are predicated on his work in this book, it would be interesting to deep-dive on how narratives shape society.",
+  },
+  {
+    title: "Who Is Government?",
+    author: "Edited by Michael Lewis",
+    year: "2025",
+    why: "I like Michael Lewis, and I've always wanted to peek behind the curtain of bureaucracy to learn about how government works.",
+  },
+  {
+    title: "Breath",
+    author: "James Nestor",
+    year: "2020",
+    why: "A tactical guide to one of the most universal tools.  I loved the book on sleep and books on meditation, this seems like a natural compliment.",
+  },
+  {
+    title: "Salt, Fat, Acid, Heat",
+    author: "Samin Nosrat",
+    year: "2017",
+    why: "A framework for deliciousness, count me in!",
+  },
+];

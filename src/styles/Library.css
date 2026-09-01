@@ -781,6 +781,54 @@
   text-align: right;
 }
 
+/* ---------- Want to read ----------
+   Same rules and gold numerals as the ranking, minus the score rail and the
+   click target — nothing in the queue has a rating to show yet. */
+.library-queue-list {
+  margin-top: 26px;
+}
+
+.library-queue-row {
+  border-bottom: 1px solid var(--lib-rule);
+  padding: 16px 10px;
+}
+
+.library-queue-head {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0 10px;
+}
+
+.library-queue-title {
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.library-queue-author {
+  font-size: 0.95rem;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--lib-muted);
+}
+
+.library-queue-year {
+  margin-left: auto;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--lib-gold);
+}
+
+.library-queue-why {
+  margin: 6px 0 0 0;
+  max-width: 68ch;
+  color: #d0d0d0;
+  font-size: 0.95rem;
+  font-weight: 300;
+  line-height: 1.6;
+}
+
 /* ---------- Shelf clearance above the mobile scale ----------
    From here up, the case is comfortably narrower than the viewport, so it never
    needs to scroll — which means the hover tip can overflow the case instead of
@@ -1053,6 +1101,11 @@
   .library-rank-author {
     display: block;
     margin-left: 0;
+  }
+
+  /* Title takes the row; author and the year share the next one. */
+  .library-queue-title {
+    flex: 1 1 100%;
   }
 
   .library-rank-score .library-meter {
