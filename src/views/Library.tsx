@@ -13,7 +13,18 @@ import { Book, BOOKS } from "../data/books";
 import "../styles/Library.css";
 
 const BOOKS_PER_SHELF = 6;
-const SHELF_NUMERALS = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"];
+const SHELF_NUMERALS = [
+  "I",
+  "II",
+  "III",
+  "IV",
+  "V",
+  "VI",
+  "VII",
+  "VIII",
+  "IX",
+  "X",
+];
 
 /* ---------- Shelf order ----------
    Sorting rearranges the running order and nothing else: spine color, height,
@@ -21,7 +32,12 @@ const SHELF_NUMERALS = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", 
    same spine wherever it lands and the case doesn't repaint on every sort. */
 type SortKey = "rating" | "title" | "author";
 
-const SORT_OPTIONS: { key: SortKey; label: string; up: string; down: string }[] = [
+const SORT_OPTIONS: {
+  key: SortKey;
+  label: string;
+  up: string;
+  down: string;
+}[] = [
   { key: "rating", label: "Rating", up: "lowest first", down: "highest first" },
   { key: "title", label: "Title", up: "A to Z", down: "Z to A" },
   { key: "author", label: "Author", up: "A to Z", down: "Z to A" },
@@ -38,8 +54,10 @@ const SORT_OPENS_DESCENDING: Record<SortKey, boolean> = {
    every tie, so the shelf is stable however it's arranged. Author sorts on the
    name as written — no first/last parsing. */
 const compareAscending = (key: SortKey) => (a: Book, b: Book) => {
-  if (key === "rating") return a.rating - b.rating || a.title.localeCompare(b.title);
-  if (key === "author") return a.author.localeCompare(b.author) || a.title.localeCompare(b.title);
+  if (key === "rating")
+    return a.rating - b.rating || a.title.localeCompare(b.title);
+  if (key === "author")
+    return a.author.localeCompare(b.author) || a.title.localeCompare(b.title);
   return a.title.localeCompare(b.title);
 };
 
@@ -72,7 +90,9 @@ const SPINE_COLORS = [
    looking like a barcode. Library.css scales these down on small screens via
    the --spine-h / --spine-w custom properties. A book is never shorter than
    this, but spineFit below will make it taller when its title needs the room. */
-const SPINE_HEIGHTS = [188, 168, 202, 162, 182, 196, 172, 206, 178, 194, 166, 190];
+const SPINE_HEIGHTS = [
+  188, 168, 202, 162, 182, 196, 172, 206, 178, 194, 166, 190,
+];
 const SPINE_WIDTHS = [42, 36, 48, 34, 40, 44, 38, 46, 36, 42, 35, 47];
 
 /* Spine lettering runs the length of the book, so a title physically has to fit
@@ -95,18 +115,19 @@ const spineFit = (title: string, index: number) => {
   const run = title.length * TITLE_PX_PER_CHAR;
   const titleScale = Math.max(
     SMALLEST_TITLE_SCALE,
-    Math.min(1, (TALLEST_SPINE - TITLE_CLEARANCE - TITLE_SLACK) / run)
+    Math.min(1, (TALLEST_SPINE - TITLE_CLEARANCE - TITLE_SLACK) / run),
   );
   return {
     height: Math.max(
       SPINE_HEIGHTS[index % SPINE_HEIGHTS.length],
-      Math.ceil(run * titleScale + TITLE_CLEARANCE + TITLE_SLACK)
+      Math.ceil(run * titleScale + TITLE_CLEARANCE + TITLE_SLACK),
     ),
     titleScale,
   };
 };
 
-const NO_TAKE_YET = "I haven't written this one up yet — the rating stands on its own for now.";
+const NO_TAKE_YET =
+  "I haven't written this one up yet — the rating stands on its own for now.";
 
 type MeterProps = { rating: number; tone: "paper" | "dark" };
 
@@ -127,7 +148,9 @@ const Meter = ({ rating, tone }: MeterProps) => (
 
 export const Library = () => {
   const [selected, setSelected] = useState<number | null>(null);
-  const [isCompact, setIsCompact] = useState(() => window.matchMedia(COMPACT_QUERY).matches);
+  const [isCompact, setIsCompact] = useState(
+    () => window.matchMedia(COMPACT_QUERY).matches,
+  );
   const [sortKey, setSortKey] = useState<SortKey>("rating");
   const [descending, setDescending] = useState(SORT_OPENS_DESCENDING.rating);
   const spineRefs = useRef<Record<number, HTMLButtonElement | null>>({});
@@ -138,7 +161,8 @@ export const Library = () => {
 
   useEffect(() => {
     const query = window.matchMedia(COMPACT_QUERY);
-    const handleChange = (event: MediaQueryListEvent) => setIsCompact(event.matches);
+    const handleChange = (event: MediaQueryListEvent) =>
+      setIsCompact(event.matches);
     query.addEventListener("change", handleChange);
     return () => query.removeEventListener("change", handleChange);
   }, []);
@@ -175,7 +199,7 @@ export const Library = () => {
       }
       setSelected(null);
     },
-    [selected]
+    [selected],
   );
 
   /* Walk the shelf in place, in whatever order it's currently sorted into.
@@ -189,7 +213,7 @@ export const Library = () => {
         return next < 0 || next >= order.length ? current : order[next];
       });
     },
-    [order]
+    [order],
   );
 
   // Escape reshelves; left/right walk the shelf while a card is open.
@@ -207,13 +231,16 @@ export const Library = () => {
       } else if (event.key === "Tab" && isOverlay) {
         // The sheet is modal, so keep Tab from wandering behind the scrim.
         const focusable = cardRef.current?.querySelectorAll<HTMLElement>(
-          "button:not([disabled])"
+          "button:not([disabled])",
         );
         if (!focusable || focusable.length === 0) return;
         const first = focusable[0];
         const last = focusable[focusable.length - 1];
         const active = document.activeElement;
-        if (event.shiftKey && (active === first || active === cardRef.current)) {
+        if (
+          event.shiftKey &&
+          (active === first || active === cardRef.current)
+        ) {
           event.preventDefault();
           last.focus();
         } else if (!event.shiftKey && active === last) {
@@ -231,7 +258,11 @@ export const Library = () => {
     if (selected === null) return;
     const handlePointerDown = (event: MouseEvent) => {
       const target = event.target as Node;
-      if (browseRef.current?.contains(target) || rankRef.current?.contains(target)) return;
+      if (
+        browseRef.current?.contains(target) ||
+        rankRef.current?.contains(target)
+      )
+        return;
       closeCard(false);
     };
     document.addEventListener("mousedown", handlePointerDown);
@@ -247,7 +278,9 @@ export const Library = () => {
     const navHeight = 72;
     const onScreen = rect.bottom > navHeight && rect.top < window.innerHeight;
     if (onScreen) return;
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
     cardRef.current.scrollIntoView({
       behavior: reducedMotion ? "auto" : "smooth",
       block: "center",
@@ -272,7 +305,10 @@ export const Library = () => {
 
   const shelfCount = Math.ceil(order.length / BOOKS_PER_SHELF);
   const shelves = Array.from({ length: shelfCount }, (_, shelfIndex) =>
-    order.slice(shelfIndex * BOOKS_PER_SHELF, (shelfIndex + 1) * BOOKS_PER_SHELF)
+    order.slice(
+      shelfIndex * BOOKS_PER_SHELF,
+      (shelfIndex + 1) * BOOKS_PER_SHELF,
+    ),
   );
 
   /* Where the open book sits on the shelf as sorted — drives the card number
@@ -280,7 +316,7 @@ export const Library = () => {
   const shelfPosition = selected === null ? -1 : order.indexOf(selected);
 
   const ranked = BOOKS.map((book, index) => ({ book, index })).sort(
-    (a, b) => b.book.rating - a.book.rating
+    (a, b) => b.book.rating - a.book.rating,
   );
 
   const openBook = selected === null ? null : BOOKS[selected];
@@ -290,23 +326,35 @@ export const Library = () => {
      the node and keeps out of React state. The open animation uses fill-mode:
      both, which would outrank an inline transform for the life of the sheet —
      clearing it here hands control over the moment a finger lands. */
-  const moveSheet = useCallback((transform: string, ms: number, flush = false) => {
-    const node = cardRef.current;
-    if (!node) return;
-    node.style.animation = "none";
-    node.style.transition = ms > 0 ? `transform ${ms}ms cubic-bezier(0.22, 1, 0.36, 1)` : "none";
-    node.style.transform = transform;
-    /* Commit the untransitioned position before the next call transitions away
+  const moveSheet = useCallback(
+    (transform: string, ms: number, flush = false) => {
+      const node = cardRef.current;
+      if (!node) return;
+      node.style.animation = "none";
+      node.style.transition =
+        ms > 0 ? `transform ${ms}ms cubic-bezier(0.22, 1, 0.36, 1)` : "none";
+      node.style.transform = transform;
+      /* Commit the untransitioned position before the next call transitions away
        from it, or the two collapse into one and nothing animates. */
-    if (flush) void node.offsetHeight;
-  }, []);
+      if (flush) void node.offsetHeight;
+    },
+    [],
+  );
 
-  const reducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const reducedMotion = () =>
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   /* True while the sheet is animating itself — a second gesture mid-flight
      would fight the one already running. */
   const sliding = useRef(false);
-  const swipe = useRef({ startX: 0, startY: 0, dx: 0, dy: 0, axis: "", live: false });
+  const swipe = useRef({
+    startX: 0,
+    startY: 0,
+    dx: 0,
+    dy: 0,
+    axis: "",
+    live: false,
+  });
 
   /* Walk to a neighbour: the open card leaves in the direction of the swipe and
      the next one comes in from the other side. */
@@ -318,15 +366,22 @@ export const Library = () => {
         return;
       }
       sliding.current = true;
-      moveSheet(`translate3d(${delta > 0 ? "-104%" : "104%"}, 0, 0)`, SWIPE_SLIDE_MS);
+      moveSheet(
+        `translate3d(${delta > 0 ? "-104%" : "104%"}, 0, 0)`,
+        SWIPE_SLIDE_MS,
+      );
       window.setTimeout(() => {
         step(delta);
-        moveSheet(`translate3d(${delta > 0 ? "104%" : "-104%"}, 0, 0)`, 0, true);
+        moveSheet(
+          `translate3d(${delta > 0 ? "104%" : "-104%"}, 0, 0)`,
+          0,
+          true,
+        );
         moveSheet("translate3d(0, 0, 0)", SWIPE_SLIDE_MS);
         sliding.current = false;
       }, SWIPE_SLIDE_MS);
     },
-    [moveSheet, step]
+    [moveSheet, step],
   );
 
   // Drop the sheet off the bottom of the screen, then reshelve the book.
@@ -371,7 +426,11 @@ export const Library = () => {
     gesture.dy = touch.clientY - gesture.startY;
 
     if (!gesture.axis) {
-      if (Math.abs(gesture.dx) < SWIPE_SLOP && Math.abs(gesture.dy) < SWIPE_SLOP) return;
+      if (
+        Math.abs(gesture.dx) < SWIPE_SLOP &&
+        Math.abs(gesture.dy) < SWIPE_SLOP
+      )
+        return;
       if (Math.abs(gesture.dx) > Math.abs(gesture.dy)) {
         gesture.axis = "x";
       } else if (gesture.dy > 0 && (cardBodyRef.current?.scrollTop ?? 0) <= 0) {
@@ -387,7 +446,10 @@ export const Library = () => {
     if (gesture.axis === "x") {
       const atEnd =
         gesture.dx < 0 ? shelfPosition >= order.length - 1 : shelfPosition <= 0;
-      moveSheet(`translate3d(${atEnd ? gesture.dx * SWIPE_RESIST : gesture.dx}px, 0, 0)`, 0);
+      moveSheet(
+        `translate3d(${atEnd ? gesture.dx * SWIPE_RESIST : gesture.dx}px, 0, 0)`,
+        0,
+      );
     } else {
       moveSheet(`translate3d(0, ${Math.max(0, gesture.dy)}px, 0)`, 0);
     }
@@ -427,26 +489,36 @@ export const Library = () => {
         <header className="library-intro">
           <p className="library-eyebrow">The Library</p>
           <h1 className="library-title">
-            Every book I've finished, <span className="library-title-accent">shelved and scored.</span>
+            The books that have{" "}
+            <span className="library-title-accent">shaped me.</span>
           </h1>
           <p className="library-lede">
-            Reading is where most of my thinking starts. Sort the shelf how you like, hover a spine
-            for a peek, pull one down for the full take, or skip to the ranking. Everything is scored
-            out of ten — no cowardly sevens across the board.
+            Seeing a person's shelf is a peek into their minds. Browse away and
+            see what's been on mine along with my takeaways. Full ranked list at
+            the bottom.
           </p>
         </header>
 
         <div className="library-browse" ref={browseRef}>
-          <section className="library-shelf-column" aria-labelledby="library-shelf-heading">
+          <section
+            className="library-shelf-column"
+            aria-labelledby="library-shelf-heading"
+          >
             <h2 id="library-shelf-heading" className="library-visually-hidden">
               The shelf
             </h2>
 
-            <div className="library-sort" role="group" aria-label="Sort the shelf">
+            <div
+              className="library-sort"
+              role="group"
+              aria-label="Sort the shelf"
+            >
               <span className="library-sort-label">Sort</span>
               {SORT_OPTIONS.map(({ key, label, up, down }) => {
                 const isActive = sortKey === key;
-                const isDescending = isActive ? descending : SORT_OPENS_DESCENDING[key];
+                const isDescending = isActive
+                  ? descending
+                  : SORT_OPENS_DESCENDING[key];
                 return (
                   <button
                     type="button"
@@ -497,11 +569,19 @@ export const Library = () => {
                           aria-pressed={isSelected}
                           onClick={() => setSelected(isSelected ? null : index)}
                         >
-                          <span className="library-spine-title">{book.title}</span>
+                          <span className="library-spine-title">
+                            {book.title}
+                          </span>
                           <span className="library-tip" aria-hidden="true">
-                            <span className="library-tip-title">{book.title}</span>
-                            <span className="library-tip-author">{book.author}</span>
-                            <span className="library-tip-score">{book.rating} / 10</span>
+                            <span className="library-tip-title">
+                              {book.title}
+                            </span>
+                            <span className="library-tip-author">
+                              {book.author}
+                            </span>
+                            <span className="library-tip-score">
+                              {book.rating} / 10
+                            </span>
                           </span>
                         </button>
                       );
@@ -519,9 +599,14 @@ export const Library = () => {
             <p className="library-shelf-hint">Tap a spine to pull its card</p>
           </section>
 
-          <div className={`library-card-column${isOverlay ? " library-card-overlay" : ""}`}>
+          <div
+            className={`library-card-column${isOverlay ? " library-card-overlay" : ""}`}
+          >
             {isOverlay && (
-              <div className="library-card-scrim" onClick={() => closeCard(false)} />
+              <div
+                className="library-card-scrim"
+                onClick={() => closeCard(false)}
+              />
             )}
 
             {openBook && selected !== null ? (
@@ -532,13 +617,17 @@ export const Library = () => {
                 aria-live="polite"
                 role={isOverlay ? "dialog" : undefined}
                 aria-modal={isOverlay || undefined}
-                aria-label={isOverlay ? `${openBook.title} — catalog card` : undefined}
+                aria-label={
+                  isOverlay ? `${openBook.title} — catalog card` : undefined
+                }
                 onTouchStart={handleTouchStart}
                 onTouchMove={handleTouchMove}
                 onTouchEnd={handleTouchEnd}
                 onTouchCancel={handleTouchCancel}
               >
-                {isOverlay && <span className="library-card-handle" aria-hidden="true" />}
+                {isOverlay && (
+                  <span className="library-card-handle" aria-hidden="true" />
+                )}
 
                 <div className="library-card-head">
                   <span className="library-card-number">
@@ -602,14 +691,22 @@ export const Library = () => {
                       className="library-stamp"
                       aria-label={`Rated ${openBook.rating} out of 10`}
                     >
-                      <span className="library-stamp-score">{openBook.rating}/10</span>
-                      <span className="library-stamp-date">{openBook.finished}</span>
+                      <span className="library-stamp-score">
+                        {openBook.rating}/10
+                      </span>
+                      <span className="library-stamp-date">
+                        {openBook.finished}
+                      </span>
                     </div>
                   </div>
 
                   <div className="library-card-take">
                     <span className="library-card-take-label">The take</span>
-                    <p className={openBook.take ? undefined : "library-card-take-empty"}>
+                    <p
+                      className={
+                        openBook.take ? undefined : "library-card-take-empty"
+                      }
+                    >
                       {openBook.take ?? NO_TAKE_YET}
                     </p>
                   </div>
@@ -621,22 +718,26 @@ export const Library = () => {
               <div className="library-card-resting" aria-hidden="true">
                 <p className="library-card-resting-title">Pull a book down</p>
                 <p className="library-card-resting-copy">
-                  Click any spine and its catalog card opens here. Then walk the shelf with the
-                  arrows or your &larr; and &rarr; keys, and press Esc to reshelve.
+                  Click any spine and its catalog card opens here. Then walk the
+                  shelf with the arrows or your &larr; and &rarr; keys, and
+                  press Esc to reshelve.
                 </p>
               </div>
             )}
           </div>
         </div>
 
-        <section className="library-block" aria-labelledby="library-ranking-heading">
+        <section
+          className="library-block"
+          aria-labelledby="library-ranking-heading"
+        >
           <p className="library-eyebrow">Best to worst</p>
           <h2 id="library-ranking-heading" className="library-block-header">
             The ranking
           </h2>
           <p className="library-block-sub">
-            The whole shelf, in order. Ten means I bought copies for other people. Three means I
-            finished it out of spite.
+            The whole shelf, in order. Ten means I bought copies for other
+            people. Three means I finished it out of spite.
           </p>
 
           <div className="library-rank-list" ref={rankRef}>
@@ -650,7 +751,9 @@ export const Library = () => {
                 onClick={() => setSelected(selected === index ? null : index)}
                 aria-pressed={selected === index}
               >
-                <span className="library-rank-num">{String(position + 1).padStart(2, "0")}</span>
+                <span className="library-rank-num">
+                  {String(position + 1).padStart(2, "0")}
+                </span>
                 <span className="library-rank-body">
                   <span className="library-rank-title">{book.title}</span>
                   <span className="library-rank-author">{book.author}</span>
