@@ -3,6 +3,7 @@ import { Navbar } from "../components/Navbar";
 import "../styles/About.css";
 
 // Photo imports — files live in src/assets/about/ (see spec at the bottom of About.css).
+import andyPhoto from "../assets/about/andy-about.jpg";
 import tennisFloridaPhoto from "../assets/about/tennis-florida.jpg";
 import pacificNorthwestPhoto from "../assets/about/pacific-northwest.jpg";
 import chicagoPhoto from "../assets/about/chicago.jpg";
@@ -50,6 +51,14 @@ export const About = () => {
             there.
           </p>
         </header>
+
+        <figure className="about-hero">
+          <img
+            className="about-hero-img"
+            src={andyPhoto}
+            alt="Andy Pratt standing in front of a high-desert valley and snow-capped mountains"
+          />
+        </figure>
 
         <section className="about-chapter">
           <h2 className="about-chapter-header">How I got here</h2>
