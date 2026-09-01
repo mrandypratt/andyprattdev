@@ -61,6 +61,7 @@ export const About = () => {
         </figure>
 
         <section className="about-chapter">
+          <p className="about-chapter-eyebrow">Background</p>
           <h2 className="about-chapter-header">How I got here</h2>
           <div className="about-chapter-body">
             <p>
@@ -87,6 +88,7 @@ export const About = () => {
         </section>
 
         <section className="about-chapter">
+          <p className="about-chapter-eyebrow">Motivation</p>
           <h2 className="about-chapter-header">Why software?</h2>
           <div className="about-chapter-body">
             <p>
@@ -114,6 +116,7 @@ export const About = () => {
         </section>
 
         <section className="about-chapter">
+          <p className="about-chapter-eyebrow">Off the clock</p>
           <h2 className="about-chapter-header">Outside of work</h2>
           <p className="about-chapter-intro">
             Tennis, travel, and a fiancée who always expands my horizons.
@@ -160,6 +163,7 @@ export const About = () => {
         </section>
 
         <section className="about-chapter">
+          <p className="about-chapter-eyebrow">Odds and ends</p>
           <h2 className="about-chapter-header">A few other things</h2>
           <ul className="about-list">
             <li>Tennis, fitness, hiking.</li>

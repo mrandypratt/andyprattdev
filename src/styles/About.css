@@ -60,11 +60,23 @@
   margin-bottom: 56px;
 }
 
+/* Chapter eyebrow — small gold label above each header. Mirrors
+   .library-eyebrow so the two long-form pages share one device. Gold marks
+   structure; cyan is reserved for things you can actually click (.about-link). */
+.about-chapter-eyebrow {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #ffbd59;
+  margin: 0 0 10px 0;
+}
+
 .about-chapter-header {
   font-size: 1.75rem;
   font-weight: 500;
   margin: 0 0 16px 0;
-  color: #5ce1e6;
+  color: #ffffff;
 }
 
 .about-chapter-body p,
@@ -210,6 +222,12 @@
 
   .about-chapter {
     margin-bottom: 44px;
+  }
+
+  .about-chapter-eyebrow {
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    margin-bottom: 8px;
   }
 
   .about-chapter-header {
